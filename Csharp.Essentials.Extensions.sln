@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Api", "Web.Api\Web.Api.csproj", "{89AC96A7-534D-4C45-9857-2FB0ADBF5B33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpEssentials.HttpHelper", "..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj", "{482FAC57-B2B8-FD91-7683-E301826837D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{89AC96A7-534D-4C45-9857-2FB0ADBF5B33}.Release|x64.Build.0 = Release|Any CPU
 		{89AC96A7-534D-4C45-9857-2FB0ADBF5B33}.Release|x86.ActiveCfg = Release|Any CPU
 		{89AC96A7-534D-4C45-9857-2FB0ADBF5B33}.Release|x86.Build.0 = Release|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Debug|x64.Build.0 = Debug|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Debug|x86.Build.0 = Debug|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Release|x64.ActiveCfg = Release|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Release|x64.Build.0 = Release|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Release|x86.ActiveCfg = Release|Any CPU
+		{482FAC57-B2B8-FD91-7683-E301826837D8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
