@@ -7,14 +7,10 @@ Ti propongo una roadmap **SOLIDA**, **testabile**, e pronta a scalare. L'obietti
 ### 📌 Fase 1: Struttura di Progetto
 
 1. 🔹 Separare la logica in livelli:
-- [] Aggiornare Readme.md di Csharp.Essentials.HttpHelper
+- [ ] Aggiornare Readme.md di Csharp.Essentials.HttpHelper
 - [ ] Rendere SOLID le minimal API includendo il pattern IUnitOfWork.cs usando l' esempio delle chiamate API di GitHub
-
-   * `IGitHubSearchService`
-   * `GitHubSearchService : IGitHubSearchService`
-   * `GitHubRepoDto`
-   * `IGitHubClient` per l’HTTP esterno (astrazione)
-2. 🔹 Usare `HttpClientFactory` con named client `GitHub`
+- [ ] Aggiungere altre chiamate alla API di gitHub
+- [ ] Usare `HttpClientFactory` con named client `GitHub`
 
 ---
 
@@ -30,8 +26,9 @@ Ti propongo una roadmap **SOLIDA**, **testabile**, e pronta a scalare. L'obietti
 ---
 
 ### 📊 Fase 3: Telemetria e Logging
+- [ ] Usare ElasticSearch !
 
-6. ✅ Integrare `LoggerHelper` o `Serilog`
+6. ✅ Integrare `LoggerHelper`
 7. ✅ Aggiungere OpenTelemetry:
 
    * `http.client.duration`
