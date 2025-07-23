@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ServiceDbContext))]
-    [Migration("20250723075938_InitSchema")]
+    [Migration("20250723085850_InitSchema")]
     partial class InitSchema
     {
         /// <inheritdoc />

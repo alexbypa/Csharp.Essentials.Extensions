@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 namespace DataAccessLayer.EFStrategy;
 public class AppDbContextFactory : IDesignTimeDbContextFactory<ServiceDbContext> {
     private readonly IConnectionStrategyResolver _resolver;
-
     public AppDbContextFactory() : this(new ConnectionStrategyResolver()) { }
     public AppDbContextFactory(IConnectionStrategyResolver resolver) {
         _resolver = resolver;
