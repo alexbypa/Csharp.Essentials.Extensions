@@ -1,5 +1,3 @@
----
-
 ## ✅ 1. **Verifica dei principi SOLID sulla tua implementazione `Unit of Work`**
 
 | Principio                     | Stato | Note                                                                            |

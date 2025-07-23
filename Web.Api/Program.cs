@@ -7,7 +7,6 @@ using DataAccessLayer.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Web.Api.MinimalApi;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region UnitOfWork
