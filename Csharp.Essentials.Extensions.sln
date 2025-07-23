@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpEssentials.HttpHelper
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpEssentials.LoggerHelper", "..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper\CSharpEssentials.LoggerHelper.csproj", "{B3E52614-11C5-A971-F733-6F31A2C6FD33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{B3E52614-11C5-A971-F733-6F31A2C6FD33}.Release|x64.Build.0 = Release|Any CPU
 		{B3E52614-11C5-A971-F733-6F31A2C6FD33}.Release|x86.ActiveCfg = Release|Any CPU
 		{B3E52614-11C5-A971-F733-6F31A2C6FD33}.Release|x86.Build.0 = Release|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Release|x64.Build.0 = Release|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D0BCED1-1C3A-4BE7-9C7D-E79274CED1AD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

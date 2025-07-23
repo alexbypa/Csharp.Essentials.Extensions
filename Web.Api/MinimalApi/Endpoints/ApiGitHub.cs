@@ -26,7 +26,6 @@ public class ApiGitHub : IEndpointDefinition {
         string url = $"https://api.github.com/search/repositories?q={searchTerm}+in:name&per_page=10";
 
         httpHelper.setHeadersAndBearerAuthentication(new Dictionary<string, string> { { "User-Agent", "MyGitHubApp" } }, new httpsClientHelper.httpClientAuthenticationBearer("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"));
-
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
         HttpResponseMessage responseMessage = await httpHelper.SendAsync(url, HttpMethod.Get, null, contentBuilder);
         var json = await responseMessage.Content.ReadAsStringAsync();
