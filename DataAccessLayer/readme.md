@@ -1,32 +1,22 @@
 ﻿**STEPS**
 1) Installare Microsoft.EntityFrameworkCore
-2) La migration cercherà i DBContext registrati tramite DI
-3) Quindi applicherà le modifiche sul DB cercando ogni DBSet
-4) dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-4) dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+2) dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+3) dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 4) dotnet add Microsoft.Extensions.Configuration.Json
 
-
-Sì, **le migration di EF Core usano AppDbContextFactory solo in un contesto specifico: la CLI.**
 ---
-
+## 🔥 Cosa fa partire la migration
 > **La migration viene eseguita da AppDbContextFactory**
-
-EF cerca automaticamente una classe che implementa:
+Questo perchè EF cerca automaticamente una classe che implementa:
 ```csharp
 IDesignTimeDbContextFactory<YourDbContext>
 ```
 
----
-
 ## 🔥 Ma: non viene mai “eseguita” a runtime!
-
 Se non hai qualcosa tipo:
-
 ```csharp
 dbContext.Database.Migrate();
 ```
-
 all’avvio della tua Web API, allora **le migration non vengono applicate automaticamente.**
 
 ---
@@ -45,33 +35,12 @@ using (var scope = app.Services.CreateScope())
 
 ---
 
-## ⚠️ Se `AppDbContextFactory` non è in un progetto referenziato...
+## ✅ Verifica e Azione
 
-Allora la CLI **non può nemmeno trovarlo**. Soluzione:
+Esegui da terminale dalla root della soluzione :
 
-1. Il progetto dove scrivi `AppDbContextFactory` deve essere **compilabile**
-2. Il progetto dove esegui `dotnet ef ...` deve avere `Microsoft.EntityFrameworkCore.Design` e referenziare il progetto `DataAccessLayer`
+1) dotnet ef dbcontext list --project DataAccessLayer\DataAccessLayer.csproj --startup-project Web.Api\Web.Api.csproj 
+2) dotnet ef migrations add InitSchema --project DataAccessLayer\DataAccessLayer.csproj --startup-project Web.Api\Web.Api.csproj
+3) dotnet ef database update --project DataAccessLayer\DataAccessLayer.csproj --startup-project Web.Api\Web.Api.csproj
 
----
-
-## ✅ Verifica
-
-Esegui da terminale nella WebAPI:
-
-```bash
-dotnet ef dbcontext list
-```
-
-Se ti mostra `ServiceDbContext`, allora `AppDbContextFactory` è **correttamente agganciato**.
-
----
-Attenzione: 
-Your startup project 'Web.Api' doesn't reference Microsoft.EntityFrameworkCore.Design. This package is required for the Entity Framework Core Tools to work. Ensure your startup project is correct, install the package, and try again.
-
-
-Quindi, dalla root usare 
---1
-dotnet ef dbcontext list --project DataAccessLayer\DataAccessLayer.csproj --startup-project Web.Api\Web.Api.csproj
---2
-dotnet ef migrations add InitSchema --project DataAccessLayer\DataAccessLayer.csproj --startup-project Web.Api\Web.Api.csproj
---3
+### Il primo comando restiuisce i DBContext trovati !
