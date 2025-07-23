@@ -14,9 +14,9 @@ namespace DataAccessLayer.Migrations
                 name: "tGitHubOptions",
                 columns: table => new
                 {
-                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    BToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PageSize = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    BToken = table.Column<string>(type: "text", nullable: false),
+                    PageSize = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
