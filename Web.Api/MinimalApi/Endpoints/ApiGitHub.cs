@@ -1,5 +1,8 @@
-﻿using CSharpEssentials.HttpHelper;
+﻿using BusinessLayer.DataAccess.EntityFramework;
+using BusinessLayer.Repository.Github;
+using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -12,6 +15,13 @@ public class ApiGitHub : IEndpointDefinition {
         app.MapGet("/repos/search", SearchRepos)
             .WithName("SearchRepos")
             .Produces<IResult>(StatusCodes.Status200OK);
+        app.MapGet("/testuow", testUoW)
+            .WithName("testUoW")
+            .Produces<IResult>(StatusCodes.Status200OK);
+    }
+    public async Task<IResult> testUoW([FromServices] IUnitOfWork unitOfWork, [FromServices] IGitHubOptionsRepo repo, [FromQuery] string UserName) {
+        var all = await repo.GetByUserName(UserName);
+        return Results.Ok(all);
     }
     public async Task<IResult> SearchRepos([FromQuery] string Pattern, [FromServices] IhttpsClientHelperFactory httpFactory) {
         RequestDemo request = new RequestDemo() { IdTransaction = Guid.NewGuid().ToString(), Action = "getRepoByUser" };
