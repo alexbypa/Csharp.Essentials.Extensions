@@ -1,4 +1,5 @@
-﻿1) Installare Microsoft.EntityFrameworkCore
+﻿**STEPS**
+1) Installare Microsoft.EntityFrameworkCore
 2) La migration cercherà i DBContext registrati tramite DI
 3) Quindi applicherà le modifiche sul DB cercando ogni DBSet
 4) dotnet add package Microsoft.EntityFrameworkCore.SqlServer
@@ -9,22 +10,12 @@
 Sì, **le migration di EF Core usano AppDbContextFactory solo in un contesto specifico: la CLI.**
 ---
 
-> ❓ **La migration viene eseguita da `AppDbContextFactory`?**
-> ✅ **Sì, ma solo quando lanci comandi CLI come:**
-
-```bash
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-```
+> **La migration viene eseguita da AppDbContextFactory**
 
 EF cerca automaticamente una classe che implementa:
-
 ```csharp
 IDesignTimeDbContextFactory<YourDbContext>
 ```
-
-
-per creare un'istanza del tuo `DbContext` **fuori dal contesto dell'app**, come nel caso della migration.
 
 ---
 
