@@ -7,7 +7,7 @@ Ti propongo una roadmap **SOLIDA**, **testabile**, e pronta a scalare. L'obietti
 ### 📌 Fase 1: Struttura di Progetto
 
 1. 🔹 Separare la logica in livelli:
-- [ ] Aggiornare Readme.md di Csharp.Essentials.HttpHelper
+- [x] Aggiornare Readme.md di Csharp.Essentials.HttpHelper
 - [ ] Rendere SOLID le minimal API includendo il pattern IUnitOfWork.cs usando l' esempio delle chiamate API di GitHub
 - [ ] Aggiungere altre chiamate alla API di gitHub
 - [ ] Usare `HttpClientFactory` con named client `GitHub`
