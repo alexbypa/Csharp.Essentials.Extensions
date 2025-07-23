@@ -1,8 +1,6 @@
-﻿using BusinessLayer.DataAccess.EntityFramework;
-using BusinessLayer.Repository.Github;
+﻿using BusinessLayer.Repository.Github;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -19,7 +17,7 @@ public class ApiGitHub : IEndpointDefinition {
             .WithName("testUoW")
             .Produces<IResult>(StatusCodes.Status200OK);
     }
-    public async Task<IResult> testUoW([FromServices] IUnitOfWork unitOfWork, [FromServices] IGitHubOptionsRepo repo, [FromQuery] string UserName) {
+    public async Task<IResult> testUoW([FromServices] IGitHubOptionsRepo repo, [FromQuery] string UserName) {
         var all = await repo.GetByUserName(UserName);
         return Results.Ok(all);
     }

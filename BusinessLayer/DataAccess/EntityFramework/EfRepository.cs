@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 
 namespace BusinessLayer.DataAccess.EntityFramework;
-public class EfRepository<T> : IRepository<T> where T : class {
+internal class EfRepository<T> : IRepository<T> where T : class {
     protected readonly DbContext _context;
     protected readonly DbSet<T> _dbSet;
     public EfRepository(DbContext context) {

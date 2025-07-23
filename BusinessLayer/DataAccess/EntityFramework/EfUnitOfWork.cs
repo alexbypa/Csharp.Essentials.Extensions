@@ -1,8 +1,7 @@
 ﻿using DataAccessLayer.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.DataAccess.EntityFramework;
-public class EfUnitOfWork : IUnitOfWork {
+internal class EfUnitOfWork : IUnitOfWork {
     private readonly ServiceDbContext _context;
     private readonly Dictionary<Type, object> _repositories = new();
     public EfUnitOfWork(ServiceDbContext context) {

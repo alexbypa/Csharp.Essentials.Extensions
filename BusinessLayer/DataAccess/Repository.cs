@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 
 namespace BusinessLayer.DataAccess;
-public class Repository<TContext, TEntity> : IRepository<TEntity>
+internal class Repository<TContext, TEntity> : IRepository<TEntity>
     where TContext : DbContext
     where TEntity : class {
     protected readonly TContext _context;
