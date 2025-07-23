@@ -9,7 +9,7 @@ Ti propongo una roadmap **SOLIDA**, **testabile**, e pronta a scalare. L'obietti
 1. 🔹 Separare la logica in livelli:
 - [x] Aggiornare Readme.md di Csharp.Essentials.HttpHelper
 - [x] [Includere Migration per entrambi i provider](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/DataAccessLayer/readme.md)
-- [ ] Rendere SOLID le minimal API includendo il pattern IUnitOfWork.cs 
+- [ ] [Rendere SOLID le minimal API includendo il pattern IUnitOfWork.cs ]([BusinessLayer/UnitOfWork.md](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/BusinessLayer/UnitOfWork.md))
 - [ ] Includere ChainOfResponsability
 - [ ] Aggiungere altre chiamate alla API di gitHub
 - [ ] Usare `HttpClientFactory` con named client `GitHub`
