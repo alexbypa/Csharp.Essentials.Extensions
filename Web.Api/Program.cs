@@ -1,25 +1,11 @@
-using BusinessLayer.DataAccess;
-using BusinessLayer.DataAccess.EntityFramework;
-using BusinessLayer.Repository.Github;
 using CSharpEssentials.HttpHelper;
-using DataAccessLayer.Entities;
-using DataAccessLayer.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Web.Api.MinimalApi;
+using BusinessLayer.DataAccess.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region UnitOfWork
-builder.Services.AddDbContext<ServiceDbContext>(options => {
-    // Usa qui il tuo strategy resolver se serve per ambiente dinamico
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
-});
-builder.Services.AddScoped<IRepository<tGitHubOptions>>(sp =>
-    new Repository<ServiceDbContext, tGitHubOptions>(
-        sp.GetRequiredService<ServiceDbContext>())
-);
-builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-builder.Services.AddScoped<IGitHubOptionsRepo, GitHubOptionsRepo>();
+builder.Services.AddUnitOfWorkInfrastructure(builder.Configuration);
 #endregion
 
 #region CSharpEssentials.HttpHelper Package
