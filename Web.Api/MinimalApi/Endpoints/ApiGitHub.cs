@@ -1,11 +1,28 @@
 ﻿using BusinessLayer.Repository.Github;
 using CSharpEssentials.HttpHelper;
+using CSharpEssentials.LoggerHelper;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using HttpMethod = System.Net.Http.HttpMethod;
+
+
+//TODO: verifica pacchetto HttpHelper se funziona tutto provare a pubblicare la versione 4.0.0 e aggiornare doc.md  
+//TODO: Sistemare program.cs e appsettings.json da aggiungere su doc.md
+
 
 namespace Web.Api.MinimalApi.Endpoints;
 public class ApiGitHub : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
+        IContentBuilder contentBuilder = new NoBodyContentBuilder();
+
+        app.MapGet("/demo/github/repos", async (IhttpsClientHelperFactory http) => {
+            var client = http.CreateOrGet("Test1");
+            HttpResponseMessage responseMessage = await client.SendAsync("users/dotnet/repos", HttpMethod.Get, null, contentBuilder);
+            var json = await responseMessage.Content.ReadAsStringAsync();
+            return Results.Content(json, "application/json");
+        })
+.WithSummary("GET repos (mock)")
+.WithDescription("Simula la lettura dei repos (mock via Moq).");
         app.MapGet("/repo/get", getRepoByUser)
             .WithName("getUser")
             .Produces<IResult>(StatusCodes.Status200OK);
@@ -20,8 +37,9 @@ public class ApiGitHub : IEndpointDefinition {
         var all = await repo.GetByUserName(UserName);
         return Results.Ok(all);
     }
-    public async Task<IResult> SearchRepos([FromQuery] string Pattern, [FromServices] IhttpsClientHelper httpFactory) {
+    public async Task<IResult> SearchRepos([FromQuery] string Pattern, [FromServices] IhttpsClientHelperFactory httpFactory) {
         RequestDemo request = new RequestDemo() { IdTransaction = Guid.NewGuid().ToString(), Action = "getRepoByUser" };
+        
         IhttpsClientHelper httpHelper = httpFactory
             .CreateOrGet("Test1")
             .AddRequestAction((req, res, retry, ts) => {
@@ -69,6 +87,8 @@ public class ApiGitHub : IEndpointDefinition {
                 "Eseguita richiesta {req} con risposta {res} numero di retry : {retry}",
                 req, res, retry
                 );
+
+
                 return Task.CompletedTask;
             });
         var username = "alexbypa";

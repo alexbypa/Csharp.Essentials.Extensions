@@ -1,6 +1,7 @@
 using CSharpEssentials.HttpHelper;
 using Web.Api.MinimalApi;
 using BusinessLayer.DataAccess.Configuration;
+using Web.Api.MinimalApi.Mocks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddUnitOfWorkInfrastructure(builder.Configuration);
 #endregion
 
+builder.Services.AddHttpClient("Test1").ConfigurePrimaryHttpMessageHandler(() => HttpMocks.CreateHandler()); // usa il mock per i test
+
 #region CSharpEssentials.HttpHelper Package
 builder.Services.AddHttpClients(builder.Configuration);
 #endregion
+
 
 #region Minimal API
 builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpointDefinition
