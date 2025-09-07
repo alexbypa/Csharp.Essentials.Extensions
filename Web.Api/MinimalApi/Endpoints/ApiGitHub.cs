@@ -1,6 +1,5 @@
 ﻿using BusinessLayer.Repository.Github;
 using CSharpEssentials.HttpHelper;
-using CSharpEssentials.LoggerHelper;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -21,7 +20,7 @@ public class ApiGitHub : IEndpointDefinition {
         var all = await repo.GetByUserName(UserName);
         return Results.Ok(all);
     }
-    public async Task<IResult> SearchRepos([FromQuery] string Pattern, [FromServices] IhttpsClientHelperFactory httpFactory) {
+    public async Task<IResult> SearchRepos([FromQuery] string Pattern, [FromServices] IhttpsClientHelper httpFactory) {
         RequestDemo request = new RequestDemo() { IdTransaction = Guid.NewGuid().ToString(), Action = "getRepoByUser" };
         IhttpsClientHelper httpHelper = httpFactory
             .CreateOrGet("Test1")
