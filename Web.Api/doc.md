@@ -25,13 +25,11 @@ This demo also demonstrates how **HttpHelper** and **LoggerHelper** work togethe
 - Send logs to multiple sinks (Console, File, Telegram, xUnit).  
 - Prepare for future integration with metrics and traces (OpenTelemetry).  
 
-📖 Full documentation here 👉 [LoggerHelper on NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper/)
+📖 Full documentation here 👉 [LoggerHelper](https://github.com/alexbypa/CSharp.Essentials/blob/main/CSharpEssentials.LoggerHelper/doc.md)
 
 ---
 
 ## 🧩 CSharpEssentials Ecosystem
-
-- `CSharpEssentials.HttpHelper` → HttpClient wrapper with configuration support  
 - `CSharpEssentials.LoggerHelper` → structured logging + multi-sink support  
 - `CSharpEssentials.HangFireHelper` → Hangfire extensions  
 - `CSharp.Essentials.Extensions` → **this demo repository**
@@ -43,7 +41,7 @@ This demo also demonstrates how **HttpHelper** and **LoggerHelper** work togethe
 This repository serves as a **unified demo** to show how to:
 
 - Configure the packages.  
-- Integrate them into a .NET 8 Web API.  
+- Integrate them into a .NET 6/8/9 Web API.  
 - Use available sinks and extensions.  
 
-👉 Future updates will also include a **premium dashboard** for metrics and traces.
+👉 Future updates will also include a **premium dashboard** for metrics and traces and other.
