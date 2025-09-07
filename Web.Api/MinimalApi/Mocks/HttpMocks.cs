@@ -88,7 +88,7 @@ public class HttpMocks {
                     r.RequestUri.AbsolutePath.Contains("/timeout")),
                 ItExpr.IsAny<CancellationToken>())
             .Returns(async () => {
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(1));
                 return new HttpResponseMessage(HttpStatusCode.OK) {
                     Content = new StringContent("""{"delayed":true}""", Encoding.UTF8, "application/json")
                 };

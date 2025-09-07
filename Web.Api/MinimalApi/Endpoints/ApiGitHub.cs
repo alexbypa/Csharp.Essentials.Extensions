@@ -15,14 +15,15 @@ public class ApiGitHub : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
 
-        app.MapGet("/demo/github/repos", async (IhttpsClientHelperFactory http) => {
-            var client = http.CreateOrGet("Test1");
-            HttpResponseMessage responseMessage = await client.SendAsync("users/dotnet/repos", HttpMethod.Get, null, contentBuilder);
+        app.MapGet("demo/github/repos", async (IhttpsClientHelperFactory http) => {
+            
+            var client = http.CreateOrGet("Test1").addTimeout(TimeSpan.FromSeconds(3));
+            HttpResponseMessage responseMessage = await client.SendAsync("http://www.yousite.com/test/timeout", HttpMethod.Get, null, contentBuilder);
             var json = await responseMessage.Content.ReadAsStringAsync();
             return Results.Content(json, "application/json");
-        })
-.WithSummary("GET repos (mock)")
-.WithDescription("Simula la lettura dei repos (mock via Moq).");
+        
+        });
+        
         app.MapGet("/repo/get", getRepoByUser)
             .WithName("getUser")
             .Produces<IResult>(StatusCodes.Status200OK);

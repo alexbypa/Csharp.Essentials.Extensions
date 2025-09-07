@@ -9,12 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddUnitOfWorkInfrastructure(builder.Configuration);
 #endregion
 
-builder.Services.AddHttpClient("Test1").ConfigurePrimaryHttpMessageHandler(() => HttpMocks.CreateHandler()); // usa il mock per i test
 
 #region CSharpEssentials.HttpHelper Package
 builder.Services.AddHttpClients(builder.Configuration);
 #endregion
 
+builder.Services.AddHttpClient("Test1").ConfigurePrimaryHttpMessageHandler(() => HttpMocks.CreateHandler()); // usa il mock per i test
 
 #region Minimal API
 builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpointDefinition
@@ -22,12 +22,15 @@ builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpoin
 
 builder.Services.AddOpenApi();
 
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+    
 
 app.UseHttpsRedirection();
 
