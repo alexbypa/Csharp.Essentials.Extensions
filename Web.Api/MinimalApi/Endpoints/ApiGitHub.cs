@@ -15,24 +15,34 @@ public class ApiGitHub : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
 
-        app.MapGet("demo/github/repos", async (IhttpsClientHelperFactory http) => {
-            
-            var client = http.CreateOrGet("Test1").addTimeout(TimeSpan.FromSeconds(3));
+        app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory http) => {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(3);
+            var client = http.CreateOrGet("Test1").addTimeout(timeSpan).AddRequestAction((req, res, retry, ts) => {
+                Console.WriteLine(res);
+                return Task.CompletedTask;
+            });
             HttpResponseMessage responseMessage = await client.SendAsync("http://www.yousite.com/test/timeout", HttpMethod.Get, null, contentBuilder);
             var json = await responseMessage.Content.ReadAsStringAsync();
             return Results.Content(json, "application/json");
         
-        });
-        
+        }).WithSummary("List repositories (mock)")
+          .WithTags("HttpHelper")
+          .WithName("Test Timeout");
         app.MapGet("/repo/get", getRepoByUser)
             .WithName("getUser")
-            .Produces<IResult>(StatusCodes.Status200OK);
+            .Produces<IResult>(StatusCodes.Status200OK)
+            .WithTags("LoggerHelper");
         app.MapGet("/repos/search", SearchRepos)
             .WithName("SearchRepos")
-            .Produces<IResult>(StatusCodes.Status200OK);
+            .Produces<IResult>(StatusCodes.Status200OK)
+            .WithTags("LoggerHelper / PostgreSQL")
+            .WithGroupName("HttpHelper");
         app.MapGet("/testuow", testUoW)
             .WithName("testUoW")
-            .Produces<IResult>(StatusCodes.Status200OK);
+            .Produces<IResult>(StatusCodes.Status200OK)
+            .WithTags("LoggerHelper / MS SQL")
+            .WithGroupName("HttpHelper");
+        
     }
     public async Task<IResult> testUoW([FromServices] IGitHubOptionsRepo repo, [FromQuery] string UserName) {
         var all = await repo.GetByUserName(UserName);

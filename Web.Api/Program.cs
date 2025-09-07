@@ -1,6 +1,8 @@
-using CSharpEssentials.HttpHelper;
-using Web.Api.MinimalApi;
 using BusinessLayer.DataAccess.Configuration;
+using CSharpEssentials.HttpHelper;
+using Microsoft.Extensions.Options;
+using Scalar.AspNetCore;
+using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Mocks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,11 +28,9 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-    
+app.MapOpenApi();
+
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 
