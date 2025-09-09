@@ -18,10 +18,11 @@ public class ApiGitHub : IEndpointDefinition {
         app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory http) => {
             TimeSpan timeSpan = TimeSpan.FromSeconds(3);
             var client = http.CreateOrGet("Test1").addTimeout(timeSpan).AddRequestAction((req, res, retry, ts) => {
-                Console.WriteLine(res);
+                Console.WriteLine(res.Content.ReadAsStringAsync());
                 return Task.CompletedTask;
-            });
-            HttpResponseMessage responseMessage = await client.SendAsync("http://www.yousite.com/test/timeout", HttpMethod.Get, null, contentBuilder);
+            })
+            .addRetryCondition((res) => res.StatusCode == System.Net.HttpStatusCode.InternalServerError, 3, 0.5);
+            HttpResponseMessage responseMessage = await client.SendAsync("http://www.yousite.com/retry", HttpMethod.Get, null, contentBuilder);
             var json = await responseMessage.Content.ReadAsStringAsync();
             return Results.Content(json, "application/json");
         

@@ -11,15 +11,20 @@ public static class EndpointDefinitionExtensions {
                         && !t.IsAbstract);
 
         foreach (var implementation in implementations) {
-            services.AddSingleton(endpointDefinitionType, implementation);
+            services.AddTransient(endpointDefinitionType, implementation);
         }
 
         return services;
     }
     public static WebApplication UseEndpointDefinitions(this WebApplication app) {
-        var defs = app.Services.GetServices<IEndpointDefinition>();
+        using var scope = app.Services.CreateScope(); // <-- crea scope
+        var defs = scope.ServiceProvider.GetServices<IEndpointDefinition>();
         foreach (var def in defs)
             def.DefineEndpoints(app);
-        return app;
+        return app;        
+        //var defs = app.Services.GetServices<IEndpointDefinition>();
+        //foreach (var def in defs)
+        //    def.DefineEndpoints(app);
+        //return app;
     }
 }
