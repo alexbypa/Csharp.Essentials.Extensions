@@ -2,6 +2,7 @@
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using HttpMethod = System.Net.Http.HttpMethod;
 
@@ -17,7 +18,7 @@ public class ApiGitHub : IEndpointDefinition {
 
         app.MapGet("Test/AddAction", async (IhttpsClientHelperFactory http) => {
             TimeSpan timeSpan = TimeSpan.FromSeconds(30);
-            var client = http.CreateOrGet("Test1").addTimeout(timeSpan).AddRequestAction((req, res, retry, ts) => {
+            var client = http.CreateOrGet("Test_No_RateLimit").addTimeout(timeSpan).AddRequestAction((req, res, retry, ts) => {
                 Console.BackgroundColor = ConsoleColor.Blue;
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine($"Http status response was: {res.StatusCode.ToString()}");
@@ -32,7 +33,7 @@ public class ApiGitHub : IEndpointDefinition {
 
         app.MapGet("Test/retry", async (IhttpsClientHelperFactory http) => {
             TimeSpan timeSpan = TimeSpan.FromSeconds(30);
-            var client = http.CreateOrGet("Test1")
+            var client = http.CreateOrGet("Test_No_RateLimit")
             .addTimeout(timeSpan)
             .ClearRequestActions()
             .AddRequestAction((req, res, retry, ts) => {
@@ -51,8 +52,9 @@ public class ApiGitHub : IEndpointDefinition {
 
         app.MapGet("Test/testtimeout", async (IhttpsClientHelperFactory http) => {
             TimeSpan timeSpan = TimeSpan.FromSeconds(1);
-            var client = http.CreateOrGet("Test1")
+            var client = http.CreateOrGet("Test_No_RateLimit")
             .addTimeout(timeSpan)
+            .ClearRequestActions()
             .AddRequestAction((req, res, retry, ts) => {
                 Console.BackgroundColor = ConsoleColor.Blue;
                 Console.ForegroundColor = ConsoleColor.White;
@@ -66,6 +68,25 @@ public class ApiGitHub : IEndpointDefinition {
         }).WithSummary("Test Timeout")
           .WithTags("HttpHelper");
 
+        app.MapGet("Test/testratelimit", async (IhttpsClientHelperFactory http) => {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(30);
+            var client = http.CreateOrGet("Test_With_RateLimit")
+            .addTimeout(timeSpan)
+            .ClearRequestActions()
+            .AddRequestAction((req, res, retry, ts) => {
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                var header = req.Headers.FirstOrDefault(x => x.Key == "X-RateLimit-TimeSpanElapsed");
+                Console.WriteLine($"{DateTime.Now.ToLongTimeString()}: On request {req.RequestUri.AbsolutePath} Http status response was: [{res.StatusCode.ToString()}] X-RateLimit-TimeSpanElapsed: {header.Value.FirstOrDefault()}");
+                Console.ResetColor();
+                return Task.CompletedTask;
+            });
+            for (int i = 0; i < 10; i++) {
+                var responseMessage = await client.SendAsync($"http://www.yousite.com/users/get/{i}", HttpMethod.Get, null, contentBuilder);
+            }
+            return Results.Content(content: "Page called", contentType: "application/json", statusCode: 200);
+        }).WithSummary("Test Rate Limit")
+          .WithTags("HttpHelper");
+
 
 
         app.MapGet("/repo/get", getRepoByUser)
@@ -74,7 +95,6 @@ public class ApiGitHub : IEndpointDefinition {
             .WithTags("LoggerHelper");
         app.MapGet("/repos/search", SearchRepos)
             .WithName("SearchRepos")
-
             .Produces<IResult>(StatusCodes.Status200OK)
             .WithTags("LoggerHelper / PostgreSQL")
             .WithGroupName("HttpHelper");

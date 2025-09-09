@@ -13,10 +13,11 @@ builder.Services.AddUnitOfWorkInfrastructure(builder.Configuration);
 
 
 #region CSharpEssentials.HttpHelper Package
-builder.Services.AddHttpClients(builder.Configuration);
+builder.Services.AddHttpClients(builder.Configuration, null);
+builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
 
-builder.Services.AddHttpClient("Test1").ConfigurePrimaryHttpMessageHandler(() => HttpMocks.CreateHandler()); // usa il mock per i test
+
 
 #region Minimal API
 builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpointDefinition
