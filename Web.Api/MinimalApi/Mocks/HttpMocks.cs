@@ -52,7 +52,8 @@ public class HttpMocks {
                     r.RequestUri != null &&
                     r.RequestUri.AbsolutePath.Contains("/retry")),
                 ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(async () => {
+            .ReturnsAsync(() => {
+                Task.Delay(500).GetAwaiter().GetResult(); // Simula un piccolo ritardo
                 if (retryCount < 2) {
                     retryCount++;
                     return new HttpResponseMessage(HttpStatusCode.InternalServerError) {
