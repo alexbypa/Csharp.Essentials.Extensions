@@ -15,26 +15,66 @@ public class ApiGitHub : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
 
-        app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory http) => {
-            TimeSpan timeSpan = TimeSpan.FromSeconds(3);
+        app.MapGet("Test/AddAction", async (IhttpsClientHelperFactory http) => {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(30);
             var client = http.CreateOrGet("Test1").addTimeout(timeSpan).AddRequestAction((req, res, retry, ts) => {
-                Console.WriteLine(res.Content.ReadAsStringAsync());
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"Http status response was: {res.StatusCode.ToString()}");
+                Console.ResetColor();
+                return Task.CompletedTask;
+            });
+            HttpResponseMessage responseMessage = await client.SendAsync("http://www.yousite.com/users/get", HttpMethod.Get, null, contentBuilder);
+            var json = await responseMessage.Content.ReadAsStringAsync();
+            return Results.Content(json, "application/json");
+        }).WithSummary("Add Action")
+          .WithTags("HttpHelper");
+
+        app.MapGet("Test/retry", async (IhttpsClientHelperFactory http) => {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(30);
+            var client = http.CreateOrGet("Test1")
+            .addTimeout(timeSpan)
+            .ClearRequestActions()
+            .AddRequestAction((req, res, retry, ts) => {
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"Http status response was: {res.StatusCode.ToString()}");
+                Console.ResetColor();
                 return Task.CompletedTask;
             })
             .addRetryCondition((res) => res.StatusCode == System.Net.HttpStatusCode.InternalServerError, 3, 0.5);
             HttpResponseMessage responseMessage = await client.SendAsync("http://www.yousite.com/retry", HttpMethod.Get, null, contentBuilder);
             var json = await responseMessage.Content.ReadAsStringAsync();
             return Results.Content(json, "application/json");
-        
-        }).WithSummary("List repositories (mock)")
-          .WithTags("HttpHelper")
-          .WithName("Test Timeout");
+        }).WithSummary("Test Retry")
+          .WithTags("HttpHelper");
+
+        app.MapGet("Test/testtimeout", async (IhttpsClientHelperFactory http) => {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(1);
+            var client = http.CreateOrGet("Test1")
+            .addTimeout(timeSpan)
+            .AddRequestAction((req, res, retry, ts) => {
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"{DateTime.Now.ToShortTimeString()}: Http status response was: {res.StatusCode.ToString()}");
+                Console.ResetColor();
+                return Task.CompletedTask;
+            });
+            var responseMessage = await client.SendAsync("http://www.yousite.com/timeout", HttpMethod.Get, null, contentBuilder);
+            var json = await responseMessage.Content.ReadAsStringAsync();
+            return Results.Content(content: json, contentType: "application/json", statusCode: (int)responseMessage.StatusCode);
+        }).WithSummary("Test Timeout")
+          .WithTags("HttpHelper");
+
+
+
         app.MapGet("/repo/get", getRepoByUser)
             .WithName("getUser")
             .Produces<IResult>(StatusCodes.Status200OK)
             .WithTags("LoggerHelper");
         app.MapGet("/repos/search", SearchRepos)
             .WithName("SearchRepos")
+
             .Produces<IResult>(StatusCodes.Status200OK)
             .WithTags("LoggerHelper / PostgreSQL")
             .WithGroupName("HttpHelper");
@@ -43,7 +83,7 @@ public class ApiGitHub : IEndpointDefinition {
             .Produces<IResult>(StatusCodes.Status200OK)
             .WithTags("LoggerHelper / MS SQL")
             .WithGroupName("HttpHelper");
-        
+
     }
     public async Task<IResult> testUoW([FromServices] IGitHubOptionsRepo repo, [FromQuery] string UserName) {
         var all = await repo.GetByUserName(UserName);
@@ -51,7 +91,7 @@ public class ApiGitHub : IEndpointDefinition {
     }
     public async Task<IResult> SearchRepos([FromQuery] string Pattern, [FromServices] IhttpsClientHelperFactory httpFactory) {
         RequestDemo request = new RequestDemo() { IdTransaction = Guid.NewGuid().ToString(), Action = "getRepoByUser" };
-        
+
         IhttpsClientHelper httpHelper = httpFactory
             .CreateOrGet("Test1")
             .AddRequestAction((req, res, retry, ts) => {
@@ -59,7 +99,7 @@ public class ApiGitHub : IEndpointDefinition {
                 return Task.CompletedTask;
             });
 
-        string searchTerm = Pattern; 
+        string searchTerm = Pattern;
         string url = $"https://api.github.com/search/repositories?q={searchTerm}+in:name&per_page=10";
 
         httpHelper.setHeadersAndBearerAuthentication(new Dictionary<string, string> { { "User-Agent", "MyGitHubApp" } }, new httpsClientHelper.httpClientAuthenticationBearer("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"));

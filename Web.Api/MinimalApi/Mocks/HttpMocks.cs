@@ -26,7 +26,7 @@ public class HttpMocks {
                 ItExpr.Is<HttpRequestMessage>(r =>
                     r.Method == HttpMethod.Get &&
                     r.RequestUri != null &&
-                    r.RequestUri.AbsolutePath.Contains("/users/dotnet/repos")),
+                    r.RequestUri.AbsolutePath.Contains("/users/get")),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(repoJson, Encoding.UTF8, "application/json")
@@ -40,7 +40,7 @@ public class HttpMocks {
                     r.RequestUri != null &&
                     r.RequestUri.AbsolutePath.Contains("/not-found")),
                 ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NotFound) {
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.NotFound) {
                 Content = new StringContent("""{"message":"Not Found"}""", Encoding.UTF8, "application/json")
             });
 
@@ -52,19 +52,20 @@ public class HttpMocks {
                     r.RequestUri != null &&
                     r.RequestUri.AbsolutePath.Contains("/retry")),
                 ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(() => {
+            .ReturnsAsync(async () => {
                 if (retryCount < 2) {
                     retryCount++;
                     return new HttpResponseMessage(HttpStatusCode.InternalServerError) {
                         Content = new StringContent("""{"message":"Transient error"}""", Encoding.UTF8, "application/json")
                     };
                 }
+                retryCount = 0; 
                 return new HttpResponseMessage(HttpStatusCode.OK) {
                     Content = new StringContent("""{"ok":true}""", Encoding.UTF8, "application/json")
                 };
             });
 
-        // POST: /echo  -> ritorna esattamente il body ricevuto
+        // POST: /echo  -> 
         mock.Protected()
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
@@ -87,8 +88,9 @@ public class HttpMocks {
                     r.RequestUri != null &&
                     r.RequestUri.AbsolutePath.Contains("/timeout")),
                 ItExpr.IsAny<CancellationToken>())
-            .Returns(async () => {
-                await Task.Delay(TimeSpan.FromSeconds(1));
+            .Returns<HttpRequestMessage, CancellationToken>(async (req, ct) => {
+                await Task.Delay(TimeSpan.FromSeconds(30), ct);
+                ct.ThrowIfCancellationRequested();
                 return new HttpResponseMessage(HttpStatusCode.OK) {
                     Content = new StringContent("""{"delayed":true}""", Encoding.UTF8, "application/json")
                 };
