@@ -1,9 +1,7 @@
 using BusinessLayer.DataAccess.Configuration;
 using CSharpEssentials.HttpHelper;
-using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
-using Web.Api.MinimalApi.Mocks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +12,6 @@ builder.Services.AddUnitOfWorkInfrastructure(builder.Configuration);
 
 #region CSharpEssentials.HttpHelper Package
 builder.Services.AddHttpClients(builder.Configuration, null);
-builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
 
 

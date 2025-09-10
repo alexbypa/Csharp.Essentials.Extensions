@@ -88,7 +88,7 @@ public class ApiGitHub : IEndpointDefinition {
           .WithTags("HttpHelper");
 
 
-
+        /*
         app.MapGet("/repo/get", getRepoByUser)
             .WithName("getUser")
             .Produces<IResult>(StatusCodes.Status200OK)
@@ -103,8 +103,9 @@ public class ApiGitHub : IEndpointDefinition {
             .Produces<IResult>(StatusCodes.Status200OK)
             .WithTags("LoggerHelper / MS SQL")
             .WithGroupName("HttpHelper");
-
+        */
     }
+    /*
     public async Task<IResult> testUoW([FromServices] IGitHubOptionsRepo repo, [FromQuery] string UserName) {
         var all = await repo.GetByUserName(UserName);
         return Results.Ok(all);
@@ -178,6 +179,7 @@ public class ApiGitHub : IEndpointDefinition {
             return Results.StatusCode((int)responseMessage.StatusCode);
         }
     }
+    */
 }
 
 public class RequestDemo : IRequest {
@@ -187,38 +189,3 @@ public class RequestDemo : IRequest {
 
     public string ApplicationName { get; set; }
 }
-
-/*
-
- 2. 📄 Ottenere il contenuto del README.md di un repo
-csharp
-Copia
-Modifica
-var url = "https://api.github.com/repos/alexbypa/recap/readme";
-
-var response = await httpClient.GetAsync(url);
-var json = await response.Content.ReadAsStringAsync();
-Console.WriteLine(json);
-
-6. 🧪 Leggere workflow runs (es. test CI/CD GitHub Actions)
-csharp
-Copia
-Modifica
-var url = "https://api.github.com/repos/alexbypa/recap/actions/runs";
-
-var response = await httpClient.GetAsync(url);
-var json = await response.Content.ReadAsStringAsync();
-Console.WriteLine(json);
-
-7. ✅ Ottenere copertura test (es. da un file coverage.json nel repo)
-Se salvi un file di test coverage (es. da coverlet) in GitHub puoi usare l’API per leggerlo:
-
-csharp
-Copia
-Modifica
-var url = "https://api.github.com/repos/alexbypa/recap/contents/coverage/coverage.json";
-
-var response = await httpClient.GetAsync(url);
-var json = await response.Content.ReadAsStringAsync();
-Console.WriteLine(json);
-*/
