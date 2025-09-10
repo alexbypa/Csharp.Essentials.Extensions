@@ -15,11 +15,12 @@ These packages are intentionally lightweight. You can add only what you need, ke
 
 ---
 
-## Contents
+## 📑 Table of Contents <a id='table-of-contents'></a>
 
 - [Using HttpHelper](#using-httphelper)
+- [Using LoggerHelper MSSQL](#using-loggerhelper-mssql)
 
-## Using HttpHelper
+## Using HttpHelper<a id='using-httphelper'></a>   [🔝](#table-of-contents)
 
 This section explains how to install **HttpHelper** and configure your project to run the demo. Detailed Minimal API examples for each HttpHelper method will be added later.
 
@@ -307,7 +308,9 @@ Console.WriteLine(result);
 
 
 ---
+## Using LoggerHelper MSSQL<a id='using-httphelper'></a>   [🔝](#table-of-contents)
 
+---
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!
