@@ -1,6 +1,7 @@
 # Csharp.Essentials
 
-A **modular helper library for .NET** projects designed to make common tasks like HTTP calls, background jobs and logging easier and more robust.  This repository contains demonstrations and extensions for the **Csharp.Essentials** NuGet packages.
+A **modular helper library for .NET** projects designed to make common tasks like HTTP calls, background jobs and logging easier and more robust.  
+This repository contains demonstrations and extensions for the **Csharp.Essentials** NuGet packages.
 
 Csharp.Essentials provides several packages that can be used independently or together depending on your project’s needs:
 
@@ -10,7 +11,7 @@ Csharp.Essentials provides several packages that can be used independently or to
 | **CSharpEssentials.LoggerHelper** | Provides logging helpers that leverage Serilog sinks to trace HTTP requests and responses:contentReference[oaicite:1]{index=1}. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper) |
 | **CSharpEssentials.LoggerHelper.Sink.MSSqlServer** | Adds an MSSQL sink for durable log storage. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.MSSqlServer) |
 
-These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable:contentReference[oaicite:2]{index=2}.
+These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable.
 
 ---
 
@@ -33,7 +34,8 @@ Install the core packages via the .NET CLI:
 
 ### Program.cs setup
 
-To start the demo, you only need to register the HttpHelper clients and enable the OpenAPI + Scalar documentation. The Minimal API endpoints themselves will be defined elsewhere in the project.
+To start the demo, you only need to register the HttpHelper clients and enable the OpenAPI + Scalar documentation. 
+The Minimal API endpoints themselves will be defined elsewhere in the project.
 
 ```csharp
 using CSharpEssentials.HttpHelper;
@@ -149,13 +151,6 @@ Console.WriteLine(result);
 * The first parameter (`Dictionary<string, string>`) allows you to inject any custom headers.
 * The second parameter (`httpClientAuthenticationBearer`) automatically adds the `Authorization: Bearer ...` header.
 
----
-
-## 📌 Roadmap
-
-* More built-in authentication helpers (Basic, OAuth2).
-* Extended logging hooks.
-* Built-in metrics for performance and retries.
 
 ---
 
