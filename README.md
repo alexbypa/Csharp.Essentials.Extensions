@@ -77,7 +77,6 @@ The actual endpoints demonstrating HttpHelper usage (GET, POST with retries, log
 ## 📖 Usage Examples
 
 ### 1. Simple GET request
-
 ```csharp
 IhttpsClientHelperFactory factory = ...;
 IContentBuilder contentBuilder = new NoBodyContentBuilder();
@@ -92,7 +91,16 @@ HttpResponseMessage response = await client.SendAsync(
 
 string result = await response.Content.ReadAsStringAsync();
 Console.WriteLine(result);
-```
+````
+
+---
+
+## 🧩 Supported Content Builders
+
+* `JsonContentBuilder` → for `application/json`
+* `FormUrlEncodedContentBuilder` → for form data
+* `XmlContentBuilder` → for `application/xml`
+* `NoBodyContentBuilder` → for `GET / DELETE`
 
 ---
 
@@ -142,15 +150,6 @@ HttpResponseMessage response = await client.SendAsync(
 string result = await response.Content.ReadAsStringAsync();
 Console.WriteLine(result);
 ```
-
----
-
-## 🧩 Supported Content Builders
-
-* `JsonContentBuilder` → for `application/json`
-* `FormUrlEncodedContentBuilder` → for form data
-* `XmlContentBuilder` → for `application/xml`
-* `NoBodyContentBuilder` → for `GET / DELETE`
 
 ---
 

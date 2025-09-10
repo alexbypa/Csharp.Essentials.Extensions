@@ -1,14 +1,9 @@
 ﻿using CSharpEssentials.HttpHelper;
-using CSharpEssentials.LoggerHelper;
-using Microsoft.Identity.Client;
-using Microsoft.OpenApi.Any;
-using static CSharpEssentials.HttpHelper.httpsClientHelper;
-using static System.Net.WebRequestMethods;
 using HttpMethod = System.Net.Http.HttpMethod;
 
 
 namespace Web.Api.MinimalApi.Endpoints;
-public class ApiGitHub : IEndpointDefinition {
+public class ApiHttpHelperDemo : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
 
