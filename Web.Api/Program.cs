@@ -1,15 +1,19 @@
 using BusinessLayer.DataAccess.Configuration;
 using CSharpEssentials.HttpHelper;
+using CSharpEssentials.LoggerHelper.Configuration;
+using Scalar;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Mocks;
-using Scalar;
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region CSharpEssentials.HttpHelper Package
 //builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
 builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
+#endregion
+#region Logger Configuration
+builder.Services.AddloggerConfiguration(builder);
 #endregion
 
 
