@@ -89,6 +89,12 @@ public class ApiGitHub : IEndpointDefinition {
 
 
         /*
+            //on program
+            #region UnitOfWork
+                builder.Services.AddUnitOfWorkInfrastructure(builder.Configuration);
+            #endregion
+        */
+        /*
         app.MapGet("/repo/get", getRepoByUser)
             .WithName("getUser")
             .Produces<IResult>(StatusCodes.Status200OK)

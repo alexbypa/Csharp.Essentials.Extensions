@@ -2,18 +2,14 @@ using BusinessLayer.DataAccess.Configuration;
 using CSharpEssentials.HttpHelper;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
+using Web.Api.MinimalApi.Mocks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region UnitOfWork
-builder.Services.AddUnitOfWorkInfrastructure(builder.Configuration);
-#endregion
-
-
 #region CSharpEssentials.HttpHelper Package
-builder.Services.AddHttpClients(builder.Configuration, null);
+//builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
+builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
-
 
 
 #region Minimal API
@@ -21,8 +17,6 @@ builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpoin
 #endregion
 
 builder.Services.AddOpenApi();
-
-
 
 var app = builder.Build();
 
