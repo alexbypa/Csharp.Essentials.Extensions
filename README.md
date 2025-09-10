@@ -60,7 +60,7 @@ You will see all available demo endpoints (e.g. **Simple Request**, **Bearer tok
 
 ### Screenshot
 
-![Scalar Demo](docs/images/scalar-demo.png)
+![Scalar Demo](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/Web.Api/docs/images/scalar-demo.png)
 
 ---
 
