@@ -23,6 +23,52 @@ These packages are intentionally lightweight. You can add only what you need, ke
 
 This section explains how to install **HttpHelper** and configure your project to run the demo. Detailed Minimal API examples for each HttpHelper method will be added later.
 
+## Demo project with Scalar UI
+
+The repository also provides a **Demo project** that you can run locally to explore the library with [Scalar](https://github.com/scalar/scalar) — a next-generation OpenAPI/Swagger UI that offers a much clearer and more modern developer experience.
+
+### Why Scalar?
+- Cleaner interface than the traditional Swagger UI.  
+- Easy testing of endpoints directly from the browser.  
+- Clear display of query parameters, responses, and examples.  
+- Modern dark/light theme and responsive layout.
+
+### How to run the Demo
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/alexbypa/Csharp.Essentials.Extensions.git
+   cd Csharp.Essentials.Extensions/Demo
+````
+
+2. Restore dependencies and run:
+
+   ```bash
+   dotnet restore
+   dotnet run
+   ```
+
+3. Open Scalar UI in your browser:
+
+   ```
+   http://localhost:1234/scalar
+   ```
+
+You will see all available demo endpoints (e.g. **Simple Request**, **Bearer token check**, **Retry**, **Timeout**, **Rate Limit**) already documented in Scalar, ready to be tested.
+
+---
+
+### Screenshot
+
+![Scalar Demo](docs/images/scalar-demo.png)
+
+---
+
+> 💡 We suggest running the Demo project to get familiar with the library before integrating it into your own solution.
+> Scalar is fully integrated and automatically reflects your API endpoints without additional setup.
+
+
+
 ### Installation
 
 Install the core packages via the .NET CLI:
