@@ -1,133 +1,34 @@
-# Csharp.Essentials
+# CSharp.Essentials.Extensions
 
-A **modular helper library for .NET** projects designed to make common tasks like HTTP calls, background jobs and logging easier and more robust.  
-This repository contains demonstrations and extensions for the **Csharp.Essentials** NuGet packages.
+## 📖 Overview
+CSharp.Essentials.Extensions is a collection of helper libraries that simplify common .NET development scenarios.  
+It provides ready-to-use HTTP client helpers, structured logging with multiple sinks, and useful extension methods.
 
-Csharp.Essentials provides several packages that can be used independently or together depending on your project’s needs:
+---
+
+## 📦 NuGet Packages
 
 | Package | Description | NuGet |
 |---|---|---|
-| **CSharpEssentials.HttpHelper** | Simplifies `HttpClient` usage with built‑in resiliency (retries/fallbacks) and rate‑limiting strategies:contentReference[oaicite:0]{index=0}. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.HttpHelper) |
-| **CSharpEssentials.LoggerHelper** | Provides logging helpers that leverage Serilog sinks to trace HTTP requests and responses:contentReference[oaicite:1]{index=1}. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper) |
-| **CSharpEssentials.LoggerHelper.Sink.MSSqlServer** | Adds an MSSQL sink for durable log storage. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.MSSqlServer) |
-
-These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable.
+| **CSharpEssentials.HttpHelper** | Simplifies `HttpClient` usage with built-in resiliency (retries/fallbacks) and rate-limiting strategies. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.HttpHelper) |
+| **CSharpEssentials.Extensions** | Provides essential C# extension methods to simplify development. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.Extensions) |
+| **CSharpEssentials.LoggerHelper** | Structured logging helper built on top of Serilog, with sinks for multiple providers. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper) |
 
 ---
 
-## Contents
+## ⚙️ Configuration
 
-- [Using HttpHelper](#using-httphelper)
+### `appsettings.json`
 
-## Using HttpHelper
-
-This section explains how to install **HttpHelper** and configure your project to run the demo. Detailed Minimal API examples for each HttpHelper method will be added later.
-
-## Demo project with Scalar UI
-
-The repository also provides a **Demo project** that you can run locally to explore the library with [Scalar](https://github.com/scalar/scalar) — a next-generation OpenAPI/Swagger UI that offers a much clearer and more modern developer experience.
-
-### Why Scalar?
-- Cleaner interface than the traditional Swagger UI.  
-- Easy testing of endpoints directly from the browser.  
-- Clear display of query parameters, responses, and examples.  
-- Modern dark/light theme and responsive layout.
-
-### How to run the Demo
-
-1. Clone the repository:
-```bash
-   git clone https://github.com/alexbypa/Csharp.Essentials.Extensions.git
-   cd Csharp.Essentials.Extensions/Demo
-````
-
-2. Restore dependencies and run:
-
-```bash
-   dotnet restore
-   dotnet run
-```
-
-3. Open Scalar UI in your browser:
-
-```bash
-   http://localhost:1234/scalar
-```
-
-You will see all available demo endpoints (e.g. **Simple Request**, **Bearer token check**, **Retry**, **Timeout**, **Rate Limit**) already documented in Scalar, ready to be tested.
-
----
-
-### Screenshot
-
-![Scalar Demo](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/Web.Api/docs/images/scalar-demo.png)
-
----
-
-> 💡 We suggest running the Demo project to get familiar with the library before integrating it into your own solution.
-> Scalar is fully integrated and automatically reflects your API endpoints without additional setup.
-
-### Installation
-
-Install the core packages via the .NET CLI:
-
-```bash
-# HttpHelper – resilient HTTP calls with rate limiting
- dotnet add package CSharpEssentials.HttpHelper
-````
-
-### Program.cs setup
-
-To start the demo, you only need to register the HttpHelper clients and enable the OpenAPI + Scalar documentation. 
-The Minimal API endpoints themselves will be defined elsewhere in the project.
-
-```csharp
-using CSharpEssentials.HttpHelper;
-using Scalar.AspNetCore;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Register HttpHelper clients. The configuration section `HttpClientOptions` in appsettings.json
-// allows you to specify certificates, rate limit settings and more content.
-// If you are not using a custom HttpMessageHandler (e.g. Moq for tests), pass null as the second argument.
-builder.Services.AddHttpClients(builder.Configuration, null);
-//Otwerwise use this: 
-//builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
-
-// Add OpenAPI document generation and Scalar UI for interactive docs
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Expose the OpenAPI JSON and the Scalar UI
-app.MapOpenApi();
-app.MapScalarApiReference();
-
-// Optional: force HTTPS redirection for local development
-app.UseHttpsRedirection();
-
-app.Run();
-```
-
-This `Program.cs` sets up:
-
-* Registration of **HttpHelper** via `AddHttpClients`, which reads options like `PermitLimit`, `QueueLimit` and certificate settings from `HttpClientOptions` in your configuration file.
-* Built in OpenAPI document generation (available at `/openapi/v1.json`) and **Scalar** as an interactive UI for exploring the API.
-
-The actual endpoints demonstrating HttpHelper usage (GET, POST with retries, logging, etc.) will be defined in subsequent sections of this repository.
-
----
-## Configuration with `appsettings.json`
-
-This library is designed to work with a centralized configuration stored in `appsettings.json`.  
-Below you will find an explanation of all the available sections and how they affect the behavior of the extension.
-
----
-
-### Example `appsettings.json`
+The libraries support centralized configuration via `appsettings.json`.  
+Below is a real example showing all available keys:
 
 ```json
 {
+  "DatabaseProvider": "SqlServer",
+  "ConnectionStrings": {
+    "Default": "Server=YOUR_SERVER;Database=YOUR_DB;User Id=YOUR_USER;Password=YOUR_PWD;"
+  },
   "HttpClientOptions": [
     {
       "name": "Test_No_RateLimit",
@@ -161,161 +62,121 @@ Below you will find an explanation of all the available sections and how they af
       },
       "UseMock": true
     }
-  ]
+  ],
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  }
 }
 ````
 
 ---
 
-### Sections explained
+## 🚀 Usage
 
-#### `HttpClientOptions`
-
-A list of **preconfigured HTTP clients**. Each object represents one named client.
-
-* **`name`**
-  Identifier of the client. Used when calling `http.CreateOrGet("ClientName")`.
-
-* **`certificate`**
-  Optional certificate to be attached to the client.
-
-  * `path`: File system path to the `.pfx` or certificate file.
-  * `password`: Password protecting the certificate.
-
-* **`RateLimitOptions`**
-  Controls throttling behavior for outgoing requests.
-
-  * `AutoReplenishment`: If `true`, permits are automatically restored at the end of each window.
-  * `PermitLimit`: Maximum number of requests allowed per window segment.
-  * `QueueLimit`: Maximum number of requests waiting in the queue when the limit is exceeded.
-  * `Window`: Time window (e.g. `"00:00:15"` = 15 seconds).
-  * `SegmentsPerWindow`: Splits the window into smaller segments for more precise limiting.
-  * `IsEnabled`: Enables (`true`) or disables (`false`) rate limiting.
-
-* **`UseMock`**
-  If `true`, the client uses an internal mock/handler instead of making real HTTP calls (useful for testing).
-
----
-
-## 📖 Usage Examples
-
-### 1. Simple GET request
-```csharp
-IhttpsClientHelperFactory factory = ...;
-IContentBuilder contentBuilder = new NoBodyContentBuilder();
-
-var client = factory.CreateOrGet("Test_No_RateLimit");
-
-HttpResponseMessage response = await client.SendAsync(
-    "https://jsonplaceholder.typicode.com/posts/1",
-    HttpMethod.Get,
-    null,
-    contentBuilder);
-
-string result = await response.Content.ReadAsStringAsync();
-Console.WriteLine(result);
-````
-
----
-
-## 🧩 Supported Content Builders
-
-* `JsonContentBuilder` → for `application/json`
-* `FormUrlEncodedContentBuilder` → for form data
-* `XmlContentBuilder` → for `application/xml`
-* `NoBodyContentBuilder` → for `GET / DELETE`
-
----
-
-### 2. Request actions and retry logic
+### Simple Request
 
 ```csharp
-var client = factory.CreateOrGet("WithRetry")
-    .AddRequestAction((req, res, retry, ts) => {
-        Console.WriteLine($"[{DateTime.Now}] Status: {res.StatusCode}");
-        return Task.CompletedTask;
-    })
-    .addRetryCondition(
-        res => res.StatusCode == HttpStatusCode.InternalServerError,
-        maxRetries: 3,
-        delayInSeconds: 0.5
-    );
+app.MapGet("Test/simple", async (IhttpsClientHelperFactory http) =>
+{
+    var bodyJson = """
+        {"name":"Request","value":"Simple"}
+    """;
 
-HttpResponseMessage response = await client.SendAsync(
-    "https://yoursite.com/retry",
-    HttpMethod.Get,
-    null,
-    contentBuilder);
+    var contentBuilder = new JsonContentBuilder();
+    contentBuilder.BuildContent(bodyJson);
+
+    var client = http.CreateOrGet("Test_No_RateLimit");
+
+    HttpResponseMessage responseMessage =
+        await client.SendAsync("http://www.yoursite.com/echo", HttpMethod.Post, bodyJson, contentBuilder);
+
+    var json = await responseMessage.Content.ReadAsStringAsync();
+    return Results.Content(json, "application/json");
+})
+.WithSummary("Simple Request")
+.WithTags("HttpHelper");
 ```
 
----
-
-### 3. Authentication with Bearer Token
-
-The method `setHeadersAndBearerAuthentication` allows you to fluently attach both custom headers and a Bearer authentication token to your requests.
+### With Rate Limiting
 
 ```csharp
-var client = factory.CreateOrGet("WithAuth")
-    .setHeadersAndBearerAuthentication(
-        new Dictionary<string, string>
-        {
-            { "X-Correlation-Id", Guid.NewGuid().ToString() }
-        },
-        new httpsClientHelper.httpClientAuthenticationBearer("super-secret-token")
-    );
-
-HttpResponseMessage response = await client.SendAsync(
-    "https://yoursite.com/secure/data",
-    HttpMethod.Get,
-    null,
-    contentBuilder);
-
-string result = await response.Content.ReadAsStringAsync();
-Console.WriteLine(result);
+var client = http.CreateOrGet("Test_With_RateLimit");
 ```
 
----
+### Other Examples
 
-## 🛠️ Built-in Features
+* **Retry** request handling
+* **Timeout** management
+* **Bearer token check** demo endpoint
+* **Rate limit** configuration
 
-| Feature         | Description                                |
-| --------------- | ------------------------------------------ |
-| Retry           | Polly-based retry with exponential backoff |
-| Rate Limiting   | Sliding window limiter per client instance |
-| Headers/Auth    | Bearer / Basic / Custom headers            |
-| Logging Handler | Custom DelegatingHandler logs all requests |
-| Retry Info      | Injects `X-Retry-Attempt` and duration     |
+(All these examples are available in the included Demo project.)
 
 ---
 
-## 📂 Folder Structure
+## 🖥️ Demo Project with Scalar UI
 
-* **httpsClientHelper.cs** → main engine
-* **httpsClientHelperFactory.cs** → factory + DI integration
-* **HttpRequestBuilder.cs** → fluent builder pattern
-* **IContentBuilder.cs** → pluggable request body strategies
-* **HttpClientHandlerLogging.cs** → optional delegating handler
-* **httpClientOptions.cs** → config-based client tuning
+The repository includes a **Demo project** that showcases all features using [Scalar](https://github.com/scalar/scalar), a modern OpenAPI UI that provides a cleaner alternative to Swagger.
+
+### Why Scalar?
+
+* Modern and clean interface.
+* Dark/light theme support.
+* Direct request testing from the browser.
+* Clear visualization of query parameters and responses.
+
+### Run the Demo
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/alexbypa/Csharp.Essentials.Extensions.git
+   cd Csharp.Essentials.Extensions/Demo
+   ```
+
+2. Restore and run:
+
+   ```bash
+   dotnet restore
+   dotnet run
+   ```
+
+3. Open Scalar UI:
+
+   ```
+   http://localhost:1234/scalar
+   ```
+
+### Screenshot
+
+![Scalar Demo](docs/images/scalar-demo.png)
 
 ---
 
-## 🏷️ Notes
+## 🔗 Related LoggerHelper Sinks
 
-* You can combine `setHeadersAndBearerAuthentication` with other fluent APIs like `AddRequestAction`, `addTimeout`, and `addRetryCondition`.
-* The first parameter (`Dictionary<string, string>`) allows you to inject any custom headers.
-* The second parameter (`httpClientAuthenticationBearer`) automatically adds the `Authorization: Bearer ...` header.
-
+* `CSharpEssentials.LoggerHelper.Sink.Elasticsearch`
+* `CSharpEssentials.LoggerHelper.Sink.MSSqlServer`
+* `CSharpEssentials.LoggerHelper.Sink.File`
+* `CSharpEssentials.LoggerHelper.Sink.Postgresql`
+* `CSharpEssentials.LoggerHelper.Sink.Console`
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome!
-Feel free to open a [pull request](https://github.com/alexbypa/CSharpEssentials.HttpHelper/pulls) or [issue](https://github.com/alexbypa/CSharpEssentials.HttpHelper/issues).
+Contributions are welcome!
+Please open issues and submit pull requests.
 
 ---
 
-## 📜 License
+## 📄 License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+MIT
 
+```
+
+---
