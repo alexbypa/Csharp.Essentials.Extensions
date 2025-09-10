@@ -145,6 +145,38 @@ Console.WriteLine(result);
 
 ---
 
+## 🧩 Supported Content Builders
+
+* `JsonContentBuilder` → for `application/json`
+* `FormUrlEncodedContentBuilder` → for form data
+* `XmlContentBuilder` → for `application/xml`
+* `NoBodyContentBuilder` → for `GET / DELETE`
+
+---
+
+## 🛠️ Built-in Features
+
+| Feature         | Description                                |
+| --------------- | ------------------------------------------ |
+| Retry           | Polly-based retry with exponential backoff |
+| Rate Limiting   | Sliding window limiter per client instance |
+| Headers/Auth    | Bearer / Basic / Custom headers            |
+| Logging Handler | Custom DelegatingHandler logs all requests |
+| Retry Info      | Injects `X-Retry-Attempt` and duration     |
+
+---
+
+## 📂 Folder Structure
+
+* **httpsClientHelper.cs** → main engine
+* **httpsClientHelperFactory.cs** → factory + DI integration
+* **HttpRequestBuilder.cs** → fluent builder pattern
+* **IContentBuilder.cs** → pluggable request body strategies
+* **HttpClientHandlerLogging.cs** → optional delegating handler
+* **httpClientOptions.cs** → config-based client tuning
+
+---
+
 ## 🏷️ Notes
 
 * You can combine `setHeadersAndBearerAuthentication` with other fluent APIs like `AddRequestAction`, `addTimeout`, and `addRetryCondition`.
