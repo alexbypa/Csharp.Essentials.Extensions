@@ -308,8 +308,8 @@ Console.WriteLine(result);
 
 
 ---
-## Using LoggerHelper MSSQL<a id='using-httphelper'></a>   [🔝](#table-of-contents)
-
+## Using LoggerHelper MSSQL<a id='using-loggerhelper-mssql'></a>   [🔝](#table-of-contents)
+                                  
 ---
 ## 🤝 Contributing
 
