@@ -8,18 +8,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CSharpEssentials.HttpHelper" Version="4.0.0" />
-    <PackageReference Include="CSharpEssentials.LoggerHelper" Version="4.0.0" />
-    <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.MSSqlServer" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.7.2" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj" />
+    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper.Sink.MSSqlServer\CSharpEssentials.LoggerHelper.Sink.MSSqlServer.csproj" />
+    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper\CSharpEssentials.LoggerHelper.csproj" />
     <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
   </ItemGroup>
 </Project>
