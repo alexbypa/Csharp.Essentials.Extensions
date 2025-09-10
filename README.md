@@ -73,6 +73,85 @@ This `Program.cs` sets up:
 The actual endpoints demonstrating HttpHelper usage (GET, POST with retries, logging, etc.) will be defined in subsequent sections of this repository.
 
 ---
+## Configuration with `appsettings.json`
+
+This library is designed to work with a centralized configuration stored in `appsettings.json`.  
+Below you will find an explanation of all the available sections and how they affect the behavior of the extension.
+
+---
+
+### Example `appsettings.json`
+
+```json
+{
+  "HttpClientOptions": [
+    {
+      "name": "Test_No_RateLimit",
+      "certificate": {
+        "path": "YOUR_PATH",
+        "password": "YOUR_PASSWORD"
+      },
+      "RateLimitOptions": {
+        "AutoReplenishment": true,
+        "PermitLimit": 1,
+        "QueueLimit": 1,
+        "Window": "00:00:15",
+        "SegmentsPerWindow": 2,
+        "IsEnabled": false
+      },
+      "UseMock": true
+    },
+    {
+      "name": "Test_With_RateLimit",
+      "certificate": {
+        "path": "YOUR_PATH",
+        "password": "YOUR_PASSWORD"
+      },
+      "RateLimitOptions": {
+        "AutoReplenishment": true,
+        "PermitLimit": 1,
+        "QueueLimit": 100,
+        "Window": "00:00:10",
+        "SegmentsPerWindow": 1,
+        "IsEnabled": true
+      },
+      "UseMock": true
+    }
+  ]
+}
+````
+
+---
+
+### Sections explained
+
+#### `HttpClientOptions`
+
+A list of **preconfigured HTTP clients**. Each object represents one named client.
+
+* **`name`**
+  Identifier of the client. Used when calling `http.CreateOrGet("ClientName")`.
+
+* **`certificate`**
+  Optional certificate to be attached to the client.
+
+  * `path`: File system path to the `.pfx` or certificate file.
+  * `password`: Password protecting the certificate.
+
+* **`RateLimitOptions`**
+  Controls throttling behavior for outgoing requests.
+
+  * `AutoReplenishment`: If `true`, permits are automatically restored at the end of each window.
+  * `PermitLimit`: Maximum number of requests allowed per window segment.
+  * `QueueLimit`: Maximum number of requests waiting in the queue when the limit is exceeded.
+  * `Window`: Time window (e.g. `"00:00:15"` = 15 seconds).
+  * `SegmentsPerWindow`: Splits the window into smaller segments for more precise limiting.
+  * `IsEnabled`: Enables (`true`) or disables (`false`) rate limiting.
+
+* **`UseMock`**
+  If `true`, the client uses an internal mock/handler instead of making real HTTP calls (useful for testing).
+
+---
 
 ## 📖 Usage Examples
 
@@ -81,7 +160,7 @@ The actual endpoints demonstrating HttpHelper usage (GET, POST with retries, log
 IhttpsClientHelperFactory factory = ...;
 IContentBuilder contentBuilder = new NoBodyContentBuilder();
 
-var client = factory.CreateOrGet("DefaultClient");
+var client = factory.CreateOrGet("Test_No_RateLimit");
 
 HttpResponseMessage response = await client.SendAsync(
     "https://jsonplaceholder.typicode.com/posts/1",

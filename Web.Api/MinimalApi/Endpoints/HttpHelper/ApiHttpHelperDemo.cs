@@ -1,11 +1,26 @@
 ﻿using CSharpEssentials.HttpHelper;
 using HttpMethod = System.Net.Http.HttpMethod;
 
-
-namespace Web.Api.MinimalApi.Endpoints;
+namespace Web.Api.MinimalApi.Endpoints.HttpHelper;
 public class ApiHttpHelperDemo : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
+        HttpHelperDemo demo = new HttpHelperDemo();
+        
+        //Simple Request
+        app.MapGet("Test/simple", async (IhttpsClientHelperFactory http) => {
+            var bodyJson = """
+                {"name":"Request","value":"Simple"}
+            """;
+            contentBuilder = new JsonContentBuilder();
+            contentBuilder.BuildContent(bodyJson);
+            var client = http.CreateOrGet("Test_No_RateLimit");
+            HttpResponseMessage responseMessage = await client.SendAsync("http://www.yoursite.com/echo", HttpMethod.Post, bodyJson, contentBuilder);
+            var json = await responseMessage.Content.ReadAsStringAsync();
+            return Results.Content(json, "application/json");
+        })
+        .WithSummary("Simple Request")
+        .WithTags("HttpHelper");
 
         app.MapGet("Test/AddAction", async (IhttpsClientHelperFactory http) => {
             TimeSpan timeSpan = TimeSpan.FromSeconds(30);
@@ -23,7 +38,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         .WithSummary("Add Action")
         .WithTags("HttpHelper");
 
-        app.MapGet("Test/auth/check", CheckAuth)
+        app.MapGet("Test/auth/check", demo.CheckAuth)
             .WithTags("HttpHelper")
             .WithSummary("Bearer token check (demo)")
             .WithDescription("""
@@ -88,21 +103,4 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         }).WithSummary("Test Rate Limit")
           .WithTags("HttpHelper");
     }
-
-    public async Task<IResult> CheckAuth(string token, IhttpsClientHelperFactory http) {
-        IContentBuilder contentBuilder = new NoBodyContentBuilder();
-        TimeSpan timeSpan = TimeSpan.FromSeconds(30);
-        var client = http.CreateOrGet("Test_No_RateLimit").addTimeout(timeSpan)
-        .setHeadersAndBearerAuthentication(null, new httpsClientHelper.httpClientAuthenticationBearer(token))
-        .AddRequestAction((req, res, retry, ts) => {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine($"Http status response was: {res.StatusCode.ToString()}");
-            Console.ResetColor();
-            return Task.CompletedTask;
-        });
-        HttpResponseMessage responseMessage = await client.SendAsync("http://www.yoursite.com/auth/check", HttpMethod.Get, null, contentBuilder);
-        var json = await responseMessage.Content.ReadAsStringAsync();
-        return Results.Content(json, "application/json", statusCode: (int)responseMessage.StatusCode);
-    }
 }
-
