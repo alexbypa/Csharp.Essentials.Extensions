@@ -97,6 +97,30 @@ public class HttpMocks {
                 };
             });
 
+        // POST: /Test bearertoken -> 200 OK se header Authorization corretto, altrimenti 401
+        mock.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.Is<HttpRequestMessage>(r =>
+                    r.RequestUri != null &&
+                    r.RequestUri.AbsolutePath.Contains("/auth/check")),
+                ItExpr.IsAny<CancellationToken>())
+            .Returns<HttpRequestMessage, CancellationToken>((req, _) =>
+            {
+                var token = req.Headers.Authorization?.Parameter;
+                if (token == "super-secret") {
+                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+                        Content = new StringContent("""{"authenticated":true}""", Encoding.UTF8, "application/json")
+                    });
+                }
+
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized) {
+                    Content = new StringContent("""{"error":"unauthorized"}""", Encoding.UTF8, "application/json")
+                });
+            });
+
+
+
         return mock.Object;
     }
 }

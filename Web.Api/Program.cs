@@ -3,6 +3,7 @@ using CSharpEssentials.HttpHelper;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Mocks;
+using Scalar;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,17 +18,20 @@ builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpoin
 #endregion
 
 builder.Services.AddOpenApi();
-
+builder.Services.AddEndpointsApiExplorer();
 var app = builder.Build();
 
 app.MapOpenApi();
 
 app.MapScalarApiReference();
 
+
+
 app.UseHttpsRedirection();
 
 #region Minimal API
 app.UseEndpointDefinitions(); // definisce gli endpoint
 #endregion
+
 
 app.Run();

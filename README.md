@@ -69,3 +69,104 @@ This `Program.cs` sets up:
 * Built in OpenAPI document generation (available at `/openapi/v1.json`) and **Scalar** as an interactive UI for exploring the API.
 
 The actual endpoints demonstrating HttpHelper usage (GET, POST with retries, logging, etc.) will be defined in subsequent sections of this repository.
+
+---
+
+## 📖 Usage Examples
+
+### 1. Simple GET request
+
+```csharp
+IhttpsClientHelperFactory factory = ...;
+IContentBuilder contentBuilder = new NoBodyContentBuilder();
+
+var client = factory.CreateOrGet("DefaultClient");
+
+HttpResponseMessage response = await client.SendAsync(
+    "https://jsonplaceholder.typicode.com/posts/1",
+    HttpMethod.Get,
+    null,
+    contentBuilder);
+
+string result = await response.Content.ReadAsStringAsync();
+Console.WriteLine(result);
+```
+
+---
+
+### 2. Request actions and retry logic
+
+```csharp
+var client = factory.CreateOrGet("WithRetry")
+    .AddRequestAction((req, res, retry, ts) => {
+        Console.WriteLine($"[{DateTime.Now}] Status: {res.StatusCode}");
+        return Task.CompletedTask;
+    })
+    .addRetryCondition(
+        res => res.StatusCode == HttpStatusCode.InternalServerError,
+        maxRetries: 3,
+        delayInSeconds: 0.5
+    );
+
+HttpResponseMessage response = await client.SendAsync(
+    "https://yoursite.com/retry",
+    HttpMethod.Get,
+    null,
+    contentBuilder);
+```
+
+---
+
+### 3. Authentication with Bearer Token
+
+The method `setHeadersAndBearerAuthentication` allows you to fluently attach both custom headers and a Bearer authentication token to your requests.
+
+```csharp
+var client = factory.CreateOrGet("WithAuth")
+    .setHeadersAndBearerAuthentication(
+        new Dictionary<string, string>
+        {
+            { "X-Correlation-Id", Guid.NewGuid().ToString() }
+        },
+        new httpsClientHelper.httpClientAuthenticationBearer("super-secret-token")
+    );
+
+HttpResponseMessage response = await client.SendAsync(
+    "https://yoursite.com/secure/data",
+    HttpMethod.Get,
+    null,
+    contentBuilder);
+
+string result = await response.Content.ReadAsStringAsync();
+Console.WriteLine(result);
+```
+
+---
+
+## 🏷️ Notes
+
+* You can combine `setHeadersAndBearerAuthentication` with other fluent APIs like `AddRequestAction`, `addTimeout`, and `addRetryCondition`.
+* The first parameter (`Dictionary<string, string>`) allows you to inject any custom headers.
+* The second parameter (`httpClientAuthenticationBearer`) automatically adds the `Authorization: Bearer ...` header.
+
+---
+
+## 📌 Roadmap
+
+* More built-in authentication helpers (Basic, OAuth2).
+* Extended logging hooks.
+* Built-in metrics for performance and retries.
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+Feel free to open a [pull request](https://github.com/alexbypa/CSharpEssentials.HttpHelper/pulls) or [issue](https://github.com/alexbypa/CSharpEssentials.HttpHelper/issues).
+
+---
+
+## 📜 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
