@@ -29,9 +29,6 @@ Install the core packages via the .NET CLI:
 ```bash
 # HttpHelper – resilient HTTP calls with rate limiting
  dotnet add package CSharpEssentials.HttpHelper
-
-# LoggerHelper (optional) – enrich your HTTP calls with Serilog logging
- dotnet add package CSharpEssentials.LoggerHelper
 ````
 
 ### Program.cs setup
@@ -45,9 +42,11 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Register HttpHelper clients. The configuration section `HttpClientOptions` in appsettings.json
-// allows you to specify certificates, rate‑limit settings and more:contentReference[oaicite:3]{index=3}.
+// allows you to specify certificates, rate limit settings and more content.
 // If you are not using a custom HttpMessageHandler (e.g. Moq for tests), pass null as the second argument.
 builder.Services.AddHttpClients(builder.Configuration, null);
+//Otwerwise use this: 
+//builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 
 // Add OpenAPI document generation and Scalar UI for interactive docs
 builder.Services.AddOpenApi();
@@ -67,6 +66,6 @@ app.Run();
 This `Program.cs` sets up:
 
 * Registration of **HttpHelper** via `AddHttpClients`, which reads options like `PermitLimit`, `QueueLimit` and certificate settings from `HttpClientOptions` in your configuration file.
-* Built‑in OpenAPI document generation (available at `/openapi/v1.json`) and **Scalar** as an interactive UI for exploring the API.
+* Built in OpenAPI document generation (available at `/openapi/v1.json`) and **Scalar** as an interactive UI for exploring the API.
 
 The actual endpoints demonstrating HttpHelper usage (GET, POST with retries, logging, etc.) will be defined in subsequent sections of this repository.
