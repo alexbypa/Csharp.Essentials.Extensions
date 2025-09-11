@@ -1,9 +1,13 @@
 using BusinessLayer.DataAccess.Configuration;
 using CSharpEssentials.HttpHelper;
+using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.Configuration;
+using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Scalar;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
+using Web.Api.MinimalApi.Endpoints.LoggerHelper;
 using Web.Api.MinimalApi.Mocks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +20,17 @@ builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler()
 builder.Services.AddloggerConfiguration(builder);
 #endregion
 
+#region CORS
+const string CorsPolicy = "ViteDev";
+builder.Services.AddCors(opt => {
+    opt.AddPolicy(CorsPolicy, p =>
+        p.WithOrigins("http://localhost:5173")   // porta di Vite
+         .AllowAnyMethod()
+         .AllowAnyHeader()
+    // .AllowCredentials() // scommenta solo se usi cookie/autenticazione
+    );
+});
+#endregion
 
 #region Minimal API
 builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpointDefinition
@@ -29,8 +44,10 @@ app.MapOpenApi();
 
 app.MapScalarApiReference();
 
-
-
+#region CSharpEssentials.Dashboard Package
+app.UseCors(CorsPolicy);
+app.UseLoggerHelperDashboard<RequestHelper>(); // registra la dashboard embedded
+#endregion
 app.UseHttpsRedirection();
 
 #region Minimal API
