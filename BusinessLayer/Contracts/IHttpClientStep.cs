@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Domain;
 using CSharpEssentials.HttpHelper;
 
-namespace BusinessLayer.Ports;
+namespace BusinessLayer.Contracts;
 public interface IHttpClientStep {
     IhttpsClientHelper Apply(IhttpsClientHelper client, HttpRequestSpec spec);
 }

@@ -1,6 +1,6 @@
-﻿using BusinessLayer.Ports;
+﻿using BusinessLayer.Contracts;
 
-namespace BusinessLayer.Adapters;
+namespace BusinessLayer.Infrastructure;
 public sealed class ConsoleColorRequestAction : IRequestAction {
     public Task OnAfterRequestAsync(AfterRequestContext r) {
         var bg = Console.BackgroundColor;

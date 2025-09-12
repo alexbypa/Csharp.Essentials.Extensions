@@ -1,8 +1,8 @@
 ﻿using BusinessLayer.Domain;
-using BusinessLayer.Ports;
+using BusinessLayer.Contracts;
 using CSharpEssentials.HttpHelper;
 
-namespace BusinessLayer.UseCases;
+namespace BusinessLayer.Application;
 public sealed class FetchAndLogUseCase {
     private readonly INetworkClient _network;
     private readonly IAppLogger? _logger;

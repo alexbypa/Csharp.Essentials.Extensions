@@ -1,8 +1,8 @@
 ﻿using BusinessLayer.Domain;
-using BusinessLayer.Ports;
+using BusinessLayer.Contracts;
 using System.Net.Http.Headers;
 
-namespace BusinessLayer.Adapters;
+namespace BusinessLayer.Infrastructure;
 public sealed class DefaultAfterRequestContextFactory : IAfterRequestContextFactory {
     public AfterRequestContext Create(
         HttpRequestSpec spec,

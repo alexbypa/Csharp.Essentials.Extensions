@@ -1,18 +1,11 @@
-﻿using Azure.Identity;
-using BusinessLayer.Adapters;
+﻿using BusinessLayer.Application;
+using BusinessLayer.Contracts;
 using BusinessLayer.Domain;
-using BusinessLayer.Ports;
-using BusinessLayer.UseCases;
+using BusinessLayer.Infrastructure;
 using CSharpEssentials.HttpHelper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client;
-using Microsoft.OpenApi.Validations;
 using Scalar.AspNetCore;
-using System;
 using System.Net;
-using System.Numerics;
-using HttpMethod = System.Net.Http.HttpMethod;
 
 namespace Web.Api.MinimalApi.Endpoints.HttpHelper;
 public class ApiHttpHelperDemo : IEndpointDefinition {

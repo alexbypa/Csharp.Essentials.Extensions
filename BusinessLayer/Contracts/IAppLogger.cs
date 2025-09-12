@@ -1,4 +1,4 @@
-﻿namespace BusinessLayer.Ports;
+﻿namespace BusinessLayer.Contracts;
 public interface IAppLogger {
     void Info(string message, object? context = null);
     void Warning(string message, object? context = null);

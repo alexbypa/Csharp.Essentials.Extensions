@@ -1,4 +1,4 @@
-﻿namespace BusinessLayer.Ports;
+﻿namespace BusinessLayer.Contracts;
 public sealed record AfterRequestContext(
     string Url,
     string Method,

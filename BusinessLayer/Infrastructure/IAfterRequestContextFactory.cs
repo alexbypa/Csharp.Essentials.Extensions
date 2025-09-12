@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Domain;
-using BusinessLayer.Ports;
+using BusinessLayer.Contracts;
 
-namespace BusinessLayer.Adapters;
+namespace BusinessLayer.Infrastructure;
 public interface IAfterRequestContextFactory {
     AfterRequestContext Create(
         HttpRequestSpec spec,

@@ -1,4 +1,4 @@
-﻿namespace BusinessLayer.Ports;
+﻿namespace BusinessLayer.Contracts;
 public sealed class RequestReport {
     public required string Url { get; init; }
     public required string Method { get; init; }

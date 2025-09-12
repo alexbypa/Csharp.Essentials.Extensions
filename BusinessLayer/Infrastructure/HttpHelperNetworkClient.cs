@@ -1,9 +1,8 @@
-﻿using BusinessLayer.Domain;
-using BusinessLayer.Ports;
+﻿using BusinessLayer.Contracts;
+using BusinessLayer.Domain;
 using CSharpEssentials.HttpHelper;
-using System.Diagnostics;
 
-namespace BusinessLayer.Adapters;
+namespace BusinessLayer.Infrastructure;
 public sealed class HttpHelperNetworkClient : INetworkClient {
     private readonly IhttpsClientHelperFactory _factory;
     private readonly IAfterRequestContextFactory _ctxFactory;
