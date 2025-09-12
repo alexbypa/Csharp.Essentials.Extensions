@@ -199,26 +199,67 @@ A list of **preconfigured HTTP clients**. Each object represents one named clien
 ---
 
 ## 📖 Usage Examples
+> This table **lists the native methods from the `HttpHelper` package** and shows **where they are orchestrated inside the `BusinessLayer`** following SOLID separation (endpoint ➜ UseCase ➜ NetworkClient ➜ Steps ➜ native helper).
+> It also includes **`CreateOrGet`**, which accepts the **option name configured in `appsettings.json`** and resolves the correct HTTP profile.
 
-### 1. Simple GET request
-```csharp
-IhttpsClientHelperFactory factory = ...;
-IContentBuilder contentBuilder = new NoBodyContentBuilder();
-
-var client = factory.CreateOrGet("Test_No_RateLimit");
-
-HttpResponseMessage response = await client.SendAsync(
-    "https://jsonplaceholder.typicode.com/posts/1",
-    HttpMethod.Get,
-    null,
-    contentBuilder);
-
-string result = await response.Content.ReadAsStringAsync();
-Console.WriteLine(result);
-````
+| **Native method & Purpose**                                                                                                                      | **Applied by (class/step)**                                     | **Project / Folder / File**                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- | --------------------------------------------------------- |
+| **`CreateOrGet(string optionName)`** – resolves the configured `IhttpsClientHelper` profile from `appsettings.json`.                             | `HttpHelperNetworkClient`                                       | `BusinessLayer/Infrastructure/HttpHelperNetworkClient.cs` |
+| **`addTimeout(TimeSpan)`** – applies per-request timeout from `HttpRequestSpec.Timeout`.                                                         | `TimeoutStep` *(sealed, implements `IHttpClientStep`)*          | `BusinessLayer/Contracts/IHttpClientStep.cs`              |
+| **`addRetryCondition(Func<HttpResponseMessage,bool>, int, double)`** – sets retry policy (predicate + attempts + backoff).                       | `RetryConditionStep` *(sealed, implements `IHttpClientStep`)*   | `BusinessLayer/Contracts/IHttpClientStep.cs`              |
+| **`setHeadersWithoutAuthorization(Dictionary<string,string>)`** – sets headers when no auth is provided.                                         | `HeadersAndBearerStep` *(sealed, implements `IHttpClientStep`)* | `BusinessLayer/Contracts/IHttpClientStep.cs`              |
+| **`setHeadersAndBearerAuthentication(Dictionary<string,string>, httpClientAuthenticationBearer)`** – sets headers + bearer token authentication. | `HeadersAndBearerStep`                                          | `BusinessLayer/Contracts/IHttpClientStep.cs`              |
+| **`setHeadersAndBasicAuthentication(Dictionary<string,string>, httpClientAuthenticationBasic)`** – sets headers + basic authentication.          | `HeadersAndBearerStep`                                          | `BusinessLayer/Contracts/IHttpClientStep.cs`              |
+| **`addHeaders(string key, string value)`** – adds individual headers if needed.                                                                  | `HeadersAndBearerStep`                                          | `BusinessLayer/Contracts/IHttpClientStep.cs`              |
+| **`AddRequestAction(Func<HttpRequestMessage,HttpResponseMessage,int,TimeSpan,Task>)`** – registers request/response actions (logging, metrics).  | `HttpHelperNetworkClient` (+ `IRequestAction`)                  | `BusinessLayer/Infrastructure/HttpHelperNetworkClient.cs` |
+| **`ClearRequestActions()`** – clears and resets registered actions.                                                                              | `HttpHelperNetworkClient`                                       | `BusinessLayer/Infrastructure/HttpHelperNetworkClient.cs` |
+| **`addFormData(List<KeyValuePair<string,string>>)`** – attaches form-data (not used in Demo, extendable).                                        | *(none in Demo)*                                                | —                                                         |
+| **`SendAsync(string url, HttpMethod, IDictionary<string,string>? headers, IContentBuilder)`** – performs the actual HTTP request.                | `HttpHelperNetworkClient`                                       | `BusinessLayer/Infrastructure/HttpHelperNetworkClient.cs` |
 
 ---
 
+**Related types (quick pointers):**
+
+* **`IHttpClientStep`** (contract used by `TimeoutStep`, `RetryConditionStep`, `HeadersAndBearerStep`) → `BusinessLayer/Contracts/IHttpClientStep.cs`
+* **`HttpRequestSpec`, `HttpAuthSpec`, `HttpResponseSpec`** → `BusinessLayer/Domain/*.cs`
+* **`IRequestAction` + implementations** (`ConsoleColorRequestAction`, `InlineRequestAction`) → `BusinessLayer/Contracts/IRequestAction.cs` and `BusinessLayer/Infrastructure/*.cs`
+* **`HttpHelperNetworkClient`** (applies steps, adds/clears actions, performs `SendAsync`) → `BusinessLayer/Infrastructure/HttpHelperNetworkClient.cs`
+* **`FetchAndLogUseCase`** (business orchestration) → `BusinessLayer/Application/FetchAndLogUseCase.cs`
+
+> **Recap:** Minimal API endpoint ➜ **UseCase** ➜ **HttpHelperNetworkClient** ➜ **Steps (`IHttpClientStep`)** ➜ native **`IhttpsClientHelper`** methods ➜ `SendAsync`.
+
+### 1. Simple GET request
+
+```csharp
+app.MapGet("Test/echo", async (string httpOptionName, IhttpsClientHelperFactory httpFactory) => {
+    var spec = new HttpRequestSpec {          // (1)
+        Url = "http://www.yoursite.com/echo", // (2)
+        Method = "POST",                      // (3)
+        Body = "{'name':'Request','value':'Simple'}" // (4)
+    };
+
+    var ctxFactory = new DefaultAfterRequestContextFactory(); // (5)
+    var netClient = new HttpHelperNetworkClient(httpFactory, ctxFactory, null); // (6)
+
+    var result = await new FetchAndLogUseCase(netClient)
+        .ExecuteAsync(httpOptionName, spec, new NoBodyContentBuilder()); // (7)
+
+    return result.Success ? Results.Ok(result.Value) : Results.Problem(result.Error); // (8)
+});
+```
+
+**Explanation**
+
+1. **`HttpRequestSpec`** – defines the request contract (URL, method, body). It’s the DTO passed through the whole pipeline.
+2. **`Url`** – target endpoint for the call (`/echo` in this sample).
+3. **`Method`** – HTTP verb to use.
+4. **`Body`** – raw request payload.
+5. **`DefaultAfterRequestContextFactory`** – builds the context executed after each request (used for logging, metrics, tracing).
+6. **`HttpHelperNetworkClient`** – orchestrator that knows how to execute the spec using the factory and context factory.
+7. **`FetchAndLogUseCase`** – application-level use case that executes the request, handles logging, and returns a clean `Result`.
+8. Returns either the upstream value (`200 OK`) or a Problem detail if there’s an error.
+
+---
 ## 🧩 Supported Content Builders
 
 * `JsonContentBuilder` → for `application/json`
