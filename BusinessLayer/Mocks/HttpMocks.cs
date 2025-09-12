@@ -3,7 +3,7 @@ using Moq.Protected;
 using System.Net;
 using System.Text;
 
-namespace Web.Api.MinimalApi.Mocks;
+namespace BusinessLayer.Mocks;
 public class HttpMocks {
     public static HttpMessageHandler CreateHandler() {
         var mock = new Mock<HttpMessageHandler>(MockBehavior.Strict);

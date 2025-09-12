@@ -17,7 +17,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
