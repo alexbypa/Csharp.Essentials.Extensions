@@ -1,6 +1,4 @@
-using BusinessLayer.Adapters;
 using BusinessLayer.Mocks;
-using BusinessLayer.Ports;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
