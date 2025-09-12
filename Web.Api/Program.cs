@@ -1,10 +1,6 @@
-using BusinessLayer.DataAccess.Configuration;
 using CSharpEssentials.HttpHelper;
-using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Scalar;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.LoggerHelper;
