@@ -15,6 +15,7 @@ Csharp.Essentials provides several packages that can be used independently or to
 |---|---|---|
 | **CSharpEssentials.HttpHelper** | Simplifies `HttpClient` usage with built‑in resiliency (retries/fallbacks) and rate‑limiting strategies:contentReference. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.HttpHelper) |
 | **CSharpEssentials.LoggerHelper** | Provides logging helpers that leverage Serilog sinks to trace HTTP requests and responses:contentReference. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper) |
+| **CSharpEssentials.LoggerHelper.Sink.Email** | perfect for real-time critical alerts, with full HTML template customization, configurable throttling, and secure SMTP (SSL/TLS) delivery. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Email) |
 
 These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable.
 
@@ -22,21 +23,21 @@ These packages are intentionally lightweight. You can add only what you need, ke
 
 ## 📑 Table of Contents <a id='table-of-contents'></a>
 
-* [🌐Using HttpHelper](#using-httphelper)
-* [📘HttpLogger - Introduction](#introduction)
-* [🚀HttpLogger - Installation](#installation)
-* [🔧HttpLogger - Configuration](#configuration)
-* [📨 HTML Email Sink (used with System.Net.smtp)](#html-email-sink)
-* [🧪 xUnit Sink](#xunit-sink)
-* [📣 Telegram Sink (used with HttpClient)](#telegram-sink)
-* 🐘[PostgreSQL Sink](#postgresql-sink)
-* [💾 MS SQL Sink](#ms-sql-sink)
-* [🔍 ElasticSearch Sink](#elasticsearch)
-* [📊 Telemetry Sink](#telemetry)
-* [📘 Dashboard](#dashboard)
-* [🔍 Extending LogEvent Properties](#customprop)
-* [🧪 Demo API](#demo-api)
-* [📜 Version History](#versions)
+- [🌐Using HttpHelper](#using-httphelper)
+- [📘HttpLogger - Introduction](#introduction)
+  - [🚀HttpLogger - Installation](#installation)
+  - [🔧HttpLogger - Configuration](#configuration)
+  - [📨 HTML Email Sink (used with System.Net.smtp)](#html-email-sink)
+  - [🧪 xUnit Sink](#xunit-sink)
+  - [📣 Telegram Sink (used with HttpClient)](#telegram-sink)
+  - 🐘[PostgreSQL Sink](#postgresql-sink)
+  - [💾 MS SQL Sink](#ms-sql-sink)
+  - [🔍 ElasticSearch Sink](#elasticsearch)
+  - [📊 Telemetry Sink](#telemetry)
+  - [📘 Dashboard](#dashboard)
+  - [🔍 Extending LogEvent Properties](#customprop)
+- [🧪 Demo API](#demo-api)
+- [📜 Version History](#versions)
 
 ## Using HttpHelper<a id='using-httphelper'></a>   [🔝](#table-of-contents)
 
