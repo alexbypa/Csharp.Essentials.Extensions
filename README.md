@@ -19,8 +19,7 @@ Csharp.Essentials provides several packages that can be used independently or to
 | **CSharpEssentials.LoggerHelper.Sink.xUnit** | Streamlines integration testing by forwarding application logs directly into the xUnit test output, perfect for debugging in CI/CD pipelines. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.xUnit) |
 | **CSharpEssentials.LoggerHelper.Sink.Telegram** | Delivers instant log notifications to your Telegram chat or group using pure HTTP, with a clean and user-friendly message format for real-time monitoring of critical events. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Postgresql) |
 | **CSharpEssentials.LoggerHelper.Sink.Postgresql** | Stores structured logs directly into PostgreSQL with support for custom schemas, JSON fields, and automatic table creation for deep analytics and long-term storage. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Postgresql) |
-| **CSharpEssentials.LoggerHelper.Sink.CSharpEssentials.LoggerHelper.Sink.MSSqlServer** | A powerful SQL Server sink for CSharpEssentials.LoggerHelper
-, designed to log directly into Microsoft SQL Server with automatic table creation, custom columns, and structured context properties. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.CSharpEssentials.LoggerHelper.Sink.MSSqlServer) |
+| **CSharpEssentials.LoggerHelper.Sink.MSSqlServer** | A powerful SQL Server sink for CSharpEssentials.LoggerHelper, designed to log directly into Microsoft SQL Server with automatic table creation, custom columns, and structured context properties. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.MSSqlServer) |
 
 These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable.
 
