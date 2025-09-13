@@ -365,6 +365,12 @@ Console.WriteLine(result);
 * **HttpClientHandlerLogging.cs** → optional delegating handler
 * **httpClientOptions.cs** → config-based client tuning
 
+## 🏷️ Notes
+
+* You can combine `setHeadersAndBearerAuthentication` with other fluent APIs like `AddRequestAction`, `addTimeout`, and `addRetryCondition`.
+* The first parameter (`Dictionary<string, string>`) allows you to inject any custom headers.
+* The second parameter (`httpClientAuthenticationBearer`) automatically adds the `Authorization: Bearer ...` header.                               
+
 ---
 ## 📘 Introduction<a id='introduction'></a>   [🔝](#table-of-contents)
 
@@ -1414,18 +1420,10 @@ This is the full `appsettings.LoggerHelper.json` used in the demo Minimal API (r
 * **3.1.4** - Added ThrottleInterval
 
 
-## 🏷️ Notes
-
-* You can combine `setHeadersAndBearerAuthentication` with other fluent APIs like `AddRequestAction`, `addTimeout`, and `addRetryCondition`.
-* The first parameter (`Dictionary<string, string>`) allows you to inject any custom headers.
-* The second parameter (`httpClientAuthenticationBearer`) automatically adds the `Authorization: Bearer ...` header.
-
-                                  
----
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!
-Feel free to open a [pull request](https://github.com/alexbypa/CSharpEssentials.HttpHelper/pulls) or [issue](https://github.com/alexbypa/CSharpEssentials.HttpHelper/issues).
+Feel free to open a [pull request](https://github.com/alexbypa/CSharpEssentials/pulls) or [issue](https://github.com/alexbypa/CSharpEssentials.HttpHelper/issues).
 
 ---
 
