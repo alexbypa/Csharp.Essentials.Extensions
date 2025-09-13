@@ -22,6 +22,7 @@ Csharp.Essentials provides several packages that can be used independently or to
 | **CSharpEssentials.LoggerHelper.Sink.MSSqlServer** | A powerful SQL Server sink for CSharpEssentials.LoggerHelper, designed to log directly into Microsoft SQL Server with automatic table creation, custom columns, and structured context properties. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.MSSqlServer) |
 | **CSharpEssentials.LoggerHelper.Sink.Elasticsearch** | A high-performance Elasticsearch sink for CSharpEssentials.LoggerHelper, designed to index logs into Elasticsearch for fast search, advanced filtering, and real-time dashboards with Kibana. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Elasticsearch) |
 | **CSharpEssentials.LoggerHelper.Telemetry** | A full OpenTelemetry sink for CSharpEssentials.LoggerHelper, enabling metrics, traces, and logs with automatic database storage for end-to-end observability. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Telemetry) |
+| **CSharpEssentials.LoggerHelper.Dashboard** | An embedded dashboard for CSharpEssentials.LoggerHelper, giving you real-time visibility into how sinks are loaded, which log levels are enabled, and any initialization errors — all from inside your application. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Dashboard) |
 
 These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable.
 
