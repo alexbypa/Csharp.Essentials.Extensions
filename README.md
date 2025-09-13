@@ -17,6 +17,7 @@ Csharp.Essentials provides several packages that can be used independently or to
 | **CSharpEssentials.LoggerHelper** | Provides logging helpers that leverage Serilog sinks to trace HTTP requests and responses:contentReference. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper) |
 | **CSharpEssentials.LoggerHelper.Sink.Email** | Perfect for real-time critical alerts, with full HTML template customization, configurable throttling, and secure SMTP (SSL/TLS) delivery. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Email) |
 | **CSharpEssentials.LoggerHelper.Sink.xUnit** | Streamlines integration testing by forwarding application logs directly into the xUnit test output, perfect for debugging in CI/CD pipelines. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.xUnit) |
+| **CSharpEssentials.LoggerHelper.Sink.Telegram** | Delivers instant log notifications to your Telegram chat or group using pure HTTP, with a clean and user-friendly message format for real-time monitoring of critical events. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Telegram) |
 
 These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable.
 
