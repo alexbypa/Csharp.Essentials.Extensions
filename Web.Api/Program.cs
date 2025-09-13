@@ -1,7 +1,9 @@
+using BusinessLayer.Contracts.Context;
 using BusinessLayer.Mocks;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
+using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.LoggerHelper;
@@ -15,6 +17,8 @@ builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler()
 #region Logger Configuration
 builder.Services.AddloggerConfiguration(builder);
 #endregion
+
+builder.Services.AddLoggerTelemetry(builder);
 
 #region CORS
 const string CorsPolicy = "ViteDev";
@@ -42,7 +46,7 @@ app.MapScalarApiReference();
 
 #region CSharpEssentials.Dashboard Package
 app.UseCors(CorsPolicy);
-app.UseLoggerHelperDashboard<RequestHelper>(); // registra la dashboard embedded
+app.UseLoggerHelperDashboard<RequestSample>(); // registra la dashboard embedded
 #endregion
 app.UseHttpsRedirection();
 

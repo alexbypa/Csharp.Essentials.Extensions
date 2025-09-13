@@ -123,9 +123,9 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         .WithTags("HttpHelper")
         .WithSummary("Bearer token check (demo)")
         .WithDescription("""
-        Returns **200 OK** when `token` equals `super-secret`.
+            Returns **200 OK** when `token` equals `super-secret`.
 
-        Returns **401 Unauthorized** otherwise (or if omitted).
+            Returns **401 Unauthorized** otherwise (or if omitted).
         """);
 
         app.MapGet("Test/retry", async (

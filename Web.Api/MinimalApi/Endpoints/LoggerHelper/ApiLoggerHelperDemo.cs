@@ -1,4 +1,5 @@
-﻿using CSharpEssentials.LoggerHelper;
+﻿using BusinessLayer.Contracts.Context;
+using CSharpEssentials.LoggerHelper;
 
 namespace Web.Api.MinimalApi.Endpoints.LoggerHelper;
 public class ApiLoggerHelperDemo : IEndpointDefinition {
@@ -6,7 +7,7 @@ public class ApiLoggerHelperDemo : IEndpointDefinition {
 
         app.MapGet("Logger/LogDemo", () => {
             Console.WriteLine("LoggerHelper Demo");
-            loggerExtension<RequestHelper>.TraceSync(new RequestHelper() { IdTransaction = Guid.NewGuid().ToString() }, Serilog.Events.LogEventLevel.Information, null, "Test");
+            loggerExtension<RequestSample>.TraceSync(new RequestSample() { IdTransaction = Guid.NewGuid().ToString() }, Serilog.Events.LogEventLevel.Information, null, "Test");
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("CHECK SINKS: VERIFY SINKS LOADED:::::::");
             Console.WriteLine($"CURRENTERROR: {GlobalLogger.CurrentError}");
@@ -21,11 +22,4 @@ public class ApiLoggerHelperDemo : IEndpointDefinition {
         .WithSummary("Simple Request")
         .WithTags("LoggerHelper");
     }
-}
-public class RequestHelper : IRequest {
-    public string IdTransaction {get;set;}
-
-    public string Action {get;set;}
-
-    public string ApplicationName {get;set;}
 }
