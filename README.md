@@ -1022,25 +1022,13 @@ The following tables are automatically generated depending on the provider:
 
 ---
 
-# 📈 Custom Metrics
-
-The package includes support for **custom and predefined metrics**.
-
-* `GaugeWrapper` → create observable gauges easily
-* Predefined metrics:
-
-  * `memory_used_mb`
-  * `postgresql.connections.active`
-* Extendable via `CustomMetrics`
-
-```csharp
-// Example: create your own custom gauge
-GaugeWrapper.Create("custom.active_users", () => MyService.GetActiveUsersCount());
-```
+Hai ragione: il README diventa molto più convincente se oltre a mostrare **come dichiarare** le metriche, fai vedere anche **come usarle realmente** dentro un endpoint.
+Ti propongo una versione aggiornata della sezione, dove includiamo anche il frammento con le chiamate a `ParallelTelemetry.IncActive()`, `ParallelTelemetry.IncTotal()`, `ParallelTelemetry.DecActive()`.
 
 ---
 
-# 🔗 Correlation between Logs and Traces
+
+# 🔗 Correlation between Logs, Traces and Metrics
 
 Logs and traces are automatically correlated using a common `IdTransaction`.
 This makes it easy to navigate from a **trace span** to the corresponding **logs** and vice versa.
@@ -1121,6 +1109,78 @@ public async Task<IResult> getUserInfo(
 * Tags enrich the span with context.
 * Logs and traces are automatically correlated through `IdTransaction`.
 
+### 📊 Telemetry and Custom Metrics
+
+With **CSharpEssentials.LoggerHelper** you don’t need to wrestle with the verbosity of `System.Diagnostics.Metrics`.
+Thanks to wrappers like (`GaugeWrapper<T>`, `CounterWrapper<T>`, etc.) you can define metrics in a clean and straightforward way, and persist them into your database.
+
+
+```csharp
+static class ParallelTelemetry {
+    private static readonly Meter _meter = new("CSharpEssentials.Telemetry.Parallel", "1.0.0");
+
+    // Gauge: number of active tasks
+    private static readonly GaugeWrapper<int> _activeGauge = new(
+        _meter,
+        name: "telemetry.parallel_active_requests",
+        valueProvider: () => Volatile.Read(ref _active),
+        unit: "count",
+        description: "Current active parallel getUserInfo tasks");
+
+    // Gauge: total runs since startup
+    private static readonly GaugeWrapper<long> _totalGauge = new(
+        _meter,
+        name: "telemetry.parallel_total_runs",
+        valueProvider: () => Interlocked.Read(ref _totalRuns),
+        unit: "count",
+        description: "Total parallel getUserInfo runs since app start");
+
+    private static int _active;
+    private static long _totalRuns;
+
+    public static void IncActive() => Interlocked.Increment(ref _active);
+    public static void DecActive() => Interlocked.Decrement(ref _active);
+    public static void IncTotal() => Interlocked.Increment(ref _totalRuns);
+}
+```
+
+### 2. Use your metrics inside a Minimal API endpoint
+
+```csharp
+app.MapPost("Telemetry/Parallel", async (
+    ParallelRequest body,
+    IhttpsClientHelperFactory httpFactory,
+    CancellationToken ct) =>
+{
+    var tasks = new List<Task>();
+
+    for (int i = 0; i < body.N; i++) {
+        tasks.Add(Task.Run(async () =>
+        {
+            ParallelTelemetry.IncActive();
+            ParallelTelemetry.IncTotal();
+            try {
+                var outcome = await getUserInfo("user", "token", httpFactory);
+                // ... handle result ...
+            }
+            finally {
+                ParallelTelemetry.DecActive();
+            }
+        }, ct));
+    }
+
+    await Task.WhenAll(tasks);
+    return Results.Ok("Done");
+});
+```
+
+Here the metrics are automatically updated each time the endpoint runs:
+
+* **`IncActive`** increases the number of concurrent requests,
+* **`IncTotal`** increments the global counter,
+* **`DecActive`** ensures the active gauge goes back down once the task completes.
+
+👉 The result: **metrics that reflect real runtime activity, persisted directly in your database, with minimal effort.**
 ---
 
 ## 🔍 Dashboard <a id='dashboard'></a>   [🔝](#table-of-contents)
