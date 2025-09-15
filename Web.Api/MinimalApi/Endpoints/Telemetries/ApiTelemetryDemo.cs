@@ -6,6 +6,7 @@ using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.Telemetry.Context;
 using CSharpEssentials.LoggerHelper.Telemetry.Metrics;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.Collections.Concurrent;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
@@ -143,6 +144,33 @@ public class ApiTelemetryDemo : IEndpointDefinition {
             var pick = items[i]; // già N elementi
             tasks.Add(Task.Run(async () =>
             {
+
+                var activeCtx = new {
+                    MetricName = "telemetry.parallel_active_requests",
+                    Value = 10, // es. Volatile.Read(...)
+                    Unit = "count",
+                    Description = "Current active parallel getUserInfo tasks",
+                    Kind = "gauge"
+                };
+                loggerExtension<RequestSample>.TraceAsync(new RequestSample { Action = "ParallelRun", UserID = pick.UserID, Token = pick.Token },
+                    Serilog.Events.LogEventLevel.Information, null,
+                    "metric {@tcx}",
+                    activeCtx);
+
+                // 2) Counter: incremento di 1
+                var totalCtx = new {
+                    MetricName = "telemetry.parallel_total_runs",
+                    Value = 1,
+                    Unit = "count",
+                    Description = "Total parallel getUserInfo runs since app start",
+                    Kind = "counter"
+                };
+
+                loggerExtension<RequestSample>.TraceAsync(new RequestSample { Action = "ParallelRun", UserID = pick.UserID, Token = pick.Token },
+                    Serilog.Events.LogEventLevel.Information, null,
+                    "metric {@tcx}",
+                    totalCtx);
+
                 ParallelTelemetry.IncActive();
                 ParallelTelemetry.IncTotal();
                 try {

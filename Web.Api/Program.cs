@@ -1,6 +1,8 @@
+using BusinessLayer.Application;
 using BusinessLayer.Contracts.Context;
 using BusinessLayer.Mocks;
 using CSharpEssentials.HttpHelper;
+using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
@@ -14,7 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
 builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
+
 #region Logger Configuration
+builder.Services.AddSingleton<IContextLogEnricher, MetricsEnricher>();
 builder.Services.AddloggerConfiguration(builder);
 #endregion
 
