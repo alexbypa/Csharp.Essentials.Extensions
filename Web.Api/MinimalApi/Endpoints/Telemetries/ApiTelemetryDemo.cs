@@ -6,8 +6,11 @@ using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.Telemetry.Context;
 using CSharpEssentials.LoggerHelper.Telemetry.Metrics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Serilog;
+using Serilog.Events;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
 
@@ -23,6 +26,11 @@ public class ApiTelemetryDemo : IEndpointDefinition {
         app.MapPost("Telemetry/Parallel", runUserInfoInParallel)
            .WithSummary("Runs N parallel getUserInfo calls")
            .WithDescription("Launches N parallel tasks calling getUserInfo; each task receives a UserID and Token (sometimes the token is the valid 'super-secret').")
+           .WithTags("Telemetry");
+
+        // NEW: endpoint QoS → JSON + log strutturato (sink Elastic via LoggerHelper)
+        app.MapGet("Telemetry/QoS", getQoS)
+           .WithSummary("QoS snapshot (5m window)")
            .WithTags("Telemetry");
     }
 
@@ -76,12 +84,15 @@ public class ApiTelemetryDemo : IEndpointDefinition {
     public async Task<IResult> getUserInfo(
         [FromQuery] string UserID,
         [FromQuery] string Token,
-        [FromServices] IhttpsClientHelperFactory httpFactory) {
+        [FromServices] IhttpsClientHelperFactory httpFactory,
+        [FromServices] MyCustomMetrics metrics) {
         var request = new RequestSample {
             Action = "getUserInfo",
             UserID = UserID,
             Token = Token
         };
+        var sw = Stopwatch.StartNew();
+
 
         using var trace = LoggerExtensionWithMetrics<RequestSample>
             .TraceAsync(request, Serilog.Events.LogEventLevel.Information, null, "Chiamata a minimal api")
@@ -107,6 +118,9 @@ public class ApiTelemetryDemo : IEndpointDefinition {
                 Headers = new Dictionary<string, string> { { "mode", "Test" } },
                 Auth = new HttpAuthSpec { BearerToken = Token }
             });
+        sw.Stop();
+        var statusCode = result.Success ? 200 : 500;
+        metrics.Track(statusCode, (int)sw.ElapsedMilliseconds);
 
         loggerExtension<RequestSample>.TraceAsync(
             request,
@@ -124,7 +138,8 @@ public class ApiTelemetryDemo : IEndpointDefinition {
     public async Task<IResult> runUserInfoInParallel(
         [FromBody] ParallelRequest body,
         [FromServices] IhttpsClientHelperFactory httpFactory,
-        CancellationToken ct) {
+        CancellationToken ct,
+        [FromServices] MyCustomMetrics myCustomMetrics) {
         if (body is null || body.N <= 0)
             return Results.BadRequest("Provide N > 0.");
 
@@ -174,7 +189,7 @@ public class ApiTelemetryDemo : IEndpointDefinition {
                 ParallelTelemetry.IncActive();
                 ParallelTelemetry.IncTotal();
                 try {
-                    var outcome = await getUserInfo(pick.UserID, pick.Token, httpFactory);
+                    var outcome = await getUserInfo(pick.UserID, pick.Token, httpFactory, myCustomMetrics);
                     var (ok, value, error) = await MaterializeIResult(outcome);
                     return (ok, value, error, pick.UserID, pick.Token);
                 } catch (Exception ex) {
@@ -217,7 +232,32 @@ public class ApiTelemetryDemo : IEndpointDefinition {
             return new string(buf);
         }
     }
+    public IResult getQoS(
+        [FromServices] MyCustomMetrics metrics,
+        [FromServices] IConfiguration cfg) {
+        var snap = metrics.Snapshot();
 
+        // Evento strutturato per LoggerHelper (va su tutti i sink, incluso Elastic)
+        var evt = new {
+            Action = "QoS_Snapshot",
+            IdTransaction = Guid.NewGuid().ToString(),
+            ApplicationName = cfg["Service:Name"] ?? "my-service",
+            Environment = cfg["Service:Environment"] ?? "dev",
+            Qos100 = snap.qos100,
+            SuccessRatePct = snap.success_rate_pct,
+            P95Ms = snap.p95_ms,
+            Count = snap.count,
+            ThresholdMs = snap.threshold_ms
+        };
+
+        // NB: messaggio con proprietà strutturate
+        loggerExtension<RequestSample>.TraceAsync(new RequestSample { Action = "QoS_Snapshot" },
+            Serilog.Events.LogEventLevel.Information, null,
+            "metric {@qos}",
+            evt);
+
+        return Results.Json(snap);
+    }
     /// <summary>
     /// Utility: materializza un IResult in (ok, value, error) per poter aggregare le risposte.
     /// </summary>

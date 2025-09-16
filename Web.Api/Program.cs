@@ -9,6 +9,7 @@ using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.LoggerHelper;
+using Web.Api.MinimalApi.Endpoints.Telemetries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler()
 #region Logger Configuration
 builder.Services.AddSingleton<IContextLogEnricher, MetricsEnricher>();
 builder.Services.AddloggerConfiguration(builder);
+builder.Services.AddSingleton(new MyCustomMetrics(500));
 #endregion
 
 builder.Services.AddLoggerTelemetry(builder);

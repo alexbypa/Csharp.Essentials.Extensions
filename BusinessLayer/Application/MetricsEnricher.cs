@@ -20,5 +20,7 @@ public sealed class MetricsEnricher : IContextLogEnricher {
         }
         return logger;
     }
-    public LoggerConfiguration Enrich(LoggerConfiguration configuration) => configuration;
+    public LoggerConfiguration Enrich(LoggerConfiguration cfg) =>
+            cfg.Enrich.WithProperty("tags.service", "minimal-api")
+                      .Enrich.WithProperty("tags.env", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "unknown");
 }
