@@ -1109,78 +1109,186 @@ public async Task<IResult> getUserInfo(
 * Tags enrich the span with context.
 * Logs and traces are automatically correlated through `IdTransaction`.
 
-### 📊 Telemetry and Custom Metrics
+### Custom Metrics with `GaugeWrapper` + sending to Kibana/Elasticsearch
 
-With **CSharpEssentials.LoggerHelper** you don’t need to wrestle with the verbosity of `System.Diagnostics.Metrics`.
-Thanks to wrappers like (`GaugeWrapper<T>`, `CounterWrapper<T>`, etc.) you can define metrics in a clean and straightforward way, and persist them into your database.
+This section shows how to:
 
+1. define custom metrics with a `CustomMetrics` class using `GaugeWrapper`;
+2. use those metrics inside endpoints and send them automatically to Kibana/Elasticsearch via `LoggerHelper.Telemetry` (through `MetricsEnricher`).
+
+> Note: you don’t need to use `.NET System.Diagnostics.Metrics` directly – everything is handled by the `CSharpEssentials.LoggerHelper.Telemetry` package.
+
+---
+
+### Packages
+
+```
+dotnet add package CSharpEssentials.LoggerHelper
+dotnet add package CSharpEssentials.LoggerHelper.Telemetry
+dotnet add package CSharpEssentials.LoggerHelper.Sink.Elasticsearch
+```
+
+---
+
+### `CustomMetrics` class (with `GaugeWrapper`)
+
+A minimal example exposing two “live” gauges and latency/success tracking:
 
 ```csharp
-static class ParallelTelemetry {
-    private static readonly Meter _meter = new("CSharpEssentials.Telemetry.Parallel", "1.0.0");
+using System.Collections.Concurrent;
+using CSharpEssentials.LoggerHelper.Telemetry.Metrics;
 
-    // Gauge: number of active tasks
-    private static readonly GaugeWrapper<int> _activeGauge = new(
-        _meter,
-        name: "telemetry.parallel_active_requests",
-        valueProvider: () => Volatile.Read(ref _active),
-        unit: "count",
-        description: "Current active parallel getUserInfo tasks");
+public sealed class CustomMetrics
+{
+    private int _active;           
+    private long _totalRuns;       
+    private readonly ConcurrentQueue<int> _latencies = new();
 
-    // Gauge: total runs since startup
-    private static readonly GaugeWrapper<long> _totalGauge = new(
-        _meter,
-        name: "telemetry.parallel_total_runs",
-        valueProvider: () => Interlocked.Read(ref _totalRuns),
-        unit: "count",
-        description: "Total parallel getUserInfo runs since app start");
+    private readonly GaugeWrapper<int> _activeGauge;
+    private readonly GaugeWrapper<long> _totalGauge;
 
-    private static int _active;
-    private static long _totalRuns;
+    private long _ok;               
+    private long _count;            
+    private readonly int _thresholdMs;
 
-    public static void IncActive() => Interlocked.Increment(ref _active);
-    public static void DecActive() => Interlocked.Decrement(ref _active);
-    public static void IncTotal() => Interlocked.Increment(ref _totalRuns);
+    public CustomMetrics(int thresholdMs = 100)
+    {
+        _thresholdMs = thresholdMs;
+
+        _activeGauge = new GaugeWrapper<int>(
+            name: "telemetry.parallel_active_requests",
+            valueProvider: () => Volatile.Read(ref _active),
+            unit: "count",
+            description: "Current active parallel tasks");
+
+        _totalGauge = new GaugeWrapper<long>(
+            name: "telemetry.parallel_total_runs",
+            valueProvider: () => Interlocked.Read(ref _totalRuns),
+            unit: "count",
+            description: "Total parallel runs since app start");
+    }
+
+    public void IncActive() => Interlocked.Increment(ref _active);
+    public void DecActive() => Interlocked.Decrement(ref _active);
+    public void IncTotal()  => Interlocked.Increment(ref _totalRuns);
+
+    public void Track(int statusCode, int elapsedMs)
+    {
+        Interlocked.Increment(ref _count);
+        if (statusCode is >= 200 and < 300) Interlocked.Increment(ref _ok);
+
+        _latencies.Enqueue(elapsedMs);
+        while (_latencies.Count > 10_000 && _latencies.TryDequeue(out _)) { }
+    }
+
+    public (int qosUnderThreshold, double successRatePct, int p95Ms, long count, int thresholdMs) Snapshot()
+    {
+        var arr = _latencies.ToArray();
+        Array.Sort(arr);
+        int p95 = arr.Length == 0 ? 0 : arr[(int)Math.Clamp(Math.Ceiling(arr.Length * 0.95) - 1, 0, arr.Length - 1)];
+        double okPct = _count == 0 ? 0 : Math.Round((double)_ok / _count * 100, 2);
+        int qos = arr.Count(v => v <= _thresholdMs);
+        return (qos, okPct, p95, _count, _thresholdMs);
+    }
 }
 ```
 
-### 2. Use your metrics inside a Minimal API endpoint
+---
+
+### Integration in `Program.cs`
+
+`LoggerHelper.Telemetry` enriches logs with metrics via `MetricsEnricher`. Register it in DI and use `loggerExtension<T>`:
 
 ```csharp
-app.MapPost("Telemetry/Parallel", async (
-    ParallelRequest body,
-    IhttpsClientHelperFactory httpFactory,
-    CancellationToken ct) =>
+using CSharpEssentials.LoggerHelper;
+using CSharpEssentials.LoggerHelper.Telemetry;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<IContextLogEnricher, MetricsEnricher>();
+builder.Services.AddSingleton<CustomMetrics>();
+
+var app = builder.Build();
+app.Run();
+```
+
+---
+
+### Using metrics in endpoints
+
+Simple example: measure latency, track result, and optionally update gauges for parallel runs.
+
+```csharp
+app.MapGet("Telemetry/Simple", async (CustomMetrics metrics) =>
 {
-    var tasks = new List<Task>();
+    var sw = System.Diagnostics.Stopwatch.StartNew();
 
-    for (int i = 0; i < body.N; i++) {
-        tasks.Add(Task.Run(async () =>
-        {
-            ParallelTelemetry.IncActive();
-            ParallelTelemetry.IncTotal();
-            try {
-                var outcome = await getUserInfo("user", "token", httpFactory);
-                // ... handle result ...
-            }
-            finally {
-                ParallelTelemetry.DecActive();
-            }
-        }, ct));
+    // ... business logic / external call ...
+    int statusCode = 200;
+
+    sw.Stop();
+    metrics.Track(statusCode, (int)sw.ElapsedMilliseconds);
+
+    return Results.Ok(new { ok = true });
+});
+
+app.MapGet("Telemetry/Parallel", async (CustomMetrics metrics) =>
+{
+    metrics.IncActive();
+    metrics.IncTotal();
+    try
+    {
+        await Task.Delay(50);
+        metrics.Track(200, 50);
+        return Results.Ok();
     }
-
-    await Task.WhenAll(tasks);
-    return Results.Ok("Done");
+    finally
+    {
+        metrics.DecActive();
+    }
 });
 ```
 
-Here the metrics are automatically updated each time the endpoint runs:
+---
 
-* **`IncActive`** increases the number of concurrent requests,
-* **`IncTotal`** increments the global counter,
-* **`DecActive`** ensures the active gauge goes back down once the task completes.
+### Emitting “metric” events to Elasticsearch
 
-👉 The result: **metrics that reflect real runtime activity, persisted directly in your database, with minimal effort.**
+Sending metrics to logs (and Elasticsearch) is a **built-in behavior** of `LoggerHelper.Telemetry`.
+To emit a structured payload (e.g. QoS snapshot), use `loggerExtension<T>` in the correct format supported by `MetricsEnricher`:
+
+```csharp
+public sealed class RequestSample
+{
+    public string? Action { get; set; }
+}
+
+app.MapGet("Telemetry/QoS", (CustomMetrics metrics, IConfiguration cfg) =>
+{
+    var snap = metrics.Snapshot();
+
+    var evt = new
+    {
+        ApplicationName   = cfg["Service:Name"] ?? "my-service",
+        Environment       = cfg["Service:Environment"] ?? "dev",
+        QosUnderThreshold = snap.qosUnderThreshold,
+        SuccessRatePct    = snap.successRatePct,
+        P95Ms             = snap.p95Ms,
+        Count             = snap.count,
+        ThresholdMs       = snap.thresholdMs
+    };
+
+    loggerExtension<RequestSample>.TraceAsync(
+        new RequestSample { Action = "QoS_Snapshot" },
+        Serilog.Events.LogEventLevel.Information,
+        null,
+        "metric {@qos}",
+        evt);
+
+    return Results.Json(snap);
+});
+```
+
+> No need to build raw objects with `MetricName/Value/Unit/Kind`. `MetricsEnricher` takes care of serializing metrics in the expected format and sending them to all configured sinks, including Elasticsearch.
 ---
 
 ## 🔍 Dashboard <a id='dashboard'></a>   [🔝](#table-of-contents)
