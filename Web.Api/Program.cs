@@ -11,6 +11,7 @@ using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
+using System.Net.Http.Headers;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.LoggerHelper;
 using Web.Api.MinimalApi.Endpoints.Telemetries;
@@ -56,6 +57,25 @@ builder.Services.AddScoped<ILogMacroAction, SummarizeIncidentAction>();
 builder.Services.AddScoped<ILogMacroAction, CorrelateTraceAction>();
 builder.Services.AddScoped<ILogMacroAction, DetectAnomalyAction>();
 builder.Services.AddScoped<IActionOrchestrator, ActionOrchestrator>();
+builder.Services.AddHttpClient<ILlmChat, OpenAiLlmChat>(); // oppure
+// GitHub Models via Azure AI Inference
+builder.Services.AddHttpClient("ghmodels", c => {
+    c.BaseAddress = new Uri("https://models.inference.ai.azure.com/");
+    c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+    c.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2023-10-01");
+
+    var pat =
+        builder.Configuration["GITHUB_TOKEN"] ??
+        builder.Configuration["Parameters:chat-gh-apikey"] ??
+        Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+
+    if (string.IsNullOrWhiteSpace(pat))
+        throw new InvalidOperationException("GITHUB_TOKEN mancante.");
+
+    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", pat);
+});
+
+
 #endregion
 
 #region Minimal API
