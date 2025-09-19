@@ -3,9 +3,9 @@ using BusinessLayer.Contracts.Context;
 using BusinessLayer.Mocks;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
-using CSharpEssentials.LoggerHelper.AI;
 using CSharpEssentials.LoggerHelper.AI.Application;
 using CSharpEssentials.LoggerHelper.AI.Domain;
+using CSharpEssentials.LoggerHelper.AI.Infrastructure;
 using CSharpEssentials.LoggerHelper.AI.Ports;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
@@ -54,9 +54,14 @@ builder.Services.AddScoped<ITraceRepository, SqlTraceRepository>();
 builder.Services.AddScoped<IMetricRepository, SqlMetricRepository>();
 
 // Azioni macro e orchestratore (come già definito in precedenza)
+builder.Services.AddScoped<IEmbeddingService, NaiveEmbeddingService>();
+builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>(); 
+builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>(); 
+
 builder.Services.AddScoped<ILogMacroAction, SummarizeIncidentAction>();
 builder.Services.AddScoped<ILogMacroAction, CorrelateTraceAction>();
 builder.Services.AddScoped<ILogMacroAction, DetectAnomalyAction>();
+builder.Services.AddScoped<ILogMacroAction, RagAnswerQueryAction>();
 builder.Services.AddScoped<IActionOrchestrator, ActionOrchestrator>();
 
 builder.Services.AddScoped<ILlmChat, OpenAiLlmChat>(); // oppure
