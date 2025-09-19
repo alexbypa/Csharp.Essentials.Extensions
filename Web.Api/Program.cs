@@ -1,6 +1,5 @@
 using BusinessLayer.Application;
 using BusinessLayer.Contracts.Context;
-using BusinessLayer.Mocks;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.AI.Application;
@@ -12,9 +11,7 @@ using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Microsoft.Data.SqlClient;
 using Scalar.AspNetCore;
-using System.Net.Http.Headers;
 using Web.Api.MinimalApi;
-using Web.Api.MinimalApi.Endpoints.LoggerHelper;
 using Web.Api.MinimalApi.Endpoints.Telemetries;
 
 var builder = WebApplication.CreateBuilder(args);
