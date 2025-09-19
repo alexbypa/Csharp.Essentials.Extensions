@@ -1,4 +1,4 @@
-﻿using CSharpEssentials.LoggerHelper.AI;
+﻿using CSharpEssentials.LoggerHelper.AI.Application;
 using CSharpEssentials.LoggerHelper.AI.Domain;
 
 namespace Web.Api.MinimalApi.Endpoints.AI;

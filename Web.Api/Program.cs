@@ -4,6 +4,7 @@ using BusinessLayer.Mocks;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.AI;
+using CSharpEssentials.LoggerHelper.AI.Application;
 using CSharpEssentials.LoggerHelper.AI.Domain;
 using CSharpEssentials.LoggerHelper.AI.Ports;
 using CSharpEssentials.LoggerHelper.Configuration;
@@ -19,8 +20,8 @@ using Web.Api.MinimalApi.Endpoints.Telemetries;
 var builder = WebApplication.CreateBuilder(args);
 
 #region CSharpEssentials.HttpHelper Package
-//builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
-builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
+builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
+//builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
 
 #region Logger Configuration
@@ -57,7 +58,9 @@ builder.Services.AddScoped<ILogMacroAction, SummarizeIncidentAction>();
 builder.Services.AddScoped<ILogMacroAction, CorrelateTraceAction>();
 builder.Services.AddScoped<ILogMacroAction, DetectAnomalyAction>();
 builder.Services.AddScoped<IActionOrchestrator, ActionOrchestrator>();
-builder.Services.AddHttpClient<ILlmChat, OpenAiLlmChat>(); // oppure
+
+builder.Services.AddScoped<ILlmChat, OpenAiLlmChat>(); // oppure
+/*
 // GitHub Models via Azure AI Inference
 builder.Services.AddHttpClient("ghmodels", c => {
     c.BaseAddress = new Uri("https://models.inference.ai.azure.com/");
@@ -74,7 +77,7 @@ builder.Services.AddHttpClient("ghmodels", c => {
 
     c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", pat);
 });
-
+*/
 
 #endregion
 
