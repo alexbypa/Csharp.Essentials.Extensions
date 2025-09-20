@@ -43,7 +43,39 @@ builder.Services.AddCors(opt => {
 #endregion
 
 #region LoggerHelper.AI Package
-// SQL Server
+
+
+// Dati di testo di esempio
+var rawDocs = new List<string>
+{
+    "Elevato numero di connessioni attive al database, superiore al pool massimo consentito",
+    "Latenza elevata sul server del database",
+    "Query SQL complesse e non ottimizzate che bloccano le risorse del database per periodi prolungati",
+    "La richiesta al servizio esterno A ha fallito con un errore HTTP 500"
+};
+
+// Supponendo di avere un'implementazione di IEmbeddingService
+var embeddingService = new NaiveEmbeddingService(); // o qualsiasi altra implementazione
+var docsWithEmbeddings = new List<LogEmbedding>();
+
+foreach (var text in rawDocs) {
+    var embedding = await embeddingService.EmbedAsync(text);
+    docsWithEmbeddings.Add(new LogEmbedding(
+        Id: Guid.NewGuid().ToString(),
+        App: "SampleApp",
+        Ts: DateTimeOffset.UtcNow,
+        Vector: embedding,
+        Text: text,
+        TraceId: null
+    ));
+}
+
+// Registra la lista come un'istanza singola.
+builder.Services.AddSingleton<ILogVectorStore>(
+    new InMemoryLogVectorStore(embeddingService)
+);  
+
+// DB
 if (builder.Configuration.GetValue<string>("DatabaseProvider")!.Contains("postgresql", StringComparison.InvariantCultureIgnoreCase)) {
     builder.Services.AddScoped(_ => new NpgsqlConnection(builder.Configuration.GetConnectionString("Default")));
     builder.Services.AddScoped<IWrapperDbConnection>(_ => new FactoryPostgreSqlConnection(builder.Configuration.GetConnectionString("Default")!));
@@ -59,8 +91,9 @@ builder.Services.AddScoped<IMetricRepository, SqlMetricRepository>();
 
 // Azioni macro e orchestratore (come già definito in precedenza)
 builder.Services.AddScoped<IEmbeddingService, NaiveEmbeddingService>();
-builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>(); 
-builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>(); 
+
+//builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>(); 
+//builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>(); 
 
 builder.Services.AddScoped<ILogMacroAction, SummarizeIncidentAction>();
 builder.Services.AddScoped<ILogMacroAction, CorrelateTraceAction>();
