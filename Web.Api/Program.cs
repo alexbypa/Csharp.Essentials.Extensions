@@ -10,6 +10,7 @@ using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Microsoft.Data.SqlClient;
+using Npgsql;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.Telemetries;
@@ -43,7 +44,13 @@ builder.Services.AddCors(opt => {
 
 #region LoggerHelper.AI Package
 // SQL Server
-builder.Services.AddScoped(_ => new SqlConnection(builder.Configuration.GetConnectionString("Default")));
+if (builder.Configuration.GetValue<string>("DatabaseProvider")!.Contains("postgresql", StringComparison.InvariantCultureIgnoreCase)) {
+    builder.Services.AddScoped(_ => new NpgsqlConnection(builder.Configuration.GetConnectionString("Default")));
+    builder.Services.AddScoped<IWrapperDbConnection>(_ => new FactoryPostgreSqlConnection(builder.Configuration.GetConnectionString("Default")!));
+} else {
+    builder.Services.AddScoped(_ => new SqlConnection(builder.Configuration.GetConnectionString("Default")));
+    builder.Services.AddScoped<IWrapperDbConnection>(_ => new FactorySQlConnection(builder.Configuration.GetConnectionString("Default")!));
+}
 
 // Repos
 builder.Services.AddScoped<ILogRepository, SqlLogRepository>();
