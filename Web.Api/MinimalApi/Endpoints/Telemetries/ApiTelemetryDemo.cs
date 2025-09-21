@@ -95,11 +95,11 @@ public class ApiTelemetryDemo : IEndpointDefinition {
 
 
         using var trace = LoggerExtensionWithMetrics<RequestSample>
-            .TraceAsync(request, Serilog.Events.LogEventLevel.Information, null, "Chiamata a minimal api")
+            .TraceAsync(request, LogEventLevel.Information, null, "Calling Demo API Page")
             .StartActivity("getUserInfo")
             .AddTag("Minimal API", "GV"); // Per gli span
 
-        loggerExtension<RequestSample>.TraceAsync(request, Serilog.Events.LogEventLevel.Information, null, "Messaggio di prova");
+        loggerExtension<RequestSample>.TraceAsync(request, Serilog.Events.LogEventLevel.Information, null, "DemoMessage");
 
         var verifyTokenResponseHandler = new VerifyTokenResponseHandler<RequestSample>(request, httpFactory);
         var userInfoResponseHandler = new UserInfoResponseHandler<RequestSample>(request, httpFactory);
@@ -119,12 +119,13 @@ public class ApiTelemetryDemo : IEndpointDefinition {
                 Auth = new HttpAuthSpec { BearerToken = Token }
             });
         sw.Stop();
-        var statusCode = result.Success ? 200 : 500;
+        var statusCode = result.Value?.StatusCode ?? 500;
+        
         metrics.Track(statusCode, (int)sw.ElapsedMilliseconds);
 
         loggerExtension<RequestSample>.TraceAsync(
             request,
-            Serilog.Events.LogEventLevel.Information,
+            statusCode == 200 ? LogEventLevel.Information : LogEventLevel.Error,
             null,
             "Esecuzione completata con risposta {res}",
             JsonSerializer.Serialize(result));
