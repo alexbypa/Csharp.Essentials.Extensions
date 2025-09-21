@@ -13,7 +13,7 @@
 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
-*.Development.json
+appsettings.Development.json
 *.debug.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
