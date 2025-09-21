@@ -1,5 +1,6 @@
 using BusinessLayer.Application;
 using BusinessLayer.Contracts.Context;
+using BusinessLayer.Mocks;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.AI.Application;
@@ -18,8 +19,8 @@ using Web.Api.MinimalApi.Endpoints.Telemetries;
 var builder = WebApplication.CreateBuilder(args);
 
 #region CSharpEssentials.HttpHelper Package
-builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
-//builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
+//builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
+builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
 
 #region Logger Configuration
@@ -44,39 +45,10 @@ builder.Services.AddCors(opt => {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #region LoggerHelper.AI Package 
-
-/*
-// Dati di testo di esempio
-var rawDocs = new List<string>
-{
-    "Elevato numero di connessioni attive al database, superiore al pool massimo consentito",
-    "Latenza elevata sul server del database",
-    "Query SQL complesse e non ottimizzate che bloccano le risorse del database per periodi prolungati",
-    "La richiesta al servizio esterno A ha fallito con un errore HTTP 500"
-};
-
-// Supponendo di avere un'implementazione di IEmbeddingService
-var embeddingService = new NaiveEmbeddingService(); // o qualsiasi altra implementazione
-var docsWithEmbeddings = new List<LogEmbedding>();
-
-foreach (var text in rawDocs) {
-    var embedding = await embeddingService.EmbedAsync(text);
-    docsWithEmbeddings.Add(new LogEmbedding(
-        Id: Guid.NewGuid().ToString(),
-        App: "SampleApp",
-        Ts: DateTimeOffset.UtcNow,
-        Vector: embedding,
-        Text: text,
-        TraceId: null
-    ));
-}
-
-// Registra la lista come un'istanza singola.
-builder.Services.AddSingleton<ILogVectorStore>(
-    new InMemoryLogVectorStore(embeddingService)
-);  
-*/
-// DB
+// --- SEZIONE DATABASE ---
+// Qui rendiamo l'applicazione flessibile, in grado di passare da un database
+// all'altro cambiando solo una riga nel file di configurazione appsettings.json.
+// -> Legge il valore "DatabaseProvider" dalla configurazione.
 if (builder.Configuration.GetValue<string>("DatabaseProvider")!.Contains("postgresql", StringComparison.InvariantCultureIgnoreCase)) {
     builder.Services.AddScoped(_ => new NpgsqlConnection(builder.Configuration.GetConnectionString("Default")));
     builder.Services.AddScoped<IWrapperDbConnection>(_ => new FactoryPostgreSqlConnection(builder.Configuration.GetConnectionString("Default")!));
@@ -85,28 +57,40 @@ if (builder.Configuration.GetValue<string>("DatabaseProvider")!.Contains("postgr
     builder.Services.AddScoped<IWrapperDbConnection>(_ => new FactorySQlConnection(builder.Configuration.GetConnectionString("Default")!));
 }
 
-// Repos
+// --- SEZIONE REPOSITORY (Livello Accesso Dati) ---
+// I repository sono classi che contengono la logica per interrogare il database.
+// Dipendono da 'IWrapperDbConnection' che abbiamo registrato sopra.
+// -> Quando una classe chiede 'ILogRepository', gli viene data un'istanza di 'SqlLogRepository'.
 builder.Services.AddScoped<ILogRepository, SqlLogRepository>();
 builder.Services.AddScoped<ITraceRepository, SqlTraceRepository>();
 builder.Services.AddScoped<IMetricRepository, SqlMetricRepository>();
 
-// Azioni macro e orchestratore (come già definito in precedenza)
+// -> Registra il servizio per creare gli embedding (vettori numerici dal testo).
 builder.Services.AddScoped<IEmbeddingService, NaiveEmbeddingService>();
 
+// -> Registra il nostro "costruttore di dati" da file. È 'Transient' perché è leggero,
+//    senza stato, e vogliamo un'istanza nuova ogni volta che viene usato.
 builder.Services.AddTransient<FileLogIndexer>(); // se vuoi usarlo per popolare il vettore store da file
 
-builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>(); 
-builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>(); 
+builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>();
+//builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>();
 
+//builder.Services.AddHostedService<VectorStoreInitializationService>();//TODO:
+
+// -> Registriamo più implementazioni per la stessa interfaccia 'ILogMacroAction'.
+//    Questo permette all'orchestratore di riceverle tutte in una lista e decidere quale usare.
 builder.Services.AddScoped<ILogMacroAction, SummarizeIncidentAction>();
 builder.Services.AddScoped<ILogMacroAction, CorrelateTraceAction>();
 builder.Services.AddScoped<ILogMacroAction, DetectAnomalyAction>();
 builder.Services.AddScoped<ILogMacroAction, RagAnswerQueryAction>();
+
+// -> Registra l'orchestratore, la classe che gestisce e coordina tutte le azioni.
 builder.Services.AddScoped<IActionOrchestrator, ActionOrchestrator>();
 
 builder.Services.AddScoped<ILlmChat, OpenAiLlmChat>(); // oppure
 #endregion///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// -> Registra il client per comunicare con il modello di linguaggio (es. OpenAI).
 #region Minimal API
 builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpointDefinition
 #endregion
