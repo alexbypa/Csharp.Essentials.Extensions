@@ -44,6 +44,7 @@ builder.Services.AddCors(opt => {
 
 #region LoggerHelper.AI Package
 
+//This is just sample data for testing the InMemoryLogVectorStore
 
 // Dati di testo di esempio
 var rawDocs = new List<string>
