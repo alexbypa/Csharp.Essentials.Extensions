@@ -42,9 +42,10 @@ builder.Services.AddCors(opt => {
 });
 #endregion
 
-#region LoggerHelper.AI Package
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#region LoggerHelper.AI Package 
 
-
+/*
 // Dati di testo di esempio
 var rawDocs = new List<string>
 {
@@ -74,7 +75,7 @@ foreach (var text in rawDocs) {
 builder.Services.AddSingleton<ILogVectorStore>(
     new InMemoryLogVectorStore(embeddingService)
 );  
-
+*/
 // DB
 if (builder.Configuration.GetValue<string>("DatabaseProvider")!.Contains("postgresql", StringComparison.InvariantCultureIgnoreCase)) {
     builder.Services.AddScoped(_ => new NpgsqlConnection(builder.Configuration.GetConnectionString("Default")));
@@ -92,8 +93,10 @@ builder.Services.AddScoped<IMetricRepository, SqlMetricRepository>();
 // Azioni macro e orchestratore (come già definito in precedenza)
 builder.Services.AddScoped<IEmbeddingService, NaiveEmbeddingService>();
 
-//builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>(); 
-//builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>(); 
+builder.Services.AddTransient<FileLogIndexer>(); // se vuoi usarlo per popolare il vettore store da file
+
+builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>(); 
+builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>(); 
 
 builder.Services.AddScoped<ILogMacroAction, SummarizeIncidentAction>();
 builder.Services.AddScoped<ILogMacroAction, CorrelateTraceAction>();
@@ -102,26 +105,7 @@ builder.Services.AddScoped<ILogMacroAction, RagAnswerQueryAction>();
 builder.Services.AddScoped<IActionOrchestrator, ActionOrchestrator>();
 
 builder.Services.AddScoped<ILlmChat, OpenAiLlmChat>(); // oppure
-/*
-// GitHub Models via Azure AI Inference
-builder.Services.AddHttpClient("ghmodels", c => {
-    c.BaseAddress = new Uri("https://models.inference.ai.azure.com/");
-    c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-    c.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2023-10-01");
-
-    var pat =
-        builder.Configuration["GITHUB_TOKEN"] ??
-        builder.Configuration["Parameters:chat-gh-apikey"] ??
-        Environment.GetEnvironmentVariable("GITHUB_TOKEN");
-
-    if (string.IsNullOrWhiteSpace(pat))
-        throw new InvalidOperationException("GITHUB_TOKEN mancante.");
-
-    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", pat);
-});
-*/
-
-#endregion
+#endregion///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #region Minimal API
 builder.Services.AddEndpointDefinitions(); // registra gli endpoint via IEndpointDefinition
