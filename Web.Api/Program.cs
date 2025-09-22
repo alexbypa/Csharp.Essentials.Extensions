@@ -45,6 +45,13 @@ builder.Services.AddCors(opt => {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #region LoggerHelper.AI Package 
+
+builder.Services
+    .AddOptions<LoggerAIOptions>()
+    .Bind(builder.Configuration.GetSection("LoggerAIOptions"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
 // --- SEZIONE DATABASE ---
 // Qui rendiamo l'applicazione flessibile, in grado di passare da un database
 // all'altro cambiando solo una riga nel file di configurazione appsettings.json.
@@ -72,6 +79,7 @@ builder.Services.AddScoped<IEmbeddingService, NaiveEmbeddingService>();
 //    senza stato, e vogliamo un'istanza nuova ogni volta che viene usato.
 builder.Services.AddTransient<FileLogIndexer>(); // se vuoi usarlo per popolare il vettore store da file
 
+builder.Services.AddTransient<IFileLoader, FileLoader>();
 builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>();
 //builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>();
 
@@ -88,7 +96,8 @@ builder.Services.AddScoped<ILogMacroAction, RagAnswerQueryAction>();
 builder.Services.AddScoped<IActionOrchestrator, ActionOrchestrator>();
 
 builder.Services.AddScoped<ILlmChat, OpenAiLlmChat>(); // oppure
-#endregion///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#endregion
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // -> Registra il client per comunicare con il modello di linguaggio (es. OpenAI).
 #region Minimal API
