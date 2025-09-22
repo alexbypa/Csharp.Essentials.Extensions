@@ -11,6 +11,7 @@ using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Options;
 using Npgsql;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
@@ -121,6 +122,5 @@ app.UseHttpsRedirection();
 #region Minimal API
 app.UseEndpointDefinitions(); // definisce gli endpoint
 #endregion
-
 
 app.Run();
