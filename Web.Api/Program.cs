@@ -123,4 +123,8 @@ app.UseHttpsRedirection();
 app.UseEndpointDefinitions(); // definisce gli endpoint
 #endregion
 
+//AI EndPoint Dashboard
+    app.MapAiEndpoints();
+//AI EndPoint Dashboard
+
 app.Run();
