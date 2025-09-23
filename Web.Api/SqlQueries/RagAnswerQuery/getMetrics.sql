@@ -1,0 +1,1 @@
+select Id, ApplicationName App, TimeStamp Ts, LogEvent Message, IdTransaction TraceId from [MetricEntry]  order by id desc
