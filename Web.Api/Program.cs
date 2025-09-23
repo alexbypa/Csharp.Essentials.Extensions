@@ -53,6 +53,7 @@ builder.Services
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+
 // --- SEZIONE DATABASE ---
 // Qui rendiamo l'applicazione flessibile, in grado di passare da un database
 // all'altro cambiando solo una riga nel file di configurazione appsettings.json.
@@ -81,6 +82,12 @@ builder.Services.AddScoped<IEmbeddingService, NaiveEmbeddingService>();
 builder.Services.AddTransient<FileLogIndexer>(); // se vuoi usarlo per popolare il vettore store da file
 
 builder.Services.AddTransient<IFileLoader, FileLoader>();
+
+var serviceProvider = builder.Services.BuildServiceProvider();
+var fileLoader = serviceProvider.GetRequiredService<IFileLoader>();
+var sqlModels = fileLoader.getModelSQLLMModels();
+builder.Services.AddSingleton(sqlModels);
+
 builder.Services.AddScoped<ILogVectorStore, SqlLogVectorStore>();
 //builder.Services.AddScoped<ILogVectorStore, InMemoryLogVectorStore>();
 
