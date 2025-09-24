@@ -44,9 +44,9 @@ public sealed class HttpHelperNetworkClient : INetworkClient {
                 StatusCode = (int)response.StatusCode,
                 Body = await response.Content.ReadAsStringAsync(ct),
                 Headers = response.Headers.ToDictionary(h => h.Key, h => string.Join(",", h.Value))
-            });
+            }, request.IdTransaction);
         } catch (Exception ex) {
-            return OpResult<HttpResponseSpec>.Fail(ex.Message);
+            return OpResult<HttpResponseSpec>.Fail(ex.Message, request.IdTransaction);
         }
     }
 }

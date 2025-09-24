@@ -1,1 +1,1 @@
-select Id, ApplicationName App, TimeStamp Ts, LogEvent Message, IdTransaction TraceId from [LogEntry]  order by id desc
+SELECT * FROM "TraceEntry" where "TraceId" = @traceId

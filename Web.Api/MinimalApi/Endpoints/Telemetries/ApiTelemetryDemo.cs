@@ -89,17 +89,17 @@ public class ApiTelemetryDemo : IEndpointDefinition {
         var request = new RequestSample {
             Action = "getUserInfo",
             UserID = UserID,
-            Token = Token
+            Token = Token,
+            IdTransaction = Guid.NewGuid().ToString()
         };
         var sw = Stopwatch.StartNew();
 
-
         using var trace = LoggerExtensionWithMetrics<RequestSample>
             .TraceAsync(request, LogEventLevel.Information, null, "Calling Demo API Page")
-            .StartActivity("getUserInfo")
-            .AddTag("Minimal API", "GV"); // Per gli span
+            .StartActivity("get User Info")
+            .AddTag("User", UserID); // for span
 
-        loggerExtension<RequestSample>.TraceAsync(request, Serilog.Events.LogEventLevel.Information, null, "DemoMessage");
+        loggerExtension<RequestSample>.TraceAsync(request, LogEventLevel.Information, null, "DemoMessage");
 
         var verifyTokenResponseHandler = new VerifyTokenResponseHandler<RequestSample>(request, httpFactory);
         var userInfoResponseHandler = new UserInfoResponseHandler<RequestSample>(request, httpFactory);
@@ -110,14 +110,16 @@ public class ApiTelemetryDemo : IEndpointDefinition {
             "Test_No_RateLimit",
             httpFactory,
             new ResponseContext(request),
-            new BusinessLayer.Domain.HttpRequestSpec {
+            new HttpRequestSpec {
                 Url = "http://www.yoursite.com/auth/check",
                 Method = "POST",
                 Body = "{'name':'Request','value':'Simple'}",
                 Timeout = TimeSpan.FromSeconds(30),
                 Headers = new Dictionary<string, string> { { "mode", "Test" } },
-                Auth = new HttpAuthSpec { BearerToken = Token }
+                Auth = new HttpAuthSpec { BearerToken = Token },
+                IdTransaction = request.IdTransaction
             });
+        
         sw.Stop();
         var statusCode = result.Value?.StatusCode ?? 500;
         
@@ -129,8 +131,8 @@ public class ApiTelemetryDemo : IEndpointDefinition {
             null,
             "Esecuzione completata con risposta {res}",
             JsonSerializer.Serialize(result));
-
-        return result.Success ? Results.Ok(result.Value) : Results.Problem(result.Error);
+        
+        return result.Success ? Results.Ok(result) : Results.Problem(result.Error);
     }
 
     // -------------------------

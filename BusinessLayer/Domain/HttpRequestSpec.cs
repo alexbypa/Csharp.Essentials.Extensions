@@ -5,6 +5,7 @@ public sealed class HttpAuthSpec {
     public string? BasicPassword { get; init; }
 }
 public sealed class HttpRequestSpec {
+    public string IdTransaction { get; set; }
     public required string Url { get; init; }
     public string Method { get; init; } = "GET";
     public Dictionary<string, string>? Headers { get; init; }

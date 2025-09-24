@@ -1,6 +1,5 @@
 using BusinessLayer.Application;
 using BusinessLayer.Contracts.Context;
-using BusinessLayer.Mocks;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.AI.Application;
@@ -9,12 +8,8 @@ using CSharpEssentials.LoggerHelper.AI.Infrastructure;
 using CSharpEssentials.LoggerHelper.AI.Ports;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
-using CSharpEssentials.LoggerHelper.model;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Options;
 using Npgsql;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
@@ -74,7 +69,7 @@ if (builder.Configuration.GetValue<string>("DatabaseProvider")!.Contains("postgr
 // Dipendono da 'IWrapperDbConnection' che abbiamo registrato sopra.
 // -> Quando una classe chiede 'ILogRepository', gli viene data un'istanza di 'SqlLogRepository'.
 builder.Services.AddScoped<ILogRepository, SqlLogRepository>();
-builder.Services.AddScoped<ITraceRepository, SqlTraceRepository>();
+builder.Services.AddScoped<ITraceRepository<TraceRecord>, SqlTraceRepository>();
 builder.Services.AddScoped<IMetricRepository, SqlMetricRepository>();
 
 // -> Registra il servizio per creare gli embedding (vettori numerici dal testo).

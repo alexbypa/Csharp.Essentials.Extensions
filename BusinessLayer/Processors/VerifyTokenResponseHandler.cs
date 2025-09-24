@@ -22,10 +22,11 @@ public class VerifyTokenResponseHandler<TRequest> : ResponseBaseHandler<TRequest
             null,
             "Query command VerifyTokenResponseHandler UserID: {UserID}, Token: {Token}", _request.UserID ?? "Unknow", _request.Token ?? "Unknow")
             .StartActivity("VerifyToken")
-            .AddTag("UserID", _request.UserID ?? "Unknow");
+            .AddTag("Type Authentication", "Bearer");
         try {
 
             var ctxFactory = new DefaultAfterRequestContextFactory();
+            
             IHttpClientStep[] steps = [
             new TimeoutStep(),
                 new HeadersAndBearerStep()
@@ -39,7 +40,7 @@ public class VerifyTokenResponseHandler<TRequest> : ResponseBaseHandler<TRequest
             var netClient = new HttpHelperNetworkClient(_httpFactory, ctxFactory, steps, actions);
 
             var result = await new FetchAndLogUseCase(netClient).ExecuteAsync(httpOptionName, httpRequestSpec, new NoBodyContentBuilder());
-            return result;
+            //return result;
         } catch (Exception ex) {
             loggerExtension<TRequest>.TraceAsync(_request, Serilog.Events.LogEventLevel.Error, ex, "Error in VerifyTokenResponseHandler");
         } finally {
