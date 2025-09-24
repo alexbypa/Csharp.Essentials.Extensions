@@ -9,7 +9,10 @@ using CSharpEssentials.LoggerHelper.AI.Infrastructure;
 using CSharpEssentials.LoggerHelper.AI.Ports;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
+using CSharpEssentials.LoggerHelper.model;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -131,7 +134,9 @@ app.UseEndpointDefinitions(); // definisce gli endpoint
 #endregion
 
 //AI EndPoint Dashboard
-    app.MapAiEndpoints();
+// Program.cs
+
+app.MapAiEndpoints();
 //AI EndPoint Dashboard
 
 app.Run();
