@@ -1,0 +1,1 @@
+select top (@n) Id, Message, TimeStamp Ts, ApplicationName App from logentry where TimeStamp >= @now
