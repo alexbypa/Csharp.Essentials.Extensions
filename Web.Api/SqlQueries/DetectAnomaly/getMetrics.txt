@@ -1,0 +1,1 @@
+TraceId: {h.Id} | LogEvent: {h.Message} | Score: {h.Score}
