@@ -1,1 +1,1 @@
-SELECT * FROM "TraceEntry" where "TraceId" = @traceId
+SELECT * FROM "TraceEntry" where "TraceId" = (@traceId)
