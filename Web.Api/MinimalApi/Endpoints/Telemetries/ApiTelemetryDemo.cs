@@ -6,10 +6,7 @@ using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.Telemetry.Context;
 using CSharpEssentials.LoggerHelper.Telemetry.Metrics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
-using Serilog;
 using Serilog.Events;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
@@ -19,7 +16,7 @@ namespace Web.Api.MinimalApi.Endpoints.Telemetries;
 public class ApiTelemetryDemo : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         app.MapGet("Telemetry/Simple", getUserInfo)
-           .WithSummary("Simple Request")
+           .WithSummary("Simulate latency http")
            .WithTags("Telemetry");
 
         // NEW: parallel launcher
@@ -39,12 +36,14 @@ public class ApiTelemetryDemo : IEndpointDefinition {
     // -------------------------
     public record ParallelRequest(
         int N,
-        double? ValidRatio // 0..1 
+        double? ValidRatio, // 0..1 
+        int secondsDelay = 10
     );
 
     public record UserToken(
         string UserID,
-        string Token
+        string Token,
+        int secondsDelay
     );
 
     static class ParallelTelemetry {
@@ -84,12 +83,14 @@ public class ApiTelemetryDemo : IEndpointDefinition {
     public async Task<IResult> getUserInfo(
         [FromQuery] string UserID,
         [FromQuery] string Token,
+        [FromQuery] int SecondsDelay,
         [FromServices] IhttpsClientHelperFactory httpFactory,
         [FromServices] MyCustomMetrics metrics) {
         var request = new RequestSample {
             Action = "getUserInfo",
             UserID = UserID,
             Token = Token,
+            secondsDelay = SecondsDelay,
             IdTransaction = Guid.NewGuid().ToString()
         };
         var sw = Stopwatch.StartNew();
@@ -98,6 +99,8 @@ public class ApiTelemetryDemo : IEndpointDefinition {
             .TraceAsync(request, LogEventLevel.Information, null, "Calling Demo API Page")
             .StartActivity("get User Info")
             .AddTag("User", UserID); // for span
+
+        //TODO: inserire descrizione parametri e cambaire lo span per indicare quale url viene invocato + implementare UseMock deve essere il nome del namaspace da usare !!!
 
         loggerExtension<RequestSample>.TraceAsync(request, LogEventLevel.Information, null, "DemoMessage");
 
@@ -117,14 +120,15 @@ public class ApiTelemetryDemo : IEndpointDefinition {
                 Timeout = TimeSpan.FromSeconds(30),
                 Headers = new Dictionary<string, string> { { "mode", "Test" } },
                 Auth = new HttpAuthSpec { BearerToken = Token },
-                IdTransaction = request.IdTransaction
+                IdTransaction = trace.TraceId
             });
-        
+
+
         sw.Stop();
         var statusCode = result.Value?.StatusCode ?? 500;
         
         metrics.Track(statusCode, (int)sw.ElapsedMilliseconds);
-
+        
         loggerExtension<RequestSample>.TraceAsync(
             request,
             statusCode == 200 ? LogEventLevel.Information : LogEventLevel.Error,
@@ -153,7 +157,8 @@ public class ApiTelemetryDemo : IEndpointDefinition {
         {
             var user = $"user-{i:D4}-{RandomSuffix(5)}";
             var token = ShouldUseValidToken(ratio) ? "super-secret" : RandomSuffix(16);
-            return new UserToken(user, token);
+            var secondsDelay = body.secondsDelay;
+            return new UserToken(user, token, secondsDelay);
         }).ToList();
 
         var tasks = new List<Task<(bool ok, object? value, string? error, string user, string token)>>(body.N);
@@ -192,7 +197,7 @@ public class ApiTelemetryDemo : IEndpointDefinition {
                 ParallelTelemetry.IncActive();
                 ParallelTelemetry.IncTotal();
                 try {
-                    var outcome = await getUserInfo(pick.UserID, pick.Token, httpFactory, myCustomMetrics);
+                    var outcome = await getUserInfo(pick.UserID, pick.Token, pick.secondsDelay, httpFactory, myCustomMetrics);
                     var (ok, value, error) = await MaterializeIResult(outcome);
                     return (ok, value, error, pick.UserID, pick.Token);
                 } catch (Exception ex) {
@@ -243,19 +248,18 @@ public class ApiTelemetryDemo : IEndpointDefinition {
         // Evento strutturato per LoggerHelper (va su tutti i sink, incluso Elastic)
         var evt = new {
             Action = "QoS_Snapshot",
-            IdTransaction = Guid.NewGuid().ToString(),
+            IdTransaction = Activity.Current?.TraceId.ToString(),
             ApplicationName = cfg["Service:Name"] ?? "my-service",
             Environment = cfg["Service:Environment"] ?? "dev",
             Qos100 = snap.qos100,
             SuccessRatePct = snap.success_rate_pct,
             P95Ms = snap.p95_ms,
             Count = snap.count,
-            ThresholdMs = snap.threshold_ms
+            ThresholdMs = snap.threshold_ms,
         };
 
-        // NB: messaggio con proprietà strutturate
         loggerExtension<RequestSample>.TraceAsync(new RequestSample { Action = "QoS_Snapshot" },
-            Serilog.Events.LogEventLevel.Information, null,
+            LogEventLevel.Information, null,
             "metric {@qos}",
             evt);
 

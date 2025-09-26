@@ -19,7 +19,7 @@ public class UserInfoResponseHandler<TRequest> : ResponseBaseHandler<TRequest> w
 
         //Try timeout request
         var newHttpRequestSpec = new HttpRequestSpec {
-            Url = "http://www.yoursite.com/timeout",
+            Url = $"http://www.yoursite.com/timeout/{_request.secondsDelay}",
             Method = httpRequestSpec.Method,
             Headers = httpRequestSpec.Headers,
             Body = httpRequestSpec.Body,

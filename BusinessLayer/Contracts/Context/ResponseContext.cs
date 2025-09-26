@@ -8,13 +8,11 @@ public class ResponseContext {
         Request = request;
     }
 }
-
-//public interface IRequest : ILoggerRequest { }
-
 public class RequestSample : IRequest {
     public string? Action { get; set; }
     public string? UserID { get; set; }
     public string? Token { get; set; } = Guid.NewGuid().ToString();
     public string? IdTransaction { get; set; }
     public string? ApplicationName { get; set; }
+    public int secondsDelay { get; set; }
 }

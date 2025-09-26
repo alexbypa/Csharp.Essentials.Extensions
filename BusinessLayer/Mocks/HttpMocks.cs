@@ -90,7 +90,12 @@ public class HttpMocks {
                     r.RequestUri.AbsolutePath.Contains("/timeout")),
                 ItExpr.IsAny<CancellationToken>())
             .Returns<HttpRequestMessage, CancellationToken>(async (req, ct) => {
-                await Task.Delay(TimeSpan.FromSeconds(30), ct);
+                var match = System.Text.RegularExpressions.Regex.Match(req.RequestUri.AbsolutePath, @"/timeout/(\d+)$"); // Regex per /timeout/seguito_da_numeri_fino_alla_fine
+                int timeoutValue = 30;
+                if (match.Success) {
+                    int.TryParse(match.Groups[1].Value, out timeoutValue);
+                }
+                await Task.Delay(TimeSpan.FromSeconds(timeoutValue), ct);
                 ct.ThrowIfCancellationRequested();
                 return new HttpResponseMessage(HttpStatusCode.OK) {
                     Content = new StringContent("""{"delayed":true}""", Encoding.UTF8, "application/json")

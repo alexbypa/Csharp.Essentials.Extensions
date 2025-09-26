@@ -1,1 +1,1 @@
-SELECT TOP 1 * FROM TraceEntry where TraceId = (@traceId)
+SELECT * FROM "TraceEntry" where "TraceId" = (@traceId) LIMIT (10)
