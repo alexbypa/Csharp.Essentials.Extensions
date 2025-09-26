@@ -1,1 +1,1 @@
-SELECT * FROM "TraceEntry" where "TraceId" = (@traceId)
+SELECT TOP 1 * FROM TraceEntry where TraceId = (@traceId)
