@@ -5,7 +5,7 @@ namespace Web.Api.MinimalApi.Endpoints.AI;
 public class ApiAIHelperDemo : IEndpointDefinition {
 
     public void DefineEndpoints(WebApplication app) {
-        app.MapPost("/IAI/run", async (IActionOrchestrator orc, IMacroContext ctx, CancellationToken ct) =>
+        app.MapPost("/IAI/run", async (IActionOrchestrator orc, MacroContextBase ctx, CancellationToken ct) =>
             Results.Ok(await orc.RunAsync(ctx, ct)))
                 .WithTags("AI")
                 .WithSummary("Demo")
