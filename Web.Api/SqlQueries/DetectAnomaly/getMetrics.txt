@@ -1,1 +1,1 @@
-TraceId: {Id} | LogEvent: {Message} | Score: {Score}
+TraceId: {TraceId} | LogEvent: {TraceJson} | Score: {Value}
