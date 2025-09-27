@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpEssentials.HttpHelper" Version="4.0.2" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.Console" Version="4.0.2" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.Elasticsearch" Version="4.0.2" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.MSSqlServer" Version="4.0.2.1" />
@@ -20,5 +19,6 @@
     <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper.Telemetry\CSharpEssentials.LoggerHelper.Telemetry.csproj" />
     <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper\CSharpEssentials.LoggerHelper.csproj" />
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
+    <ProjectReference Include="C:\GitHub\CsharpEssentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj" />
   </ItemGroup>
 </Project>

@@ -34,7 +34,7 @@ public class UserInfoResponseHandler<TRequest> : ResponseBaseHandler<TRequest> w
             null,
             "Query command UserInfoResponseHandler UserID: {UserID}, Token: {Token}", _request.UserID ?? "Unknow", _request.Token ?? "Unknow")
                 .StartActivity("GetUserDetails")
-                .AddTag("EndPoint: ", newHttpRequestSpec.Url);
+                .AddTag("EndPoint request Url: ", newHttpRequestSpec.Url);
         try {
             var ctxFactory = new DefaultAfterRequestContextFactory();
             IHttpClientStep[] steps = [

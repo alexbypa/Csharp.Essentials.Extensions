@@ -6,6 +6,7 @@ using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.Telemetry.Context;
 using CSharpEssentials.LoggerHelper.Telemetry.Metrics;
 using Microsoft.AspNetCore.Mvc;
+using Scalar.AspNetCore;
 using Serilog.Events;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
@@ -16,8 +17,17 @@ namespace Web.Api.MinimalApi.Endpoints.Telemetries;
 public class ApiTelemetryDemo : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         app.MapGet("Telemetry/Simple", getUserInfo)
-           .WithSummary("Simulate latency http")
-           .WithTags("Telemetry");
+           .WithSummary("Test Timeout")
+           .WithBadge("beta", BadgePosition.Before, "yellow")
+           .WithTags("Telemetry")
+           .WithMetadata("Name", "asd")
+           .WithOpenApi(operation => {
+                operation.Description = "Simulates latency calling an external API (with delay). Or httpStatus 401";
+                operation.Parameters[0].Description = "User identifier (any string)";
+                operation.Parameters[1].Description = "Authentication token (use 'super-secret' for a valid token)";
+                operation.Parameters[2].Description = "Seconds of delay to simulate in the external call (e.g. 5)";
+                return operation;
+           });
 
         // NEW: parallel launcher
         app.MapPost("Telemetry/Parallel", runUserInfoInParallel)
@@ -80,6 +90,15 @@ public class ApiTelemetryDemo : IEndpointDefinition {
     // -------------------------
     // BASE endpoint (already present)
     // -------------------------
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="UserID">idueueueueueu</param>
+    /// <param name="Token"></param>
+    /// <param name="SecondsDelay"></param>
+    /// <param name="httpFactory"></param>
+    /// <param name="metrics"></param>
+    /// <returns></returns>
     public async Task<IResult> getUserInfo(
         [FromQuery] string UserID,
         [FromQuery] string Token,
@@ -100,7 +119,7 @@ public class ApiTelemetryDemo : IEndpointDefinition {
             .StartActivity("get User Info")
             .AddTag("User", UserID); // for span
 
-        //TODO: inserire descrizione parametri e cambaire lo span per indicare quale url viene invocato + implementare UseMock deve essere il nome del namaspace da usare !!!
+        //TODO: inserire descrizione parametri 
 
         loggerExtension<RequestSample>.TraceAsync(request, LogEventLevel.Information, null, "DemoMessage");
 
