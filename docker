@@ -1,0 +1,32 @@
+# Fase 1: Build (ambiente di sviluppo con SDK)
+# Usiamo l'immagine ufficiale .NET 9.0 SDK per compilare l'applicazione.
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+
+# Copia i file di progetto per il restore iniziale delle dipendenze (ottimizzazione della cache Docker)
+COPY ["Web.Api/Web.Api.csproj", "Web.Api/"]
+COPY ["BusinessLayer/BusinessLayer.csproj", "BusinessLayer/"]
+COPY ["DataAccessLayer/DataAccessLayer.csproj", "DataAccessLayer/"]
+
+# Copia tutti gli altri file della soluzione
+COPY . .
+
+# Ripristina le dipendenze e compila in modalità Release
+WORKDIR "/src/Web.Api"
+RUN dotnet restore "Web.Api.csproj"
+RUN dotnet publish "Web.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# 
+# Fase 2: Runtime (ambiente di produzione snello)
+# Usiamo l'immagine .NET 9.0 ASP.NET runtime, che è molto più piccola e sicura.
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+WORKDIR /app
+# Espone la porta usata dall'applicazione (il tuo Program.cs non specifica, ma è lo standard ASP.NET Core)
+EXPOSE 8080
+#EXPOSE 8081 
+
+# Copia i file pubblicati dalla fase di build
+COPY --from=build /app/publish .
+
+# Definisce il comando da eseguire all'avvio del container
+ENTRYPOINT ["dotnet", "Web.Api.dll"]
