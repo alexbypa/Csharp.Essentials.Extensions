@@ -60,7 +60,7 @@ app.MapScalarApiReference();
 
 #region CSharpEssentials.Dashboard Package
 app.UseCors(CorsPolicy);
-app.UseLoggerHelperDashboard<RequestSample>(); // registra la dashboard embedded
+app.UseLoggerHelperDashboard<RequestSample>("admin"); // registra la dashboard embedded
 #endregion
 app.UseHttpsRedirection();
 
