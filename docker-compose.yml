@@ -31,7 +31,7 @@ services:
     build:
       context: .
       dockerfile: docker
-    restart: on-failure
+    restart: no
     ports:
       # Mappa la porta esterna 8080 alla porta 80 del container
       - "1234:8080"
@@ -39,9 +39,10 @@ services:
       db:
         condition: service_healthy # L'API aspetta che Postgres sia sano (passi il test healthcheck)
     environment:
-      ASPNETCORE_ENVIRONMENT: Development 
+      DatabaseProvider: ${DatabaseProvider}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: http://+:8080 
-      ConnectionStrings__Default: "Host=db;Port=5432;Database=test_db;Username=root;Password=root"
+      ConnectionStrings__Default: ${ConnectionStrings__Default}
 volumes:
   postgres-data:
   pgadmin-data:

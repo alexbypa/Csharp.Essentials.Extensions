@@ -1,0 +1,16 @@
+# .dockerignore - Regole per escludere file e cartelle dal contesto di build
+
+# Cartelle di output della build .NET
+bin/
+obj/
+
+# File di configurazione sensibili (già concordato)
+.env
+appsettings.Development.json
+appsettings.LoggerHelper.debug.json
+
+# Se hai creato la cartella publish in locale (cosa non raccomandata)
+publish/ 
+
+# Directory di Visual Studio
+.vs/

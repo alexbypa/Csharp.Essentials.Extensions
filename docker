@@ -23,10 +23,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 # Espone la porta usata dall'applicazione (il tuo Program.cs non specifica, ma è lo standard ASP.NET Core)
 EXPOSE 8080
-#EXPOSE 8081 
+
+COPY entrypoint.sh .
+# NEW: Converti le terminazioni di riga da CRLF a LF (necessario se creato su Windows)
+RUN sed -i 's/\r$//' entrypoint.sh  # <--- AGGIUNTA FONDAMENTALE
+RUN chmod +x entrypoint.sh
 
 # Copia i file pubblicati dalla fase di build
 COPY --from=build /app/publish .
-
 # Definisce il comando da eseguire all'avvio del container
-ENTRYPOINT ["dotnet", "Web.Api.dll"]
+ENTRYPOINT ["./entrypoint.sh"]
