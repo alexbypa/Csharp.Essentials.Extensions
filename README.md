@@ -21,7 +21,8 @@ Csharp.Essentials provides several packages that can be used independently or to
 | **CSharpEssentials.LoggerHelper.Sink.Postgresql** | Stores structured logs directly into PostgreSQL with support for custom schemas, JSON fields, and automatic table creation for deep analytics and long-term storage. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Postgresql) |
 | **CSharpEssentials.LoggerHelper.Sink.MSSqlServer** | A powerful SQL Server sink for CSharpEssentials.LoggerHelper, designed to log directly into Microsoft SQL Server with automatic table creation, custom columns, and structured context properties. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.MSSqlServer) |
 | **CSharpEssentials.LoggerHelper.Sink.Elasticsearch** | A high-performance Elasticsearch sink for CSharpEssentials.LoggerHelper, designed to index logs into Elasticsearch for fast search, advanced filtering, and real-time dashboards with Kibana. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Sink.Elasticsearch) |
-| **CSharpEssentials.LoggerHelper.Telemetry** | A full OpenTelemetry sink for CSharpEssentials.LoggerHelper, enabling metrics, traces, and logs with automatic database storage for end-to-end observability. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Telemetry) |
+| **CSharpEssentials.LoggerHelper.Telemetry** | A full OpenTelemetry sink for CSharpEssentials.LoggerHelper, enabling metrics, traces, and logs with automatic database storage for end-to-end observability. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.AI) |
+| **CSharpEssentials.LoggerHelper.AI** | Advanced OpenTelemetry sink and scalable gateway for LLM. Enables querying of language models using a fully configurable log context, optimizing AI insight extraction for end-to-end observability. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.AI) |
 | **CSharpEssentials.LoggerHelper.Dashboard** | An embedded dashboard for CSharpEssentials.LoggerHelper, giving you real-time visibility into how sinks are loaded, which log levels are enabled, and any initialization errors — all from inside your application. | [NuGet](https://www.nuget.org/packages/CSharpEssentials.LoggerHelper.Dashboard) |
 
 These packages are intentionally lightweight. You can add only what you need, keeping your application lean and maintainable.
@@ -1673,7 +1674,7 @@ dotnet add package CSharpEssentials.LoggerHelper.Dashboard
 
 #### Usage
 
-Register the embedded dashboard in your Web API:
+Register the embedded dashboard in your Web API ( admin in this example is name of home page ):
 
 ```csharp
 // Program.cs
@@ -1686,6 +1687,11 @@ Once enabled, the dashboard UI is served by the application and provides a live 
 configured sinks, their write levels, and any sink-loading issues:
 
 > ![Dashboard](https://github.com/alexbypa/CSharp.Essentials/blob/main/CSharpEssentials.LoggerHelper/img/Dashboard.png)
+The advanced features for **AI-powered querying and macros** (`RAG Answer Query`, `Correlate Trace`, etc.) are not part of the base dashboard but are exposed as separate API endpoints upon integration of the `CSharpEssentials.LoggerHelper.AI` package.
+
+For detailed documentation on how to use and query logs via the AI functions, please refer to the **dedicated AI integration section** within this document.
+
+---
 
 ## 🚀 Extending LogEvent Properties from Your Project<a id='customprop'></a>   [🔝](#table-of-contents)
 
