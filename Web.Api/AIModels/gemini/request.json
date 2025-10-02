@@ -1,0 +1,24 @@
+{
+    "system_instruction": {
+      "parts": [
+        {
+          "text": "@system"
+        }
+      ]
+    },
+    "contents": [
+      {
+        "role": "user",
+        "parts": [
+          {
+            "text": "@user"
+          }
+        ]
+      },{
+        "role": "model",
+        "parts": [{
+            "text": "@assistant"
+        }]
+      }
+    ]
+  }

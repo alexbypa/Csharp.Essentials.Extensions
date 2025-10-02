@@ -1,0 +1,18 @@
+{
+	"model": "gpt-4o-mini",
+	"temperature": @temperature,
+	"messages": [
+		{
+			"role": "system",
+			"content": "@system"
+		},
+		{
+			"role": "user",
+			"content": "@user"
+		},
+		{
+			"role": "assistant",
+			"content": "@assistant"
+		}
+	]
+}
