@@ -18,6 +18,7 @@ builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use 
 //builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
 
+
 #region Logger Configuration
 builder.Services.AddSingleton<IContextLogEnricher, MetricsEnricher>();
 builder.Services.AddloggerConfiguration(builder);

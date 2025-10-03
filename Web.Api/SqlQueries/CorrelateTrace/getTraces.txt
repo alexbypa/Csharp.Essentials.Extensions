@@ -1,1 +1,1 @@
-{TraceId} | Span Name={Name} | duration={Duration:F0}ms | tags={TagsJson}
+{TraceId} | Span Name={Name} | duration={DurationMs:F0}ms | tags={TagsJson}
