@@ -1304,6 +1304,52 @@ Are you tired of manually sifting through mountains of logs and connecting scatt
 
 ---
 
+### ⚠️ Breaking Change in Version 4.0.7
+
+Starting with version **4.0.7**, the configuration for the `CSharpEssentials.LoggerHelper.AI` module has been refactored to support **multiple Large Language Models (LLMs)**, including **Gemini** alongside OpenAI. This change requires mandatory updates to your `appsettings.json` file. Please review the following points to ensure continued functionality.
+
+-----
+
+### 1\. Mandatory Addition: `FolderAIModelsLoaderContainer`
+
+The key **`FolderAIModelsLoaderContainer`** is now mandatory. It must contain the **path to the folder** where the specific request and response templates (used for data extraction from the LLM) are stored for **each supported AI model (e.g., OpenAI, Gemini)**. This allows flexible management of model-specific input/output formats.
+
+Example configuration in `appsettings.json`:
+
+```json
+"AIConfiguration": {
+  "FolderAIModelsLoaderContainer": "Templates/AI"
+}
+```
+
+### 2\. Relocating the API Key (Removal of `chatghapikey`)
+
+The authentication key for the chat service, previously named **`chatghapikey`**, has been **removed** from direct `appsettings` configuration.
+
+The LLM API key must now be included and managed within the **`headersLLM`** variable or configuration section. This change centralizes the management of HTTP headers (including authorization) for all LLM calls, regardless of the provider (e.g., using a single, unified structure for both OpenAI and Gemini keys/headers).
+
+### 3\. Implementation Example
+
+Here is an example of settings : 
+
+```json
+  "LoggerAIOptions": {
+    "Name": "gemini",
+    "Model": "gemini-2.5-flash",
+    "chatghapikey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "FolderSqlLoaderContainer": "D:\\github\\Csharp.Essentials.Extensions\\Web.Api\\SqlQueries",
+    "FolderAIModelsLoaderContainer": "D:\\github\\Csharp.Essentials.Extensions\\Web.Api\\AIModels",
+    "Temperature": 0.7,
+    "topScore": 5,
+    "urlLLM": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    "headersLLM": {
+      "accept": "application/json",
+      "x-goog-api-key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "httpClientName": "testAI"
+  },
+```
+
 ## AI Package Configuration
 
 To enable AI features in your project, you must add the `LoggerAIOptions` section to your `AppSettings.json` file. This section contains all the necessary settings to configure the AI model and its connection to the service.
