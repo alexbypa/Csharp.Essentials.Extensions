@@ -14,7 +14,7 @@ using Web.Api.MinimalApi.Endpoints.Telemetries;
 var builder = WebApplication.CreateBuilder(args);
 
 #region CSharpEssentials.HttpHelper Package
-builder.Services.AddHttpClients(builder.Configuration, null); //if you dont use Moq
+builder.Services.AddHttpClients(builder.Configuration); //if you dont use Moq
 //builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
 #endregion
 
