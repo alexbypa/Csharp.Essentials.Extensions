@@ -1333,19 +1333,21 @@ The LLM API key must now be included and managed within the **`headersLLM`** var
 To enable AI features in your project, you must add the `LoggerAIOptions` section to your `AppSettings.json` file. This section contains all the necessary settings to configure the AI model and its connection to the service.
 
 ```json
-"LoggerAIOptions": {
-  "Model": "gpt-4o-mini",
-  "chatghapikey": "github_pat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "FolderSqlLoaderContainer": "D:\\github\\Csharp.Essentials.Extensions\\Web.Api\\SqlQueries",
-  "Temperature": 0.7,
-  "topScore": 5,
-  "urlLLM": "https://models.inference.ai.azure.com/chat/completions",
-  "headersLLM": [
-    { "accept": "application/json" },
-    { "X-GitHub-Api-Version": "2023-10-01" }
-  ],
-  "httpClientName": "testAI"
-}
+  "LoggerAIOptions": {
+    "Name": "gemini",
+    "Model": "gemini-2.5-flash",
+    "chatghapikey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "FolderSqlLoaderContainer": "D:\\github\\Csharp.Essentials.Extensions\\Web.Api\\SqlQueries",
+    "FolderAIModelsLoaderContainer": "D:\\github\\Csharp.Essentials.Extensions\\Web.Api\\AIModels",
+    "Temperature": 0.7,
+    "topScore": 5,
+    "urlLLM": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    "headersLLM": {
+      "accept": "application/json",
+      "x-goog-api-key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "httpClientName": "testAI"
+  },
 ```
 
 ### ⚠️ Configuration Error Diagnostics
