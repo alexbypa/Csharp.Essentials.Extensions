@@ -1330,28 +1330,6 @@ The LLM API key must now be included and managed within the **`headersLLM`** var
 
 ### 3\. Implementation Example
 
-Here is an example of settings : 
-
-```json
-  "LoggerAIOptions": {
-    "Name": "gemini",
-    "Model": "gemini-2.5-flash",
-    "chatghapikey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "FolderSqlLoaderContainer": "D:\\github\\Csharp.Essentials.Extensions\\Web.Api\\SqlQueries",
-    "FolderAIModelsLoaderContainer": "D:\\github\\Csharp.Essentials.Extensions\\Web.Api\\AIModels",
-    "Temperature": 0.7,
-    "topScore": 5,
-    "urlLLM": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-    "headersLLM": {
-      "accept": "application/json",
-      "x-goog-api-key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    },
-    "httpClientName": "testAI"
-  },
-```
-
-## AI Package Configuration
-
 To enable AI features in your project, you must add the `LoggerAIOptions` section to your `AppSettings.json` file. This section contains all the necessary settings to configure the AI model and its connection to the service.
 
 ```json
