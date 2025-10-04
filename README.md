@@ -111,31 +111,7 @@ To start the demo, you only need to register the HttpHelper clients and enable t
 The Minimal API endpoints themselves will be defined elsewhere in the project.
 
 ```csharp
-using CSharpEssentials.HttpHelper;
-using Scalar.AspNetCore;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Register HttpHelper clients. The configuration section `HttpClientOptions` in appsettings.json
-// allows you to specify certificates, rate limit settings and more content.
-// If you are not using a custom HttpMessageHandler (e.g. Moq for tests), pass null as the second argument.
-builder.Services.AddHttpClients(builder.Configuration, null);
-//Otwerwise use this: 
-//builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
-
-// Add OpenAPI document generation and Scalar UI for interactive docs
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Expose the OpenAPI JSON and the Scalar UI
-app.MapOpenApi();
-app.MapScalarApiReference();
-
-// Optional: force HTTPS redirection for local development
-app.UseHttpsRedirection();
-
-app.Run();
+builder.Services.AddHttpClients(builder.Configuration);
 ```
 
 This `Program.cs` sets up:
@@ -172,7 +148,6 @@ Below you will find an explanation of all the available sections and how they af
         "SegmentsPerWindow": 2,
         "IsEnabled": false
       },
-      "UseMock": true
     },
     {
       "name": "Test_With_RateLimit",
@@ -188,11 +163,20 @@ Below you will find an explanation of all the available sections and how they af
         "SegmentsPerWindow": 1,
         "IsEnabled": true
       },
-      "UseMock": true
+      "Mock": "HttpMocks.CreateHandler" 
     }
   ]
 }
 ````
+<details>
+<summary> Variable Mock (Breaking change from 4.0.3) </summary>
+⚠️ The type name of the static method used to create a mocked HttpMessageHandler. If this property is omitted or empty, the default HttpClient handler will be used for standard external connectivity. 
+</details>
+
+**Implementation Example:**
+
+The implementation for the static class and method should resemble the structure found here:
+[Example of Static Mock Handler](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/BusinessLayer/Mocks/HttpMocks.cs)
 
 ---
 
