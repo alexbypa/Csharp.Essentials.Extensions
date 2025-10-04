@@ -30,6 +30,8 @@ check_required_env "$DatabaseProvider" "Database Provider" "DatabaseProvider"
 # 2. Validazione Stringa di Connessione Principale
 check_required_env "$ConnectionStrings__Default" "Stringa di Connessione Principale" "ConnectionStrings__Default"
 
+check_required_env "$Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString" "Stringa di Connessione Telemetry" "Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString"
+
 # 3. Validazione Stringa di Connessione per il Sink di Log MSSqlServer
 
 

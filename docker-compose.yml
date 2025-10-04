@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck: # DEFINISCE QUANDO IL DB È VERAMENTE PRONTO
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U root -d postgres-container"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -43,6 +43,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: http://+:8080 
       ConnectionStrings__Default: ${ConnectionStrings__Default}
+      Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString: ${Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString}
 volumes:
   postgres-data:
   pgadmin-data:
