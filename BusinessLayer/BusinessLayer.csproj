@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj" />
     <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper.AI\CSharpEssentials.LoggerHelper.AI.csproj" />
     <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper.Telemetry\CSharpEssentials.LoggerHelper.Telemetry.csproj" />
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
