@@ -1,7 +1,7 @@
 services:
   elasticsearch:
     profiles: ["postgres", "mssql"] 
-    image: elastic/elasticsearch:8.13.4 # Usa un tag specifico
+    image: elastic/elasticsearch:8.17.10 # Usa un tag specifico
     container_name: elasticsearch-container
     environment:
       # Permette di eseguire in modalità single-node non sicura (per la demo)
@@ -13,7 +13,7 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
   kibana:
     profiles: ["postgres", "mssql"] 
-    image: elastic/kibana:8.13.4
+    image: elastic/kibana:9.1.4
     container_name: kibana-container
     ports:
       - "5601:5601"
@@ -93,7 +93,7 @@ services:
     # ELIMINATO: La sezione 'build' non deve esserci per forzare il download dall'Hub
     build:
       context: .
-      dockerfile: docker
+      dockerfile: Web.Api.Dockerfile
     
     # AGGIUNTO: Punta all'immagine pubblica e al tag corretto
     # image: alexbypa/loggerhelper-api:1.0.1
@@ -120,4 +120,3 @@ volumes:
   pgadmin-data:
   mssql-data:
   elasticsearch-data:
-

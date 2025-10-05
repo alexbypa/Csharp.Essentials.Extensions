@@ -8,6 +8,8 @@ COPY ["Web.Api/Web.Api.csproj", "Web.Api/"]
 COPY ["BusinessLayer/BusinessLayer.csproj", "BusinessLayer/"]
 COPY ["DataAccessLayer/DataAccessLayer.csproj", "DataAccessLayer/"]
 
+COPY Web.Api/appsettings.LoggerHelper.json Web.Api/
+
 # Copia tutti gli altri file della soluzione
 COPY . .
 

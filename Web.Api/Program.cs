@@ -28,10 +28,23 @@ builder.Services.AddSingleton(settings);
 builder.Services.AddCustomValidatedServices(settings);
 */
 
+#region Logger Configuration
+builder.Services.AddSingleton<IContextLogEnricher, MetricsEnricher>();
+builder.Services.AddloggerConfiguration(builder);
+builder.Services.AddSingleton(new MyCustomMetrics(500));
+#endregion
 
 //TEMP ONLY FOR DEBUG
-/*
 Console.ForegroundColor = ConsoleColor.Yellow;
+//builder.Configuration.AddJsonFile("appsettings.LoggerHelper.debug.json", optional: true, reloadOnChange: true);
+
+Console.WriteLine("========================================================================");
+Console.WriteLine("AVVIO APP WEB DEMO");
+Console.WriteLine("Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris:");
+Console.WriteLine(builder.Configuration.GetValue<string>("Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris"));
+Console.WriteLine("========================================================================");
+Console.ForegroundColor = ConsoleColor.White;
+/*
 
 Console.WriteLine("========================================================================");
 Console.WriteLine("ConnectionStrings:Default");
@@ -64,8 +77,6 @@ for (int i = 0; i < maxRetries; i++) {
         Task.Delay(TimeSpan.FromSeconds(delaySeconds)).Wait();
     }
 }
-Console.WriteLine("========================================================================");
-Console.ForegroundColor = ConsoleColor.White;
 */
 
 
@@ -75,11 +86,6 @@ builder.Services.AddHttpClients(builder.Configuration); //if you dont use Moq
 #endregion
 
 
-#region Logger Configuration
-builder.Services.AddSingleton<IContextLogEnricher, MetricsEnricher>();
-builder.Services.AddloggerConfiguration(builder);
-builder.Services.AddSingleton(new MyCustomMetrics(500));
-#endregion
 
 builder.Services.AddLoggerTelemetry(builder);
 
