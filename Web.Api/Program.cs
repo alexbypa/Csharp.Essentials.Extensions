@@ -7,12 +7,14 @@ using CSharpEssentials.LoggerHelper.AI.Infrastructure;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
+using Microsoft.Extensions.Configuration;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.Telemetries;
 
 var builder = WebApplication.CreateBuilder(args);
 
+/* --TODO:
 var settings = builder.Configuration
                       .GetSection(nameof(FeatureSettings)) // Ad esempio, se è sotto "FeatureSettings" in appsettings.json
                       .Get<FeatureSettings>() ?? new FeatureSettings();
@@ -24,7 +26,47 @@ builder.Services.AddSingleton(settings);
 // 3. Esecuzione del metodo di validazione condizionale e registrazione
 // Chiama il metodo di estensione sul container di servizi, passando l'istanza della configurazione.
 builder.Services.AddCustomValidatedServices(settings);
+*/
 
+
+//TEMP ONLY FOR DEBUG
+/*
+Console.ForegroundColor = ConsoleColor.Yellow;
+
+Console.WriteLine("========================================================================");
+Console.WriteLine("ConnectionStrings:Default");
+Console.WriteLine(builder.Configuration.GetValue<string>("ConnectionStrings:Default"));
+Console.WriteLine("Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString");
+Console.WriteLine(builder.Configuration.GetValue<string>("Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString"));
+
+string ConnectionStrings = builder.Configuration.GetValue<string>("ConnectionStrings:Default");
+var csb = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(ConnectionStrings) {
+    InitialCatalog = "master" // <-- LA CORREZIONE AVVIENE QUI
+};
+ConnectionStrings = csb.ConnectionString;
+Console.WriteLine($"new ConnectionString : {ConnectionStrings}");
+var maxRetries = 15;
+var delaySeconds = 3;
+
+for (int i = 0; i < maxRetries; i++) {
+    try {
+        // Tentativo di connessione e SELECT 1
+        using (var conn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionStrings)) {
+            conn.Open();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[DB READY] Connessione a MSSQL MASTER riuscita dopo {i * delaySeconds}s.");
+            Console.ResetColor();
+            break;
+        }
+    } catch (Microsoft.Data.SqlClient.SqlException) {
+        // Cattura l'eccezione e riprova
+        Console.WriteLine($"[RETRY {i + 1}/{maxRetries}] MSSQL non pronto. Attendo {delaySeconds}s...");
+        Task.Delay(TimeSpan.FromSeconds(delaySeconds)).Wait();
+    }
+}
+Console.WriteLine("========================================================================");
+Console.ForegroundColor = ConsoleColor.White;
+*/
 
 
 #region CSharpEssentials.HttpHelper Package

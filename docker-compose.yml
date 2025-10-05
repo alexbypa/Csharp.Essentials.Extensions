@@ -1,5 +1,42 @@
 services:
+  mssql:
+    profiles: ["mssql"] 
+    # Nome del container MSSQL
+    container_name: mssql-container
+    # Immagine ufficiale Microsoft SQL Server per Linux (richiede licenza o EULA accettata)
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    environment:
+      ACCEPT_EULA: Y
+      # **PASSWORD CRITICA**: Deve essere sicura e utilizzata nella stringa di connessione
+      SA_PASSWORD: "strong!password#123"
+    ports:
+      # Mappa la porta standard di MSSQL all'esterno
+      - "1433:1433"
+    volumes:
+      # Volume per la persistenza dei dati MSSQL
+      - mssql-data:/var/opt/mssql
+    healthcheck: # Controlla se l'istanza è pronta per le connessioni
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'strong!password#123' -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  adminer:
+    profiles: ["postgres", "mssql"] 
+    container_name: adminer-container
+    image: adminer:latest
+    restart: always
+    ports:
+      - "8081:8080" # Porta esterna 8081 per Adminer
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false 
+      mssql:
+        condition: service_healthy        
+        required: false         
   db:
+    profiles: ["postgres"] 
     container_name: postgres-container
     image: postgres
     restart: always
@@ -17,6 +54,7 @@ services:
       timeout: 5s
       retries: 5
   pgadmin:
+    profiles: ["postgres"] 
     container_name: pgadmin4-container
     image: dpage/pgadmin4
     restart: always
@@ -28,6 +66,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
   webapi:
+    profiles: ["postgres", "mssql"] 
     # ELIMINATO: La sezione 'build' non deve esserci per forzare il download dall'Hub
     build:
       context: .
@@ -43,6 +82,10 @@ services:
     depends_on:
       db:
         condition: service_healthy # L'API aspetta che Postgres sia sano (passi il test healthcheck)
+        required: false # <- NON è richiesto per l'avvio di webapi        
+      mssql:
+        condition: service_healthy # L'API aspetta che Postgres sia sano (passi il test healthcheck)
+        required: false # <- NON è richiesto per l'avvio di webapi        
     environment:
       DatabaseProvider: ${DatabaseProvider}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
@@ -52,3 +95,4 @@ services:
 volumes:
   postgres-data:
   pgadmin-data:
+  mssql-data:
