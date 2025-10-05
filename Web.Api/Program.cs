@@ -1,4 +1,5 @@
 using BusinessLayer.Application;
+using BusinessLayer.Contracts;
 using BusinessLayer.Contracts.Context;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
@@ -11,6 +12,20 @@ using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.Telemetries;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var settings = builder.Configuration
+                      .GetSection(nameof(FeatureSettings)) // Ad esempio, se è sotto "FeatureSettings" in appsettings.json
+                      .Get<FeatureSettings>() ?? new FeatureSettings();
+
+// 2. Registrazione della configurazione stessa (opzionale, ma consigliato)
+// Inietta l'istanza di configurazione in DI.
+builder.Services.AddSingleton(settings);
+
+// 3. Esecuzione del metodo di validazione condizionale e registrazione
+// Chiama il metodo di estensione sul container di servizi, passando l'istanza della configurazione.
+builder.Services.AddCustomValidatedServices(settings);
+
+
 
 #region CSharpEssentials.HttpHelper Package
 builder.Services.AddHttpClients(builder.Configuration); //if you dont use Moq
