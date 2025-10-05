@@ -28,9 +28,14 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
   webapi:
+    # ELIMINATO: La sezione 'build' non deve esserci per forzare il download dall'Hub
     build:
       context: .
       dockerfile: docker
+    
+    # AGGIUNTO: Punta all'immagine pubblica e al tag corretto
+    #image: alexbypa/loggerhelper-api:1.0.0
+
     restart: no
     ports:
       # Mappa la porta esterna 8080 alla porta 80 del container
