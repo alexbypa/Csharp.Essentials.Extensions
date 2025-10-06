@@ -34,51 +34,6 @@ builder.Services.AddloggerConfiguration(builder);
 builder.Services.AddSingleton(new MyCustomMetrics(500));
 #endregion
 
-//TEMP ONLY FOR DEBUG
-Console.ForegroundColor = ConsoleColor.Yellow;
-//builder.Configuration.AddJsonFile("appsettings.LoggerHelper.debug.json", optional: true, reloadOnChange: true);
-
-Console.WriteLine("========================================================================");
-Console.WriteLine("AVVIO APP WEB DEMO");
-Console.WriteLine("Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris:");
-Console.WriteLine(builder.Configuration.GetValue<string>("Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris"));
-Console.WriteLine("========================================================================");
-Console.ForegroundColor = ConsoleColor.White;
-/*
-
-Console.WriteLine("========================================================================");
-Console.WriteLine("ConnectionStrings:Default");
-Console.WriteLine(builder.Configuration.GetValue<string>("ConnectionStrings:Default"));
-Console.WriteLine("Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString");
-Console.WriteLine(builder.Configuration.GetValue<string>("Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString"));
-
-string ConnectionStrings = builder.Configuration.GetValue<string>("ConnectionStrings:Default");
-var csb = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(ConnectionStrings) {
-    InitialCatalog = "master" // <-- LA CORREZIONE AVVIENE QUI
-};
-ConnectionStrings = csb.ConnectionString;
-Console.WriteLine($"new ConnectionString : {ConnectionStrings}");
-var maxRetries = 15;
-var delaySeconds = 3;
-
-for (int i = 0; i < maxRetries; i++) {
-    try {
-        // Tentativo di connessione e SELECT 1
-        using (var conn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionStrings)) {
-            conn.Open();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"[DB READY] Connessione a MSSQL MASTER riuscita dopo {i * delaySeconds}s.");
-            Console.ResetColor();
-            break;
-        }
-    } catch (Microsoft.Data.SqlClient.SqlException) {
-        // Cattura l'eccezione e riprova
-        Console.WriteLine($"[RETRY {i + 1}/{maxRetries}] MSSQL non pronto. Attendo {delaySeconds}s...");
-        Task.Delay(TimeSpan.FromSeconds(delaySeconds)).Wait();
-    }
-}
-*/
-
 
 #region CSharpEssentials.HttpHelper Package
 builder.Services.AddHttpClients(builder.Configuration); //if you dont use Moq

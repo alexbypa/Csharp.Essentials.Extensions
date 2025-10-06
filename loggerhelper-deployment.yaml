@@ -40,6 +40,12 @@ spec:
         - name: ConnectionStrings__Default
           value: "Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root"
 
+        - name: Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled
+          value: "0"
+
+        - name: Serilog__SerilogConfiguration__LoggerTelemetryOptions__Provider
+          value: "PostgreSQL"
+          
         - name: Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString
           value: "Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root"
           

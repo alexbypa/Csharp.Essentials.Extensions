@@ -27,10 +27,12 @@ check_required_env() {
 echo "Inizio validazione configurazioni critiche..."
 # 1. Validazione del Database Provider (Esempio: postgresql o sqlserver)
 check_required_env "$DatabaseProvider" "Database Provider" "DatabaseProvider"
-# 2. Validazione Stringa di Connessione Principale
 check_required_env "$ConnectionStrings__Default" "Stringa di Connessione Principale" "ConnectionStrings__Default"
+# 2. Validazione Stringa di Connessione Principale
 
 check_required_env "$Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString" "Stringa di Connessione Telemetry" "Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString"
+
+check_required_env "$Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled" "IdEnabled Telemetry" "Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled"
 
 # 3. Validazione Stringa di Connessione per il Sink di Log MSSqlServer
 
