@@ -1,0 +1,16 @@
+# loggerhelper-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: loggerhelper-api-service
+spec:
+  # IL SEGRETO: il Service seleziona tutti i Pod con questa etichetta
+  selector:
+    app: loggerhelper-api 
+  # Tipo di Service: NodePort è il più semplice per i test locali
+  type: NodePort 
+  ports:
+    - port: 80 # La porta interna del Service (per altri Pod nel cluster)
+      targetPort: 8080 # La porta a cui si connetterà all'interno del Pod
+      nodePort: 30000 # La porta esterna (dal tuo PC/server) per accedere all'API
