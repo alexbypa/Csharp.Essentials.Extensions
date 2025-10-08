@@ -1,5 +1,4 @@
 using BusinessLayer.Application;
-using BusinessLayer.Contracts;
 using BusinessLayer.Contracts.Context;
 using CSharpEssentials.HttpHelper;
 using CSharpEssentials.LoggerHelper;
@@ -7,7 +6,6 @@ using CSharpEssentials.LoggerHelper.AI.Infrastructure;
 using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
-using Microsoft.Extensions.Configuration;
 using Scalar.AspNetCore;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.Telemetries;

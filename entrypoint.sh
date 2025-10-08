@@ -1,65 +1,68 @@
 #!/bin/bash
 
 # ==========================================================
-# FUNZIONE DI VALIDAZIONE
+# VALIDATION FUNCTION
 # ==========================================================
-# Controlla se una variabile d'ambiente è vuota.
-# Argomenti: $1 = Nome Variabile, $2 = Descrizione Chiave JSON
+# Checks if an environment variable is empty.
+# Args: $1 = Variable Name, $2 = JSON Key Description, $3 = JSON Key
 check_required_env() {
   if [ -z "$1" ]; then
     echo "################################################################" >&2
-    echo "### ERRORE CRITICO: Variabile d'Ambiente mancante!           ###" >&2
+    echo "### CRITICAL ERROR: Missing Environment Variable!            ###" >&2
     echo "################################################################" >&2
     echo "" >&2
-    echo "La configurazione obbligatoria per '$2' (Chiave: $3) non è stata definita." >&2
+    echo "The mandatory configuration for '$2' (Key: $3) has not been defined." >&2
     echo "" >&2
-    echo "Utilizza il flag -e di Docker per passarla:" >&2
-    echo "  es: -e $3=\"valore_corretto\"" >&2
-    echo "Il container si sta arrestando (exit 1)." >&2
+    echo "Use the Docker -e flag to pass it:" >&2
+    echo "  e.g.: -e $3=\"correct_value\"" >&2
+    echo "The container is stopping (exit 1)." >&2
     echo "" >&2
     exit 1
   fi
 }
 
 # ==========================================================
-# ESECUZIONE DELLA VALIDAZIONE
+# EXECUTE VALIDATION
 # ==========================================================
-echo "Inizio validazione configurazioni critiche..."
-# 1. Validazione del Database Provider (Esempio: postgresql o sqlserver)
+echo "Starting critical configuration validation..."
+# 1. Validation for Database Provider (e.g.: postgresql or sqlserver)
 check_required_env "$DatabaseProvider" "Database Provider" "DatabaseProvider"
-check_required_env "$ConnectionStrings__Default" "Stringa di Connessione Principale" "ConnectionStrings__Default"
-# 2. Validazione Stringa di Connessione Principale
+check_required_env "$ConnectionStrings__Default" "Main Connection String" "ConnectionStrings__Default"
 
-check_required_env "$Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString" "Stringa di Connessione Telemetry" "Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString"
-
+# 2. Validation for Telemetry options
+check_required_env "$Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString" "Telemetry Connection String" "Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString"
 check_required_env "$Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled" "IdEnabled Telemetry" "Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled"
 
-# 3. Validazione Stringa di Connessione per il Sink di Log MSSqlServer
+# 3. Validation for MSSQL Log Sink Connection String
+# The app requires this connection only if the DatabaseProvider is set to 'sqlserver'
+if [ "$DatabaseProvider" = "sqlserver" ]; then
+    check_required_env "$Serilog__SerilogOption__MSSqlServer__connectionString" "MSSQL Log Sink Connection String" "Serilog__SerilogOption__MSSqlServer__connectionString"
+fi
 
 
-echo "Validazione completata. Tutte le configurazioni critiche sono presenti."
+echo "Validation completed. All critical configurations are present."
 echo ""
 
 # ==========================================================
-# NUOVO BLOCCO DEBUG: STAMPA TUTTE LE VARIABILI D'AMBIENTE
+# DEBUG BLOCK: PRINT ENVIRONMENT VARIABLES
 # ==========================================================
-echo "### DEBUG: VARIABILI D'AMBIENTE NEL CONTAINER ###"
-# 'env' elenca tutte le variabili. 'grep' filtra solo quelle che ci interessano.
+echo "### DEBUG: ENVIRONMENT VARIABLES IN CONTAINER ###"
+																																								
 env | grep -E 'ASPNET|Connect|Serilog|Database' 
 echo "##################################################"
 echo ""
 
 # ==========================================================
-# MESSAGGIO DI AVVIO E ESECUZIONE APPLICAZIONE
+# STARTUP MESSAGE AND APPLICATION EXECUTION
 # ==========================================================
 echo "################################################################"
-echo "##               AVVIO DEMO WEB API .NET CORE                 ##"
+echo "##               STARTING .NET CORE DEMO WEB API              ##"
 echo "################################################################"
 echo ""
-echo "Porta esposta: 8080 (mappala all'host con -p <PORTA_HOST>:8080)"
-echo "Documentazione API: http://localhost:<PORTA_HOST>/scalar"
-echo "Dashboard Logger: http://localhost:<PORTA_HOST>/dashboard"
+echo "Exposed Port: 8080 (map it to the host with -p <HOST_PORT>:8080)"
+echo "API Documentation: http://localhost:<HOST_PORT>/scalar"
+echo "Logger Dashboard: http://localhost:<HOST_PORT>/dashboard"
 echo ""
 
-# Avvio dell'applicazione .NET
+# Start the .NET application
 exec dotnet Web.Api.dll

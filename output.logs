@@ -1,0 +1,2777 @@
+D:\github\Csharp.Essentials.Extensions>kubectl logs -f loggerhelper-api-deployment-64b7c58d4f-dbwgp
+Starting critical configuration validation...
+Validation completed. All critical configurations are present.
+
+### DEBUG: ENVIRONMENT VARIABLES IN CONTAINER ###
+ASPNETCORE_ENVIRONMENT=Production
+ASPNETCORE_URLS=http://+:8080
+Serilog__SerilogConfiguration__LoggerTelemetryOptions__Provider=PostgreSQL
+Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString=Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+ConnectionStrings__Default=Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled=0
+DatabaseProvider=postgresql
+ASPNETCORE_HTTP_PORTS=8080
+ASPNET_VERSION=9.0.9
+##################################################
+
+################################################################
+##               STARTING .NET CORE DEMO WEB API              ##
+################################################################
+
+Exposed Port: 8080 (map it to the host with -p <HOST_PORT>:8080)
+API Documentation: http://localhost:<HOST_PORT>/scalar
+Logger Dashboard: http://localhost:<HOST_PORT>/dashboard
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+CSharpEssentials.LoggerHelper.Telemetry, Version=4.0.10.0, Culture=neutral, PublicKeyToken=null
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+=== CONFIGURAZIONE COMPLETA CON SORGENTI ===
+
+Provider di configurazione caricati:
+  - MemoryConfigurationProvider
+  - EnvironmentVariablesConfigurationProvider
+  - MemoryConfigurationProvider
+  - EnvironmentVariablesConfigurationProvider
+  - JsonConfigurationProvider
+    File: appsettings.json
+  - JsonConfigurationProvider
+    File: appsettings.Production.json
+  - EnvironmentVariablesConfigurationProvider
+  - ChainedConfigurationProvider
+  - JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+
+Tutte le configurazioni:
+AllowedHosts = *
+APP_UID = 1654
+applicationName = Web.Api
+ASPNET_VERSION = 9.0.9
+ASPNETCORE_ENVIRONMENT = Production
+ASPNETCORE_HTTP_PORTS = 8080
+ASPNETCORE_URLS = http://+:8080
+ConnectionStrings:Default = Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+contentRoot = /app
+DatabaseProvider = postgresql
+DOTNET_RUNNING_IN_CONTAINER = true
+DOTNET_VERSION = 9.0.9
+ENVIRONMENT = Production
+HOME = /root
+HOSTNAME = loggerhelper-api-deployment-64b7c58d4f-dbwgp
+HTTP_PORTS = 8080
+HttpClientOptions:0:certificate:password = YOUR_PASSWORD
+HttpClientOptions:0:certificate:path = YOUR_PATH
+HttpClientOptions:0:name = testAI
+HttpClientOptions:0:RateLimitOptions:AutoReplenishment = True
+HttpClientOptions:0:RateLimitOptions:IsEnabled = False
+HttpClientOptions:0:RateLimitOptions:PermitLimit = 1
+HttpClientOptions:0:RateLimitOptions:QueueLimit = 1
+HttpClientOptions:0:RateLimitOptions:SegmentsPerWindow = 2
+HttpClientOptions:0:RateLimitOptions:Window = 00:00:15
+HttpClientOptions:1:certificate:password = YOUR_PASSWORD
+HttpClientOptions:1:certificate:path = YOUR_PATH
+HttpClientOptions:1:Mock = HttpMocks.CreateHandler
+HttpClientOptions:1:name = Test_No_RateLimit
+HttpClientOptions:1:RateLimitOptions:AutoReplenishment = True
+HttpClientOptions:1:RateLimitOptions:IsEnabled = False
+HttpClientOptions:1:RateLimitOptions:PermitLimit = 1
+HttpClientOptions:1:RateLimitOptions:QueueLimit = 1
+HttpClientOptions:1:RateLimitOptions:SegmentsPerWindow = 2
+HttpClientOptions:1:RateLimitOptions:Window = 00:00:15
+HttpClientOptions:2:certificate:password = YOUR_PASSWORD
+HttpClientOptions:2:certificate:path = YOUR_PATH
+HttpClientOptions:2:Mock = HttpMocks.CreateHandler
+HttpClientOptions:2:name = Test_With_RateLimit
+HttpClientOptions:2:RateLimitOptions:AutoReplenishment = True
+HttpClientOptions:2:RateLimitOptions:IsEnabled = True
+HttpClientOptions:2:RateLimitOptions:PermitLimit = 1
+HttpClientOptions:2:RateLimitOptions:QueueLimit = 100
+HttpClientOptions:2:RateLimitOptions:SegmentsPerWindow = 1
+HttpClientOptions:2:RateLimitOptions:Window = 00:00:10
+KUBERNETES_PORT = tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP = tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_ADDR = 10.96.0.1
+KUBERNETES_PORT_443_TCP_PORT = 443
+KUBERNETES_PORT_443_TCP_PROTO = tcp
+KUBERNETES_SERVICE_HOST = 10.96.0.1
+KUBERNETES_SERVICE_PORT = 443
+KUBERNETES_SERVICE_PORT_HTTPS = 443
+LoggerAIOptions:chatghapikey = yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+LoggerAIOptions:FolderAIModelsLoaderContainer = D:\github\Csharp.Essentials.Extensions\Web.Api\AIModels
+LoggerAIOptions:FolderSqlLoaderContainer = D:\github\Csharp.Essentials.Extensions\Web.Api\SqlQueries
+LoggerAIOptions:headersLLM:accept = application/json
+LoggerAIOptions:headersLLM:Authorization = Bearer yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+LoggerAIOptions:headersLLM:X-GitHub-Api-Version = 2023-10-01
+LoggerAIOptions:httpClientName = testAI
+LoggerAIOptions:Model = gpt-4o-mini
+LoggerAIOptions:Name = openai
+LoggerAIOptions:Temperature = 0.7
+LoggerAIOptions:topScore = 5
+LoggerAIOptions:urlLLM = https://models.inference.ai.azure.com/chat/completions
+LOGGERHELPER_API_SERVICE_PORT = tcp://10.97.82.245:80
+LOGGERHELPER_API_SERVICE_PORT_80_TCP = tcp://10.97.82.245:80
+LOGGERHELPER_API_SERVICE_PORT_80_TCP_ADDR = 10.97.82.245
+LOGGERHELPER_API_SERVICE_PORT_80_TCP_PORT = 80
+LOGGERHELPER_API_SERVICE_PORT_80_TCP_PROTO = tcp
+LOGGERHELPER_API_SERVICE_SERVICE_HOST = 10.97.82.245
+LOGGERHELPER_API_SERVICE_SERVICE_PORT = 80
+Logging:LogLevel:Default = Information
+Logging:LogLevel:Microsoft.AspNetCore = Warning
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PWD = /app
+RUNNING_IN_CONTAINER = true
+Serilog:MinimumLevel:Default = Debug
+Serilog:MinimumLevel:Override:Microsoft = Debug
+Serilog:MinimumLevel:Override:System = Debug
+Serilog:SerilogConfiguration:ApplicationName = DemoLogger 9.0
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString = Data Source=mssql,1433;Initial Catalog=test_db;Persist Security Info=True;User ID=sa;Password=strong!password#123;Encrypt=False;
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportIntervalMilliseconds = 20000
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportTimeoutMilliseconds = 30000
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:IsEnabled = False
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:MeterListenerIsEnabled = True
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:Provider = SqlServer
+Serilog:SerilogConfiguration:SerilogCondition:0:Sink = MSSqlServer
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:0 = Information
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:1 = Warning
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:2 = Error
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:3 = Fatal
+Serilog:SerilogConfiguration:SerilogCondition:1:Sink = ElasticSearch
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:0 = Information
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:1 = Warning
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:2 = Error
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:3 = Fatal
+Serilog:SerilogConfiguration:SerilogCondition:2:Sink = Console
+Serilog:SerilogConfiguration:SerilogCondition:3:Sink = PostgreSQL
+Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:indexFormat = metrics_pixeloapp
+Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris = http://elasticsearch:9200
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:ColumnName = RenderedMessage
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataLength = 4000
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataType = NVarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:ColumnName = IdTransaction
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:ColumnName = Action
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:ColumnName = MachineName
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:ColumnName = ApplicationName
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:0 = Id
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:1 = Message
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:2 = MessageTemplate
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:3 = TimeStamp
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:4 = Level
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:5 = Exception
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:6 = LogEvent
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:removeStandardColumns:0 = Properties
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:connectionString = XXXXXXXXXXXXXXX
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:autoCreateSqlTable = True
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:batchPostingLimit = 10
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:period = 0.00:00:01
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:schemaName = dbo
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:tableName = LogEntry
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:addAutoIncrementColumn = True
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Name = Message
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Type = text
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Writer = Rendered
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Name = MessageTemplate
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Type = text
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Writer = Template
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Name = ApplicationName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Property = ApplicationName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Name = Username
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Property = Username
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Name = IpAddress
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Property = IpAddress
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Name = Level
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Writer = Level
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Name = TimeStamp
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Type = timestamp
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Writer = timestamp
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Name = Exception
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Type = text
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Writer = Exception
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Name = Properties
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Type = jsonb
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Writer = Properties
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Name = LogEvent
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Type = jsonb
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Writer = Serialized
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Name = IdTransaction
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Property = IdTransaction
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Name = MachineName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Property = MachineName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Name = Action
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Property = Action
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:connectionString = XXXXXXXXXXXXX
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:needAutoCreateTable = True
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:schemaName = public
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:tableName = LogEntry
+SHLVL = 0
+URLS = http://+:8080
+VERSION = 9.0.9
+
+=== DETTAGLIO SORGENTI PER CHIAVE ===
+
+
+Chiave: AllowedHosts
+Valore: *
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: *
+
+Chiave: APP_UID
+Valore: 1654
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 1654
+
+Chiave: applicationName
+Valore: Web.Api
+  ✓ Fornito da: ChainedConfigurationProvider
+    Valore: Web.Api
+
+Chiave: ASPNET_VERSION
+Valore: 9.0.9
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 9.0.9
+
+Chiave: ASPNETCORE_ENVIRONMENT
+Valore: Production
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Production
+
+Chiave: ASPNETCORE_HTTP_PORTS
+Valore: 8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 8080
+
+Chiave: ASPNETCORE_URLS
+Valore: http://+:8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: http://+:8080
+
+Chiave: ConnectionStrings:Default
+Valore: Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+
+Chiave: contentRoot
+Valore: /app
+  ✓ Fornito da: MemoryConfigurationProvider
+    Valore: /app
+
+Chiave: DatabaseProvider
+Valore: postgresql
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: postgresql
+
+Chiave: DOTNET_RUNNING_IN_CONTAINER
+Valore: true
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: true
+
+Chiave: DOTNET_VERSION
+Valore: 9.0.9
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 9.0.9
+
+Chiave: ENVIRONMENT
+Valore: Production
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Production
+
+Chiave: HOME
+Valore: /root
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: /root
+
+Chiave: HOSTNAME
+Valore: loggerhelper-api-deployment-64b7c58d4f-dbwgp
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: loggerhelper-api-deployment-64b7c58d4f-dbwgp
+
+Chiave: HTTP_PORTS
+Valore: 8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 8080
+
+Chiave: HttpClientOptions:0:certificate:password
+Valore: YOUR_PASSWORD
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PASSWORD
+
+Chiave: HttpClientOptions:0:certificate:path
+Valore: YOUR_PATH
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PATH
+
+Chiave: HttpClientOptions:0:name
+Valore: testAI
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: testAI
+
+Chiave: HttpClientOptions:0:RateLimitOptions:AutoReplenishment
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:0:RateLimitOptions:IsEnabled
+Valore: False
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: False
+
+Chiave: HttpClientOptions:0:RateLimitOptions:PermitLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:0:RateLimitOptions:QueueLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:0:RateLimitOptions:SegmentsPerWindow
+Valore: 2
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 2
+
+Chiave: HttpClientOptions:0:RateLimitOptions:Window
+Valore: 00:00:15
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 00:00:15
+
+Chiave: HttpClientOptions:1:certificate:password
+Valore: YOUR_PASSWORD
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PASSWORD
+
+Chiave: HttpClientOptions:1:certificate:path
+Valore: YOUR_PATH
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PATH
+
+Chiave: HttpClientOptions:1:Mock
+Valore: HttpMocks.CreateHandler
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: HttpMocks.CreateHandler
+
+Chiave: HttpClientOptions:1:name
+Valore: Test_No_RateLimit
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Test_No_RateLimit
+
+Chiave: HttpClientOptions:1:RateLimitOptions:AutoReplenishment
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:1:RateLimitOptions:IsEnabled
+Valore: False
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: False
+
+Chiave: HttpClientOptions:1:RateLimitOptions:PermitLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:1:RateLimitOptions:QueueLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:1:RateLimitOptions:SegmentsPerWindow
+Valore: 2
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 2
+
+Chiave: HttpClientOptions:1:RateLimitOptions:Window
+Valore: 00:00:15
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 00:00:15
+
+Chiave: HttpClientOptions:2:certificate:password
+Valore: YOUR_PASSWORD
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PASSWORD
+
+Chiave: HttpClientOptions:2:certificate:path
+Valore: YOUR_PATH
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PATH
+
+Chiave: HttpClientOptions:2:Mock
+Valore: HttpMocks.CreateHandler
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: HttpMocks.CreateHandler
+
+Chiave: HttpClientOptions:2:name
+Valore: Test_With_RateLimit
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Test_With_RateLimit
+
+Chiave: HttpClientOptions:2:RateLimitOptions:AutoReplenishment
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:2:RateLimitOptions:IsEnabled
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:2:RateLimitOptions:PermitLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:2:RateLimitOptions:QueueLimit
+Valore: 100
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 100
+
+Chiave: HttpClientOptions:2:RateLimitOptions:SegmentsPerWindow
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:2:RateLimitOptions:Window
+Valore: 00:00:10
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 00:00:10
+
+Chiave: KUBERNETES_PORT
+Valore: tcp://10.96.0.1:443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.96.0.1:443
+
+Chiave: KUBERNETES_PORT_443_TCP
+Valore: tcp://10.96.0.1:443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.96.0.1:443
+
+Chiave: KUBERNETES_PORT_443_TCP_ADDR
+Valore: 10.96.0.1
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.96.0.1
+
+Chiave: KUBERNETES_PORT_443_TCP_PORT
+Valore: 443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 443
+
+Chiave: KUBERNETES_PORT_443_TCP_PROTO
+Valore: tcp
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp
+
+Chiave: KUBERNETES_SERVICE_HOST
+Valore: 10.96.0.1
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.96.0.1
+
+Chiave: KUBERNETES_SERVICE_PORT
+Valore: 443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 443
+
+Chiave: KUBERNETES_SERVICE_PORT_HTTPS
+Valore: 443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 443
+
+Chiave: LoggerAIOptions:chatghapikey
+Valore: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
+Chiave: LoggerAIOptions:FolderAIModelsLoaderContainer
+Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\AIModels
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\AIModels
+
+Chiave: LoggerAIOptions:FolderSqlLoaderContainer
+Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\SqlQueries
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\SqlQueries
+
+Chiave: LoggerAIOptions:headersLLM:accept
+Valore: application/json
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: application/json
+
+Chiave: LoggerAIOptions:headersLLM:Authorization
+Valore: Bearer yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Bearer yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
+Chiave: LoggerAIOptions:headersLLM:X-GitHub-Api-Version
+Valore: 2023-10-01
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 2023-10-01
+
+Chiave: LoggerAIOptions:httpClientName
+Valore: testAI
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: testAI
+
+Chiave: LoggerAIOptions:Model
+Valore: gpt-4o-mini
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: gpt-4o-mini
+
+Chiave: LoggerAIOptions:Name
+Valore: openai
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: openai
+
+Chiave: LoggerAIOptions:Temperature
+Valore: 0.7
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 0.7
+
+Chiave: LoggerAIOptions:topScore
+Valore: 5
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 5
+
+Chiave: LoggerAIOptions:urlLLM
+Valore: https://models.inference.ai.azure.com/chat/completions
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: https://models.inference.ai.azure.com/chat/completions
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT
+Valore: tcp://10.97.82.245:80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.97.82.245:80
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP
+Valore: tcp://10.97.82.245:80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.97.82.245:80
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP_ADDR
+Valore: 10.97.82.245
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.97.82.245
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP_PORT
+Valore: 80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 80
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP_PROTO
+Valore: tcp
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp
+
+Chiave: LOGGERHELPER_API_SERVICE_SERVICE_HOST
+Valore: 10.97.82.245
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.97.82.245
+
+Chiave: LOGGERHELPER_API_SERVICE_SERVICE_PORT
+Valore: 80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 80
+
+Chiave: Logging:LogLevel:Default
+Valore: Information
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Information
+
+Chiave: Logging:LogLevel:Microsoft.AspNetCore
+Valore: Warning
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Warning
+
+Chiave: PATH
+Valore: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+Chiave: PWD
+Valore: /app
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: /app
+
+Chiave: RUNNING_IN_CONTAINER
+Valore: true
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: true
+
+Chiave: Serilog:MinimumLevel:Default
+Valore: Debug
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Debug
+
+Chiave: Serilog:MinimumLevel:Override:Microsoft
+Valore: Debug
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Debug
+
+Chiave: Serilog:MinimumLevel:Override:System
+Valore: Debug
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Debug
+
+Chiave: Serilog:SerilogConfiguration:ApplicationName
+Valore: DemoLogger 9.0
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: DemoLogger 9.0
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString
+Valore: Data Source=mssql,1433;Initial Catalog=test_db;Persist Security Info=True;User ID=sa;Password=strong!password#123;Encrypt=False;
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Data Source=mssql,1433;Initial Catalog=test_db;Persist Security Info=True;User ID=sa;Password=strong!password#123;Encrypt=False;
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportIntervalMilliseconds
+Valore: 20000
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 20000
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportTimeoutMilliseconds
+Valore: 30000
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 30000
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:IsEnabled
+Valore: False
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: False
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:MeterListenerIsEnabled
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:Provider
+Valore: SqlServer
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: SqlServer
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:0:Sink
+Valore: MSSqlServer
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MSSqlServer
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:0
+Valore: Information
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Information
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:1
+Valore: Warning
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Warning
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:2
+Valore: Error
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Error
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:3
+Valore: Fatal
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Fatal
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Sink
+Valore: ElasticSearch
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ElasticSearch
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:0
+Valore: Information
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Information
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:1
+Valore: Warning
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Warning
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:2
+Valore: Error
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Error
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:3
+Valore: Fatal
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Fatal
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Sink
+Valore: Console
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Console
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:3:Sink
+Valore: PostgreSQL
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: PostgreSQL
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:indexFormat
+Valore: metrics_pixeloapp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: metrics_pixeloapp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris
+Valore: http://elasticsearch:9200
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: http://elasticsearch:9200
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:ColumnName
+Valore: RenderedMessage
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: RenderedMessage
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataLength
+Valore: 4000
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 4000
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataType
+Valore: NVarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: NVarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:ColumnName
+Valore: IdTransaction
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IdTransaction
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:ColumnName
+Valore: Action
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Action
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:ColumnName
+Valore: MachineName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MachineName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:ColumnName
+Valore: ApplicationName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ApplicationName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:0
+Valore: Id
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Id
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:1
+Valore: Message
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Message
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:2
+Valore: MessageTemplate
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MessageTemplate
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:3
+Valore: TimeStamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: TimeStamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:4
+Valore: Level
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Level
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:5
+Valore: Exception
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Exception
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:6
+Valore: LogEvent
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEvent
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:removeStandardColumns:0
+Valore: Properties
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Properties
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:connectionString
+Valore: XXXXXXXXXXXXXXX
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: XXXXXXXXXXXXXXX
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:autoCreateSqlTable
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:batchPostingLimit
+Valore: 10
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 10
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:period
+Valore: 0.00:00:01
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 0.00:00:01
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:schemaName
+Valore: dbo
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: dbo
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:tableName
+Valore: LogEntry
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEntry
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:addAutoIncrementColumn
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Name
+Valore: Message
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Message
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Type
+Valore: text
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: text
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Writer
+Valore: Rendered
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Rendered
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Name
+Valore: MessageTemplate
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MessageTemplate
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Type
+Valore: text
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: text
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Writer
+Valore: Template
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Template
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Name
+Valore: ApplicationName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ApplicationName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Property
+Valore: ApplicationName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ApplicationName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Name
+Valore: Username
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Username
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Property
+Valore: Username
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Username
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Name
+Valore: IpAddress
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IpAddress
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Property
+Valore: IpAddress
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IpAddress
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Name
+Valore: Level
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Level
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Writer
+Valore: Level
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Level
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Name
+Valore: TimeStamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: TimeStamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Type
+Valore: timestamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: timestamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Writer
+Valore: timestamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: timestamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Name
+Valore: Exception
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Exception
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Type
+Valore: text
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: text
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Writer
+Valore: Exception
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Exception
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Name
+Valore: Properties
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Properties
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Type
+Valore: jsonb
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: jsonb
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Writer
+Valore: Properties
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Properties
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Name
+Valore: LogEvent
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEvent
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Type
+Valore: jsonb
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: jsonb
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Writer
+Valore: Serialized
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Serialized
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Name
+Valore: IdTransaction
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IdTransaction
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Property
+Valore: IdTransaction
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IdTransaction
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Name
+Valore: MachineName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MachineName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Property
+Valore: MachineName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MachineName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Name
+Valore: Action
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Action
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Property
+Valore: Action
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Action
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:connectionString
+Valore: XXXXXXXXXXXXX
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: XXXXXXXXXXXXX
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:needAutoCreateTable
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:schemaName
+Valore: public
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: public
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:tableName
+Valore: LogEntry
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEntry
+
+Chiave: SHLVL
+Valore: 0
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 0
+
+Chiave: URLS
+Valore: http://+:8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: http://+:8080
+
+Chiave: VERSION
+Valore: 9.0.9
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 9.0.9
+[DBG - LoggerHelper] AddDynamicSinks Path: AddDynamicSinks Path: /app/
+[DBG - LoggerHelper] Found 4 potential plugins /app/CSharpEssentials.LoggerHelper.Sink.Console.dll
+/app/CSharpEssentials.LoggerHelper.Sink.Postgresql.dll
+/app/CSharpEssentials.LoggerHelper.Sink.Elasticsearch.dll
+/app/CSharpEssentials.LoggerHelper.Sink.MSSqlServer.dll
+warn: Microsoft.AspNetCore.Hosting.Diagnostics[15]
+      Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://+:8080'.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://[::]:8080
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /app
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.5
+Untagged: alexbypa/loggerhelper-api:1.0.5
+Deleted: sha256:1dc51a37e96f12152d46145384c1e4ed39121b355e4ce8a4271f611520fe687d
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.6
+Error response from daemon: conflict: unable to delete alexbypa/loggerhelper-api:1.0.6 (must be forced) - container 7a056ca2ba10 is using its referenced image d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker stop 7a056ca2ba10
+7a056ca2ba10
+
+D:\github\Csharp.Essentials.Extensions>docker rm 7a056ca2ba10
+7a056ca2ba10
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.6
+Error response from daemon: conflict: unable to delete alexbypa/loggerhelper-api:1.0.6 (must be forced) - container 5f6aafe8922d is using its referenced image d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker stop d14ee9027969
+Error response from daemon: No such container: d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker stop 5f6aafe8922d
+5f6aafe8922d
+
+D:\github\Csharp.Essentials.Extensions>docker rm 5f6aafe8922d
+5f6aafe8922d
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.6
+Error response from daemon: conflict: unable to delete alexbypa/loggerhelper-api:1.0.6 (must be forced) - container 6cf41cef74b5 is using its referenced image d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker stop 6cf41cef74b5
+6cf41cef74b5
+
+D:\github\Csharp.Essentials.Extensions>docker rm 6cf41cef74b5
+6cf41cef74b5
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.6
+Error response from daemon: conflict: unable to delete alexbypa/loggerhelper-api:1.0.6 (must be forced) - container 5b8d86fae350 is using its referenced image d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker stop 5b8d86fae350
+5b8d86fae350
+
+D:\github\Csharp.Essentials.Extensions>docker rm 5b8d86fae350
+5b8d86fae350
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.6
+Error response from daemon: conflict: unable to delete alexbypa/loggerhelper-api:1.0.6 (must be forced) - container 420a770c7ef9 is using its referenced image d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker stop 420a770c7ef9
+420a770c7ef9
+
+D:\github\Csharp.Essentials.Extensions>docker rm 420a770c7ef9
+420a770c7ef9
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.6
+Error response from daemon: conflict: unable to delete alexbypa/loggerhelper-api:1.0.6 (must be forced) - container ce1ff5195f56 is using its referenced image d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker container prune -f
+Deleted Containers:
+48d7dffc660ef2337e3869ee26200332689f3a8ecc12c9bb5b347525943190ba
+db437dafaa8136c6662a28e5659fe23d51c1524a8cd9dddbe0638b6e51b91cf0
+fa75130886b1604f638f789a0de5df0fcd7f63a7ec4dff47ad53c7a946786193
+7dc3f44a638b6a5f5f22c0eaaa1cf04f49605512a5bfaa53f53acb415da04d23
+215fcbcd366cb5a711fbbe9337247b2090f0d348d87bd8041147c5c2048d46ba
+304a84b5c61c11c2dd73ed5f91de39a05150362749942f802121452ad7d5947a
+758dcbac4d36594337b2b87d673a34d53ae34df1095b2398d1ac6ae9aef73af1
+b1633d4e0f338a093548b6456560d5af2ae403f675751764631bb6814f5a67ba
+cbe362cc503f808ab4896f49546e74a5c706a3375e32fc4092a04f94e6a88d80
+a258510283fa0ba6ffae909a8691b7cf97b53b59f2046518cd237247cba9b4ee
+ad753e85d0637d4ed79653cf5665e83fe26dea2a6315bc46d173d9224c5ce5a4
+7d37ba68dcf9c48a1219df6363ff1700db0d0dd2e5d57a4eccb269adb6536180
+78876a51bb171ebf926640dd8d7df2ab184609adba55b2032011bd4ccb764099
+e289e6208eb90872baa60c4e276f6774d1df5901784d040e27db48350793fab7
+8edd1dda97ed07eadc20db5520829abddf7eede81171352a34a05f9003907cfb
+13c435f9487d185ee3e121dfdf8164d18bc9a8a4cf9256991bfddeb122b3383f
+d2f942bf14ec5997e8711e54e2c8bf99ad3cffb2ce376266affe993f93171ed4
+
+Total reclaimed space: 413.7kB
+
+D:\github\Csharp.Essentials.Extensions>docker rmi alexbypa/loggerhelper-api:1.0.6
+Error response from daemon: conflict: unable to delete alexbypa/loggerhelper-api:1.0.6 (must be forced) - container ce1ff5195f56 is using its referenced image d14ee9027969
+
+D:\github\Csharp.Essentials.Extensions>docker stop $(docker ps -aq)
+unknown shorthand flag: 'a' in -aq)
+
+Usage:  docker stop [OPTIONS] CONTAINER [CONTAINER...]
+
+Run 'docker stop --help' for more information
+
+D:\github\Csharp.Essentials.Extensions>docker ps -aq | ForEach-Object { docker stop $_ }
+"ForEach-Object" non è riconosciuto come comando interno o esterno,
+ un programma eseguibile o un file batch.
+
+D:\github\Csharp.Essentials.Extensions>kubectl apply -f loggerhelper-deployment.yaml
+error: error validating "loggerhelper-deployment.yaml": error validating data: failed to download openapi: Get "https://kubernetes.docker.internal:6443/openapi/v2?timeout=32s": EOF; if you choose to ignore these errors, turn validation off with --validate=false
+
+D:\github\Csharp.Essentials.Extensions>kubectl apply -f loggerhelper-deployment.yaml
+deployment.apps/loggerhelper-api-deployment configured
+
+D:\github\Csharp.Essentials.Extensions>kubectl get pods
+NAME                                           READY   STATUS      RESTARTS   AGE
+loggerhelper-api-deployment-64b7c58d4f-fvm5b   0/1     Completed   6          26m
+loggerhelper-api-deployment-7cb8db8bf9-4r7tj   1/1     Running     0          14s
+loggerhelper-api-deployment-7cb8db8bf9-4vx4c   1/1     Running     0          3s
+
+D:\github\Csharp.Essentials.Extensions>kubectl posd logs loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+error: unknown command "posd" for "kubectl"
+
+D:\github\Csharp.Essentials.Extensions>kubectl posd -l loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+error: unknown command "posd" for "kubectl"
+
+D:\github\Csharp.Essentials.Extensions>kubectl pods -l loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+error: unknown command "pods" for "kubectl"
+
+Did you mean this?
+        logs
+
+D:\github\Csharp.Essentials.Extensions>kubectl pods -logs loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+error: unknown command "pods" for "kubectl"
+
+Did you mean this?
+        logs
+
+D:\github\Csharp.Essentials.Extensions>kubectl -logs loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+Error: flags cannot be placed before plugin name: -logs
+
+D:\github\Csharp.Essentials.Extensions>kubectl logs loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+Starting critical configuration validation...
+Validation completed. All critical configurations are present.
+
+### DEBUG: ENVIRONMENT VARIABLES IN CONTAINER ###
+ASPNETCORE_ENVIRONMENT=Production
+ASPNETCORE_URLS=http://+:8080
+Serilog__SerilogConfiguration__LoggerTelemetryOptions__Provider=PostgreSQL
+Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString=Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+ConnectionStrings__Default=Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled=0
+DatabaseProvider=postgresql
+ASPNETCORE_HTTP_PORTS=8080
+Serilog__SerilogConfiguration__SerilogCondition__0__Level__3=Fatal
+Serilog__SerilogConfiguration__SerilogCondition__0__Level__2=Error
+Serilog__SerilogConfiguration__SerilogCondition__0__Level__1=Warning
+Serilog__SerilogConfiguration__SerilogCondition__0__Level__0=Information
+ASPNET_VERSION=9.0.9
+Serilog__SerilogOption__MSSqlServer__connectionString=Server=mssql-container,1433;Database=test_db;User Id=SA;Password=strong!password#123;TrustServerCertificate=True
+##################################################
+
+################################################################
+##               STARTING .NET CORE DEMO WEB API              ##
+################################################################
+
+Exposed Port: 8080 (map it to the host with -p <HOST_PORT>:8080)
+API Documentation: http://localhost:<HOST_PORT>/scalar
+Logger Dashboard: http://localhost:<HOST_PORT>/dashboard
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+CSharpEssentials.LoggerHelper.Telemetry, Version=4.0.10.0, Culture=neutral, PublicKeyToken=null
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+=== CONFIGURAZIONE COMPLETA CON SORGENTI ===
+
+Provider di configurazione caricati:
+  - MemoryConfigurationProvider
+  - EnvironmentVariablesConfigurationProvider
+  - MemoryConfigurationProvider
+  - EnvironmentVariablesConfigurationProvider
+  - JsonConfigurationProvider
+    File: appsettings.json
+  - JsonConfigurationProvider
+    File: appsettings.Production.json
+  - EnvironmentVariablesConfigurationProvider
+  - ChainedConfigurationProvider
+  - JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+
+Tutte le configurazioni:
+AllowedHosts = *
+APP_UID = 1654
+applicationName = Web.Api
+ASPNET_VERSION = 9.0.9
+ASPNETCORE_ENVIRONMENT = Production
+ASPNETCORE_HTTP_PORTS = 8080
+ASPNETCORE_URLS = http://+:8080
+ConnectionStrings:Default = Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+contentRoot = /app
+DatabaseProvider = postgresql
+DOTNET_RUNNING_IN_CONTAINER = true
+DOTNET_VERSION = 9.0.9
+ENVIRONMENT = Production
+HOME = /root
+HOSTNAME = loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+HTTP_PORTS = 8080
+HttpClientOptions:0:certificate:password = YOUR_PASSWORD
+HttpClientOptions:0:certificate:path = YOUR_PATH
+HttpClientOptions:0:name = testAI
+HttpClientOptions:0:RateLimitOptions:AutoReplenishment = True
+HttpClientOptions:0:RateLimitOptions:IsEnabled = False
+HttpClientOptions:0:RateLimitOptions:PermitLimit = 1
+HttpClientOptions:0:RateLimitOptions:QueueLimit = 1
+HttpClientOptions:0:RateLimitOptions:SegmentsPerWindow = 2
+HttpClientOptions:0:RateLimitOptions:Window = 00:00:15
+HttpClientOptions:1:certificate:password = YOUR_PASSWORD
+HttpClientOptions:1:certificate:path = YOUR_PATH
+HttpClientOptions:1:Mock = HttpMocks.CreateHandler
+HttpClientOptions:1:name = Test_No_RateLimit
+HttpClientOptions:1:RateLimitOptions:AutoReplenishment = True
+HttpClientOptions:1:RateLimitOptions:IsEnabled = False
+HttpClientOptions:1:RateLimitOptions:PermitLimit = 1
+HttpClientOptions:1:RateLimitOptions:QueueLimit = 1
+HttpClientOptions:1:RateLimitOptions:SegmentsPerWindow = 2
+HttpClientOptions:1:RateLimitOptions:Window = 00:00:15
+HttpClientOptions:2:certificate:password = YOUR_PASSWORD
+HttpClientOptions:2:certificate:path = YOUR_PATH
+HttpClientOptions:2:Mock = HttpMocks.CreateHandler
+HttpClientOptions:2:name = Test_With_RateLimit
+HttpClientOptions:2:RateLimitOptions:AutoReplenishment = True
+HttpClientOptions:2:RateLimitOptions:IsEnabled = True
+HttpClientOptions:2:RateLimitOptions:PermitLimit = 1
+HttpClientOptions:2:RateLimitOptions:QueueLimit = 100
+HttpClientOptions:2:RateLimitOptions:SegmentsPerWindow = 1
+HttpClientOptions:2:RateLimitOptions:Window = 00:00:10
+KUBERNETES_PORT = tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP = tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_ADDR = 10.96.0.1
+KUBERNETES_PORT_443_TCP_PORT = 443
+KUBERNETES_PORT_443_TCP_PROTO = tcp
+KUBERNETES_SERVICE_HOST = 10.96.0.1
+KUBERNETES_SERVICE_PORT = 443
+KUBERNETES_SERVICE_PORT_HTTPS = 443
+LoggerAIOptions:chatghapikey = yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+LoggerAIOptions:FolderAIModelsLoaderContainer = D:\github\Csharp.Essentials.Extensions\Web.Api\AIModels
+LoggerAIOptions:FolderSqlLoaderContainer = D:\github\Csharp.Essentials.Extensions\Web.Api\SqlQueries
+LoggerAIOptions:headersLLM:accept = application/json
+LoggerAIOptions:headersLLM:Authorization = Bearer yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+LoggerAIOptions:headersLLM:X-GitHub-Api-Version = 2023-10-01
+LoggerAIOptions:httpClientName = testAI
+LoggerAIOptions:Model = gpt-4o-mini
+LoggerAIOptions:Name = openai
+LoggerAIOptions:Temperature = 0.7
+LoggerAIOptions:topScore = 5
+LoggerAIOptions:urlLLM = https://models.inference.ai.azure.com/chat/completions
+LOGGERHELPER_API_SERVICE_PORT = tcp://10.97.82.245:80
+LOGGERHELPER_API_SERVICE_PORT_80_TCP = tcp://10.97.82.245:80
+LOGGERHELPER_API_SERVICE_PORT_80_TCP_ADDR = 10.97.82.245
+LOGGERHELPER_API_SERVICE_PORT_80_TCP_PORT = 80
+LOGGERHELPER_API_SERVICE_PORT_80_TCP_PROTO = tcp
+LOGGERHELPER_API_SERVICE_SERVICE_HOST = 10.97.82.245
+LOGGERHELPER_API_SERVICE_SERVICE_PORT = 80
+Logging:LogLevel:Default = Information
+Logging:LogLevel:Microsoft.AspNetCore = Warning
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PWD = /app
+RUNNING_IN_CONTAINER = true
+Serilog:MinimumLevel:Default = Debug
+Serilog:MinimumLevel:Override:Microsoft = Debug
+Serilog:MinimumLevel:Override:System = Debug
+Serilog:SerilogConfiguration:ApplicationName = DemoLogger 9.0
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString = Data Source=mssql,1433;Initial Catalog=test_db;Persist Security Info=True;User ID=sa;Password=strong!password#123;Encrypt=False;
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportIntervalMilliseconds = 20000
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportTimeoutMilliseconds = 30000
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:IsEnabled = False
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:MeterListenerIsEnabled = True
+Serilog:SerilogConfiguration:LoggerTelemetryOptions:Provider = SqlServer
+Serilog:SerilogConfiguration:SerilogCondition:0:Level:0 = Information
+Serilog:SerilogConfiguration:SerilogCondition:0:Level:1 = Warning
+Serilog:SerilogConfiguration:SerilogCondition:0:Level:2 = Error
+Serilog:SerilogConfiguration:SerilogCondition:0:Level:3 = Fatal
+Serilog:SerilogConfiguration:SerilogCondition:0:Sink = MSSqlServer
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:0 = Information
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:1 = Warning
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:2 = Error
+Serilog:SerilogConfiguration:SerilogCondition:1:Level:3 = Fatal
+Serilog:SerilogConfiguration:SerilogCondition:1:Sink = ElasticSearch
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:0 = Information
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:1 = Warning
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:2 = Error
+Serilog:SerilogConfiguration:SerilogCondition:2:Level:3 = Fatal
+Serilog:SerilogConfiguration:SerilogCondition:2:Sink = Console
+Serilog:SerilogConfiguration:SerilogCondition:3:Sink = PostgreSQL
+Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:indexFormat = metrics_pixeloapp
+Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris = http://elasticsearch:9200
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:ColumnName = RenderedMessage
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataLength = 4000
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataType = NVarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:ColumnName = IdTransaction
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:ColumnName = Action
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:ColumnName = MachineName
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:ColumnName = ApplicationName
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataLength = 50
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataType = VarChar
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:0 = Id
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:1 = Message
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:2 = MessageTemplate
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:3 = TimeStamp
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:4 = Level
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:5 = Exception
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:6 = LogEvent
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:removeStandardColumns:0 = Properties
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:connectionString = XXXXXXXXXXXXXXX
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:autoCreateSqlTable = True
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:batchPostingLimit = 10
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:period = 0.00:00:01
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:schemaName = dbo
+Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:tableName = LogEntry
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:addAutoIncrementColumn = True
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Name = Message
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Type = text
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Writer = Rendered
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Name = MessageTemplate
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Type = text
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Writer = Template
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Name = ApplicationName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Property = ApplicationName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Name = Username
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Property = Username
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Name = IpAddress
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Property = IpAddress
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Name = Level
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Writer = Level
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Name = TimeStamp
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Type = timestamp
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Writer = timestamp
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Name = Exception
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Type = text
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Writer = Exception
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Name = Properties
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Type = jsonb
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Writer = Properties
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Name = LogEvent
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Type = jsonb
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Writer = Serialized
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Name = IdTransaction
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Property = IdTransaction
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Name = MachineName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Property = MachineName
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Name = Action
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Property = Action
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Type = varchar
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Writer = Single
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:connectionString = XXXXXXXXXXXXX
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:needAutoCreateTable = True
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:schemaName = public
+Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:tableName = LogEntry
+Serilog:SerilogOption:MSSqlServer:connectionString = Server=mssql-container,1433;Database=test_db;User Id=SA;Password=strong!password#123;TrustServerCertificate=True
+SHLVL = 0
+URLS = http://+:8080
+VERSION = 9.0.9
+
+=== DETTAGLIO SORGENTI PER CHIAVE ===
+
+
+Chiave: AllowedHosts
+Valore: *
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: *
+
+Chiave: APP_UID
+Valore: 1654
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 1654
+
+Chiave: applicationName
+Valore: Web.Api
+  ✓ Fornito da: ChainedConfigurationProvider
+    Valore: Web.Api
+
+Chiave: ASPNET_VERSION
+Valore: 9.0.9
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 9.0.9
+
+Chiave: ASPNETCORE_ENVIRONMENT
+Valore: Production
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Production
+
+Chiave: ASPNETCORE_HTTP_PORTS
+Valore: 8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 8080
+
+Chiave: ASPNETCORE_URLS
+Valore: http://+:8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: http://+:8080
+
+Chiave: ConnectionStrings:Default
+Valore: Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root
+
+Chiave: contentRoot
+Valore: /app
+  ✓ Fornito da: MemoryConfigurationProvider
+    Valore: /app
+
+Chiave: DatabaseProvider
+Valore: postgresql
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: postgresql
+
+Chiave: DOTNET_RUNNING_IN_CONTAINER
+Valore: true
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: true
+
+Chiave: DOTNET_VERSION
+Valore: 9.0.9
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 9.0.9
+
+Chiave: ENVIRONMENT
+Valore: Production
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Production
+
+Chiave: HOME
+Valore: /root
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: /root
+
+Chiave: HOSTNAME
+Valore: loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: loggerhelper-api-deployment-7cb8db8bf9-4r7tj
+
+Chiave: HTTP_PORTS
+Valore: 8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 8080
+
+Chiave: HttpClientOptions:0:certificate:password
+Valore: YOUR_PASSWORD
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PASSWORD
+
+Chiave: HttpClientOptions:0:certificate:path
+Valore: YOUR_PATH
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PATH
+
+Chiave: HttpClientOptions:0:name
+Valore: testAI
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: testAI
+
+Chiave: HttpClientOptions:0:RateLimitOptions:AutoReplenishment
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:0:RateLimitOptions:IsEnabled
+Valore: False
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: False
+
+Chiave: HttpClientOptions:0:RateLimitOptions:PermitLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:0:RateLimitOptions:QueueLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:0:RateLimitOptions:SegmentsPerWindow
+Valore: 2
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 2
+
+Chiave: HttpClientOptions:0:RateLimitOptions:Window
+Valore: 00:00:15
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 00:00:15
+
+Chiave: HttpClientOptions:1:certificate:password
+Valore: YOUR_PASSWORD
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PASSWORD
+
+Chiave: HttpClientOptions:1:certificate:path
+Valore: YOUR_PATH
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PATH
+
+Chiave: HttpClientOptions:1:Mock
+Valore: HttpMocks.CreateHandler
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: HttpMocks.CreateHandler
+
+Chiave: HttpClientOptions:1:name
+Valore: Test_No_RateLimit
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Test_No_RateLimit
+
+Chiave: HttpClientOptions:1:RateLimitOptions:AutoReplenishment
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:1:RateLimitOptions:IsEnabled
+Valore: False
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: False
+
+Chiave: HttpClientOptions:1:RateLimitOptions:PermitLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:1:RateLimitOptions:QueueLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:1:RateLimitOptions:SegmentsPerWindow
+Valore: 2
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 2
+
+Chiave: HttpClientOptions:1:RateLimitOptions:Window
+Valore: 00:00:15
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 00:00:15
+
+Chiave: HttpClientOptions:2:certificate:password
+Valore: YOUR_PASSWORD
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PASSWORD
+
+Chiave: HttpClientOptions:2:certificate:path
+Valore: YOUR_PATH
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: YOUR_PATH
+
+Chiave: HttpClientOptions:2:Mock
+Valore: HttpMocks.CreateHandler
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: HttpMocks.CreateHandler
+
+Chiave: HttpClientOptions:2:name
+Valore: Test_With_RateLimit
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Test_With_RateLimit
+
+Chiave: HttpClientOptions:2:RateLimitOptions:AutoReplenishment
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:2:RateLimitOptions:IsEnabled
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: True
+
+Chiave: HttpClientOptions:2:RateLimitOptions:PermitLimit
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:2:RateLimitOptions:QueueLimit
+Valore: 100
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 100
+
+Chiave: HttpClientOptions:2:RateLimitOptions:SegmentsPerWindow
+Valore: 1
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 1
+
+Chiave: HttpClientOptions:2:RateLimitOptions:Window
+Valore: 00:00:10
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 00:00:10
+
+Chiave: KUBERNETES_PORT
+Valore: tcp://10.96.0.1:443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.96.0.1:443
+
+Chiave: KUBERNETES_PORT_443_TCP
+Valore: tcp://10.96.0.1:443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.96.0.1:443
+
+Chiave: KUBERNETES_PORT_443_TCP_ADDR
+Valore: 10.96.0.1
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.96.0.1
+
+Chiave: KUBERNETES_PORT_443_TCP_PORT
+Valore: 443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 443
+
+Chiave: KUBERNETES_PORT_443_TCP_PROTO
+Valore: tcp
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp
+
+Chiave: KUBERNETES_SERVICE_HOST
+Valore: 10.96.0.1
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.96.0.1
+
+Chiave: KUBERNETES_SERVICE_PORT
+Valore: 443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 443
+
+Chiave: KUBERNETES_SERVICE_PORT_HTTPS
+Valore: 443
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 443
+
+Chiave: LoggerAIOptions:chatghapikey
+Valore: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
+Chiave: LoggerAIOptions:FolderAIModelsLoaderContainer
+Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\AIModels
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\AIModels
+
+Chiave: LoggerAIOptions:FolderSqlLoaderContainer
+Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\SqlQueries
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: D:\github\Csharp.Essentials.Extensions\Web.Api\SqlQueries
+
+Chiave: LoggerAIOptions:headersLLM:accept
+Valore: application/json
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: application/json
+
+Chiave: LoggerAIOptions:headersLLM:Authorization
+Valore: Bearer yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Bearer yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
+Chiave: LoggerAIOptions:headersLLM:X-GitHub-Api-Version
+Valore: 2023-10-01
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 2023-10-01
+
+Chiave: LoggerAIOptions:httpClientName
+Valore: testAI
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: testAI
+
+Chiave: LoggerAIOptions:Model
+Valore: gpt-4o-mini
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: gpt-4o-mini
+
+Chiave: LoggerAIOptions:Name
+Valore: openai
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: openai
+
+Chiave: LoggerAIOptions:Temperature
+Valore: 0.7
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 0.7
+
+Chiave: LoggerAIOptions:topScore
+Valore: 5
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: 5
+
+Chiave: LoggerAIOptions:urlLLM
+Valore: https://models.inference.ai.azure.com/chat/completions
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: https://models.inference.ai.azure.com/chat/completions
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT
+Valore: tcp://10.97.82.245:80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.97.82.245:80
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP
+Valore: tcp://10.97.82.245:80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp://10.97.82.245:80
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP_ADDR
+Valore: 10.97.82.245
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.97.82.245
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP_PORT
+Valore: 80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 80
+
+Chiave: LOGGERHELPER_API_SERVICE_PORT_80_TCP_PROTO
+Valore: tcp
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: tcp
+
+Chiave: LOGGERHELPER_API_SERVICE_SERVICE_HOST
+Valore: 10.97.82.245
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 10.97.82.245
+
+Chiave: LOGGERHELPER_API_SERVICE_SERVICE_PORT
+Valore: 80
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 80
+
+Chiave: Logging:LogLevel:Default
+Valore: Information
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Information
+
+Chiave: Logging:LogLevel:Microsoft.AspNetCore
+Valore: Warning
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.json
+    Valore: Warning
+
+Chiave: PATH
+Valore: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+Chiave: PWD
+Valore: /app
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: /app
+
+Chiave: RUNNING_IN_CONTAINER
+Valore: true
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: true
+
+Chiave: Serilog:MinimumLevel:Default
+Valore: Debug
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Debug
+
+Chiave: Serilog:MinimumLevel:Override:Microsoft
+Valore: Debug
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Debug
+
+Chiave: Serilog:MinimumLevel:Override:System
+Valore: Debug
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Debug
+
+Chiave: Serilog:SerilogConfiguration:ApplicationName
+Valore: DemoLogger 9.0
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: DemoLogger 9.0
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:ConnectionString
+Valore: Data Source=mssql,1433;Initial Catalog=test_db;Persist Security Info=True;User ID=sa;Password=strong!password#123;Encrypt=False;
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Data Source=mssql,1433;Initial Catalog=test_db;Persist Security Info=True;User ID=sa;Password=strong!password#123;Encrypt=False;
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportIntervalMilliseconds
+Valore: 20000
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 20000
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:CustomExporter:exportTimeoutMilliseconds
+Valore: 30000
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 30000
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:IsEnabled
+Valore: False
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: False
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:MeterListenerIsEnabled
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:LoggerTelemetryOptions:Provider
+Valore: SqlServer
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: SqlServer
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:0:Level:0
+Valore: Information
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Information
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:0:Level:1
+Valore: Warning
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Warning
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:0:Level:2
+Valore: Error
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Error
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:0:Level:3
+Valore: Fatal
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Fatal
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:0:Sink
+Valore: MSSqlServer
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MSSqlServer
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:0
+Valore: Information
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Information
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:1
+Valore: Warning
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Warning
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:2
+Valore: Error
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Error
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Level:3
+Valore: Fatal
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Fatal
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:1:Sink
+Valore: ElasticSearch
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ElasticSearch
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:0
+Valore: Information
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Information
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:1
+Valore: Warning
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Warning
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:2
+Valore: Error
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Error
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Level:3
+Valore: Fatal
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Fatal
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:2:Sink
+Valore: Console
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Console
+
+Chiave: Serilog:SerilogConfiguration:SerilogCondition:3:Sink
+Valore: PostgreSQL
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: PostgreSQL
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:indexFormat
+Valore: metrics_pixeloapp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: metrics_pixeloapp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:ElasticSearch:nodeUris
+Valore: http://elasticsearch:9200
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: http://elasticsearch:9200
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:ColumnName
+Valore: RenderedMessage
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: RenderedMessage
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataLength
+Valore: 4000
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 4000
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:0:DataType
+Valore: NVarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: NVarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:ColumnName
+Valore: IdTransaction
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IdTransaction
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:1:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:ColumnName
+Valore: Action
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Action
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:2:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:ColumnName
+Valore: MachineName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MachineName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:3:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:ColumnName
+Valore: ApplicationName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ApplicationName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataLength
+Valore: 50
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 50
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:additionalColumns:4:DataType
+Valore: VarChar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: VarChar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:0
+Valore: Id
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Id
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:1
+Valore: Message
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Message
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:2
+Valore: MessageTemplate
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MessageTemplate
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:3
+Valore: TimeStamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: TimeStamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:4
+Valore: Level
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Level
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:5
+Valore: Exception
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Exception
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:addStandardColumns:6
+Valore: LogEvent
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEvent
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:columnOptionsSection:removeStandardColumns:0
+Valore: Properties
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Properties
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:connectionString
+Valore: XXXXXXXXXXXXXXX
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: XXXXXXXXXXXXXXX
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:autoCreateSqlTable
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:batchPostingLimit
+Valore: 10
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 10
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:period
+Valore: 0.00:00:01
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: 0.00:00:01
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:schemaName
+Valore: dbo
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: dbo
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:MSSqlServer:sinkOptionsSection:tableName
+Valore: LogEntry
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEntry
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:addAutoIncrementColumn
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Name
+Valore: Message
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Message
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Type
+Valore: text
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: text
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:0:Writer
+Valore: Rendered
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Rendered
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Name
+Valore: MessageTemplate
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MessageTemplate
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Type
+Valore: text
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: text
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:1:Writer
+Valore: Template
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Template
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Name
+Valore: ApplicationName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ApplicationName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Property
+Valore: ApplicationName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: ApplicationName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:10:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Name
+Valore: Username
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Username
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Property
+Valore: Username
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Username
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:11:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Name
+Valore: IpAddress
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IpAddress
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Property
+Valore: IpAddress
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IpAddress
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:12:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Name
+Valore: Level
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Level
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:2:Writer
+Valore: Level
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Level
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Name
+Valore: TimeStamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: TimeStamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Type
+Valore: timestamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: timestamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:3:Writer
+Valore: timestamp
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: timestamp
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Name
+Valore: Exception
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Exception
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Type
+Valore: text
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: text
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:4:Writer
+Valore: Exception
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Exception
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Name
+Valore: Properties
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Properties
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Type
+Valore: jsonb
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: jsonb
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:5:Writer
+Valore: Properties
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Properties
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Name
+Valore: LogEvent
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEvent
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Type
+Valore: jsonb
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: jsonb
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:6:Writer
+Valore: Serialized
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Serialized
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Name
+Valore: IdTransaction
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IdTransaction
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Property
+Valore: IdTransaction
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: IdTransaction
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:7:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Name
+Valore: MachineName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MachineName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Property
+Valore: MachineName
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: MachineName
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:8:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Name
+Valore: Action
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Action
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Property
+Valore: Action
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Action
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Type
+Valore: varchar
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: varchar
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:ColumnsPostGreSQL:9:Writer
+Valore: Single
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: Single
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:connectionString
+Valore: XXXXXXXXXXXXX
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: XXXXXXXXXXXXX
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:needAutoCreateTable
+Valore: True
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: True
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:schemaName
+Valore: public
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: public
+
+Chiave: Serilog:SerilogConfiguration:SerilogOption:PostgreSQL:tableName
+Valore: LogEntry
+  ✓ Fornito da: JsonConfigurationProvider
+    File: appsettings.LoggerHelper.json
+    Valore: LogEntry
+
+Chiave: Serilog:SerilogOption:MSSqlServer:connectionString
+Valore: Server=mssql-container,1433;Database=test_db;User Id=SA;Password=strong!password#123;TrustServerCertificate=True
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: Server=mssql-container,1433;Database=test_db;User Id=SA;Password=strong!password#123;TrustServerCertificate=True
+
+Chiave: SHLVL
+Valore: 0
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 0
+
+Chiave: URLS
+Valore: http://+:8080
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: http://+:8080
+
+Chiave: VERSION
+Valore: 9.0.9
+  ✓ Fornito da: EnvironmentVariablesConfigurationProvider
+    Valore: 9.0.9
+[DBG - LoggerHelper] AddDynamicSinks Path: AddDynamicSinks Path: /app/
+[DBG - LoggerHelper] Found 4 potential plugins /app/CSharpEssentials.LoggerHelper.Sink.Console.dll
+/app/CSharpEssentials.LoggerHelper.Sink.Postgresql.dll
+/app/CSharpEssentials.LoggerHelper.Sink.Elasticsearch.dll
+/app/CSharpEssentials.LoggerHelper.Sink.MSSqlServer.dll
+[ERR - LoggerHelper] Error handling sink MSSqlServer: Format of the initialization string does not conform to specification starting at index 0.
+warn: Microsoft.AspNetCore.Hosting.Diagnostics[15]
+      Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://+:8080'.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://[::]:8080
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /app
+
+D:\github\Csharp.Essentials.Extensions>

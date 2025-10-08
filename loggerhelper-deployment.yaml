@@ -20,7 +20,7 @@ spec:
       - name: loggerhelper-api-container
         # Sostituisci "alexbypa/loggerhelper-api" con il tuo container su Docker Hub
         # oppure usa l'immagine locale se stai testando con Minikube/Docker Desktop
-        image: alexbypa/loggerhelper-api:1.0.1
+        image: alexbypa/loggerhelper-api:1.0.7
         ports:
         - containerPort: 8080 # La porta interna esposta dal container (come nel Dockerfile)
         env: # <--- Questo blocco inietta le variabili d'ambiente
@@ -48,6 +48,21 @@ spec:
           
         - name: Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString
           value: "Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root"
+          
+        - name: Serilog__SerilogOption__MSSqlServer__connectionString
+          value: "Server=mssql-container,1433;Database=test_db;User Id=SA;Password=strong!password#123;TrustServerCertificate=True"
+          
+        - name: Serilog__SerilogConfiguration__SerilogCondition__0__Level__0
+          value: "Information"
+          
+        - name: Serilog__SerilogConfiguration__SerilogCondition__0__Level__1
+          value: "Warning"
+          
+        - name: Serilog__SerilogConfiguration__SerilogCondition__0__Level__2
+          value: "Error"
+          
+        - name: Serilog__SerilogConfiguration__SerilogCondition__0__Level__3
+          value: "Fatal"
           
         resources:
           limits:
