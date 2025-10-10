@@ -17,6 +17,7 @@ COPY . .
 WORKDIR "/src/Web.Api"
 RUN dotnet restore "Web.Api.csproj"
 RUN dotnet publish "Web.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet list package --include-transitive > /packages.txt && cat /packages.txt
 
 # 
 # Fase 2: Runtime (ambiente di produzione snello)
