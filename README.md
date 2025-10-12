@@ -1760,7 +1760,7 @@ app.UseLoggerHelperDashboard<RequestSample>(
 ```
 
 ### 🖥️ What You’ll See in the Dashboard:
-![dashboard Console Demo](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/Web.Api/docs/images/dashboard_console)
+![dashboard Console Demo](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/Web.Api/docs/images/dashboard_console.png)
 ---
 
 ## 🚀 Extending LogEvent Properties from Your Project<a id='customprop'></a>   [🔝](#table-of-contents)
