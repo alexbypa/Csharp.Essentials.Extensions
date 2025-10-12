@@ -55,8 +55,8 @@ builder.Services.AddCors(opt => {
 #endregion
 
 #region LoggerHelper.AI Package 
-    builder.Services.AddCSharpEssentialsLoggerAI(builder.Configuration,
-            SqlAiPersistenceFactory.AddSqlAiPersistence(builder.Configuration) // <-- Passa l'Action<IServiceCollection>
+builder.Services.AddCSharpEssentialsLoggerAI(builder.Configuration,
+        SqlAiPersistenceFactory.AddSqlAiPersistence(builder.Configuration) // <-- Passa l'Action<IServiceCollection>
 );
 #endregion
 
@@ -76,7 +76,19 @@ app.MapScalarApiReference();
 
 #region CSharpEssentials.Dashboard Package
 app.UseCors(CorsPolicy);
-app.UseLoggerHelperDashboard<RequestSample>("admin"); // registra la dashboard embedded
+app.UseLoggerHelperDashboard<RequestSample>(
+    path: "admin",
+    configure: options => {
+        options.Realm = "LoggerHelper Dashboard";
+        options.Authorization.Add(
+            new BasicAuthAuthorizationFilter(
+                users: new[] {new BasicAuthAuthorizationFilter.User ("admin", "password") } ,
+                requireSsl: false,
+                loginCaseSensitive: true,
+                realm: options.Realm
+            )
+        );
+    }); // registra la dashboard embedded
 #endregion
 app.UseHttpsRedirection();
 

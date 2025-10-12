@@ -40,7 +40,6 @@ public abstract class ServiceRegistrationAttribute : Attribute {
 // 2. Attributo Concreto: Implementazione della regola di Lunghezza Minima
 public class MinLengthRegistrationAttribute : ServiceRegistrationAttribute {
     private readonly int _minLength;
-
     public MinLengthRegistrationAttribute(
         int minLength,
         Type interfaceType,
