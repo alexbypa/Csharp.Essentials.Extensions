@@ -1758,6 +1758,19 @@ app.UseLoggerHelperDashboard<RequestSample>(
         );
     });
 ```
+> **Note:** To enable console output in the dashboard, enable the `Console` sink in `appsettings.json` (sinks section):
+
+```json
+{
+  "Sink": "Console",
+  "Level": [
+    "Information",
+    "Warning",
+    "Error",
+    "Fatal"
+  ]
+}
+```
 
 ### 🖥️ What You’ll See in the Dashboard:
 ![dashboard Console Demo](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/Web.Api/docs/images/dashboard_console.png)
