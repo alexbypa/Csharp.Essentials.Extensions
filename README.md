@@ -44,6 +44,7 @@ These packages are intentionally lightweight. You can add only what you need, ke
   - [📊 Telemetry Sink](#telemetry)
   - [🕵️ AI](#logger-ai)
   - [📘 Dashboard](#dashboard)
+    - [📘 Dashboard console](#dashboardconsole)
   - [🔍 Extending LogEvent Properties](#customprop)
 - [🧪 Demo API](#demo-api)
 - [📜 Version History](#versions)
@@ -1700,6 +1701,8 @@ configured sinks, their write levels, and any sink-loading issues:
 The advanced features for **AI-powered querying and macros** (`RAG Answer Query`, `Correlate Trace`, etc.) are not part of the base dashboard but are exposed as separate API endpoints upon integration of the `CSharpEssentials.LoggerHelper.AI` package.
 
 For detailed documentation on how to use and query logs via the AI functions, please refer to the **dedicated AI integration section** within this document.
+
+## 🔍 Dashboard <a id='dashboard'></a>   [🔝](#table-of-contents)
 
 ---
 
