@@ -1702,8 +1702,65 @@ The advanced features for **AI-powered querying and macros** (`RAG Answer Query`
 
 For detailed documentation on how to use and query logs via the AI functions, please refer to the **dedicated AI integration section** within this document.
 
-## 🔍 Dashboard <a id='dashboard'></a>   [🔝](#table-of-contents)
+## 🔍 Dashboard extended Console<a id='dashboardconsole'></a>   [🔝](#table-of-contents)
+The **new version of the LoggerHelper Dashboard** brings your console to life — see exactly what’s happening inside your application in real time!
 
+When running in a **production environment**, accessing raw console logs is often restricted.  
+That’s why the updated **`CSharpEssentials.LoggerHelper.Sink.Console`** now forwards log messages directly to the **Dashboard**.
+
+To protect sensitive information, the Dashboard now supports **optional Basic Authentication**, so you can safely expose it even in secured environments.
+
+When the main package starts, all configuration and startup behavior are automatically displayed on the Dashboard —  
+and, of course, you can extend logging manually using:
+
+```csharp
+TraceDashBoardSync()
+TraceDashBoardAsync()
+````
+
+### 🧠 Demo Example
+
+You can see a full working demo here:
+👉 [LoggerHelper Demo Project](https://github.com/alexbypa/CSharp.Essentials/tree/main/LoggerHelperDemo)
+
+```csharp
+app.MapGet("Logger/LogOnDashboard", (string Action, string message, LogEventLevel logEventLevel) => {
+    loggerExtension<RequestSample>
+        .TraceDashBoardSync(
+            new RequestSample() { 
+                IdTransaction = Guid.NewGuid().ToString(), 
+                Action = Action
+            }, 
+            logEventLevel, 
+            null,
+            message + "{test}", "NewValue");
+    var logsOnDashboard = InMemoryDashboardSink.GetLogEvents();
+    return Results.Ok(logsOnDashboard);
+});
+```
+
+### 🔐 Enabling Basic Authentication (optional)
+
+To enable Basic Auth for the Dashboard, you can easily configure it in your `Program.cs`:
+
+```csharp
+app.UseLoggerHelperDashboard<RequestSample>(
+    path: "admin",
+    configure: options => {
+        options.Realm = "LoggerHelper Dashboard";
+        options.Authorization.Add(
+            new BasicAuthAuthorizationFilter(
+                users: new[] { new BasicAuthAuthorizationFilter.User("admin", "password") },
+                requireSsl: false,
+                loginCaseSensitive: true,
+                realm: options.Realm
+            )
+        );
+    });
+```
+
+### 🖥️ What You’ll See in the Dashboard:
+![dashboard Console Demo](https://github.com/alexbypa/Csharp.Essentials.Extensions/blob/main/Web.Api/docs/images/dashboard_console)
 ---
 
 ## 🚀 Extending LogEvent Properties from Your Project<a id='customprop'></a>   [🔝](#table-of-contents)
