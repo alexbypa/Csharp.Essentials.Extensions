@@ -82,10 +82,11 @@ kubectl apply -f adminer.yaml
 kubectl -n $NS get all
 
 # Attende il completamento del rollout
-kubectl rollout status deployment/loggerhelper-api
+kubectl -n default rollout status deployment/loggerhelper-api-deployment
 
 # Ultime 200 righe di log del pod del deployment
-kubectl -n $NS logs deploy/loggerhelper-api --tail=200
+kubectl -n default logs deploy/loggerhelper-api-deployment --tail=200
+
 ```
 
 ## 6) Accesso locale senza Ingress

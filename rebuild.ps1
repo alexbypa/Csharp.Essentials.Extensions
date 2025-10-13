@@ -1,96 +1,79 @@
-# rebuild-loggerhelper.ps1
-# Rebuild, push e redeploy del servizio loggerhelper
-$ErrorActionPreference = 'Stop'
+# ========================
+# Build & Deploy Pipeline
+# ========================
 
-try {
-    # 0) Variabili base
-    Write-Host "[INFO] Set variabili..."
-    $USER = "alexbypa"
-    $IMAGE = "loggerhelper-api"
-    $TAG = "1.0.18"
-    $FULL = "$($USER)/$($IMAGE):$($TAG)"
-    Write-Host "USER=$USER IMAGE=$IMAGE TAG=$TAG FULL=$FULL"
-    Write-Host ""
+#REMEMBER
+		#Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+		#change version here and on deployment.yaml!
+#REMEMBER
 
-    # 1) Imposta contesto Kubernetes
-    Write-Host "[RUN ] kubectl config use-context docker-desktop"
-    kubectl config use-context docker-desktop
-    Write-Host "[RUN ] kubectl get nodes"
-    kubectl get nodes
-    Write-Host ""
 
-    # 2) Pulizia Docker
-    # Write-Host "[RUN ] docker compose down -v (usa env temporaneo per evitare warning)"
-    # $tmpEnv = Join-Path $env:TEMP "compose-down.env"
-    # "Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString=" | Out-File -FilePath $tmpEnv -Encoding ASCII -Force
-    # if (Test-Path ".\docker-compose.yml") { docker compose --env-file "$tmpEnv" down -v 2>$null }
-    # Remove-Item $tmpEnv -ErrorAction SilentlyContinue
+# Variabili
+$USER = "alexbypa"
+$IMAGE = "loggerhelper-api"
+$TAG   = "1.0.22"
+$FULL  = "${USER}/${IMAGE}:${TAG}"
+$NS    = "webapi"
 
-    Write-Host "[RUN ] docker stop <tutti i container>"
-    docker ps -aq | ForEach-Object { docker stop $_ } 2>$null
-    Write-Host "[RUN ] docker rm <tutti i container>"
-    docker ps -aq | ForEach-Object { docker rm $_ } 2>$null
-    Write-Host "[RUN ] docker system prune -af"
-    docker system prune -af
-    Write-Host "[RUN ] docker builder prune -af"
-    docker builder prune -af
-    Write-Host "[RUN ] docker image prune -af"
-    docker image prune -af
-    Write-Host "[RUN ] docker volume prune -f"
-    docker volume prune -f
-    Write-Host "[RUN ] docker network prune -f"
-    docker network prune -f
-    Write-Host "[OK  ] Docker cleanup completato"
-    Write-Host ""
-
-    # 3) Build e push immagine
-    Write-Host "[RUN ] docker login"
-    docker login
-    Write-Host "[RUN ] docker build -f Web.Api.Dockerfile -t $FULL ."
-    docker build -f Web.Api.Dockerfile -t $FULL .
-    Write-Host "[RUN ] docker push $FULL"
-    docker push $FULL
-    Write-Host "[OK  ] Build e push completati"
-    Write-Host ""
-
-    # 4) Pulizia Kubernetes
-    Write-Host "[RUN ] kubectl delete -f loggerhelper-deployment.yaml --ignore-not-found"
-    kubectl delete -f loggerhelper-deployment.yaml --ignore-not-found
-    Write-Host "[RUN ] kubectl delete -f loggerhelper-service.yaml --ignore-not-found"
-    kubectl delete -f loggerhelper-service.yaml --ignore-not-found
-    Write-Host "[OK  ] Vecchie risorse rimosse"
-    Write-Host ""
-
-    # 5) Deploy nuova immagine
-    Write-Host "[RUN ] kubectl apply -f loggerhelper-deployment.yaml"
-    kubectl apply -f loggerhelper-deployment.yaml
-    Write-Host "[RUN ] kubectl apply -f loggerhelper-service.yaml"
-    kubectl apply -f loggerhelper-service.yaml
-    Write-Host "[RUN ] kubectl set image deploy/loggerhelper-api-deployment loggerhelper-api=$FULL"
-    kubectl set image deploy/loggerhelper-api-deployment loggerhelper-api=$FULL
-    Write-Host "[RUN ] kubectl rollout status deploy/loggerhelper-api-deployment"
-    kubectl rollout status deploy/loggerhelper-api-deployment
-    Write-Host "[OK  ] Deploy aggiornato a $TAG"
-    Write-Host ""
-
-    # 6) Verifica
-    Write-Host "[RUN ] kubectl get pods -o wide"
-    kubectl get pods -o wide
-    Write-Host "[RUN ] kubectl describe deploy loggerhelper-api-deployment | Select-String 'Image'"
-    kubectl describe deploy loggerhelper-api-deployment | Select-String -Pattern 'Image'
-    Write-Host ""
-
-    # 7) Log applicativi
-    Write-Host "[RUN ] kubectl logs -l app=loggerhelper -f | Select-String connectionstring,mssql"
-    kubectl logs -l app=loggerhelper -f | Select-String -Pattern 'connectionstring','mssql'
-    Write-Host ""
-
-    Write-Host "[DONE] Script completato con successo"
+function Exec($cmd, desc) {
+    try {
+        Write-Host "`n>>> Eseguo: $cmd" -ForegroundColor Cyan
+        if ($desc) { Write-Host "`n>>> $desc" -ForegroundColor gray }
+        Invoke-Expression $cmd
+        if ($LASTEXITCODE -ne 0) { throw "Errore in comando: $cmd" }
+    }
+    catch {
+        Write-Host "!!! Errore: $_" -ForegroundColor Red
+        exit 1
+    }
 }
-catch {
-    Write-Host ""
-    Write-Host "[ERROR] Script failed" -ForegroundColor Red
-    Write-Host $_.Exception.Message -ForegroundColor Red
-    Write-Host "[HINT ] Verifica: Docker attivo, login Docker Hub, contesto Kubernetes." -ForegroundColor Yellow
-    exit 1
+
+# 0) Pulizia locale
+Exec 'docker ps -aq | ForEach-Object { docker rm -f $_ }'
+Exec 'docker volume ls -q | ForEach-Object { docker volume rm $_ }'
+Exec 'docker network ls --filter "type=custom" -q | ForEach-Object { docker network rm $_ }'
+Exec 'docker system prune -af --volumes'
+Exec 'if (kubectl get ns $NS 2>$null) { kubectl delete ns $NS }'
+Exec 'kubectl create ns $NS'
+
+# 1) Build immagine
+Exec "docker build --no-cache -t $FULL -f Web.Api.Dockerfile ."
+Exec "docker tag $FULL ${USER}/${IMAGE}:latest"
+
+# 2) Verifica contenuto immagine
+Exec "docker run --rm --entrypoint /bin/sh $FULL -lc 'ls -lh /app; echo ---; cat /cse-assemblies.log'"
+
+$risp = Read-Host "I Packages sono aggiornati? (S/N)"
+if ($risp -notin @('S', 's')) {
+    Write-Host "Aggiorna i pacchetti prima di continuare." -ForegroundColor Yellow
+    exit 0
 }
+
+# 3) Login e push
+Exec 'docker login'
+Exec "docker push $FULL"
+
+# 4) Deploy Kubernetes
+Exec 'kubectl apply -f loggerhelper-deployment.yaml'
+Exec 'kubectl apply -f loggerhelper-service.yaml'
+Exec 'kubectl apply -f adminer.yaml'
+
+# 5) Post-deploy check
+Exec "kubectl -n $NS get all"
+Exec "kubectl -n default rollout status deployment/loggerhelper-api-deployment"
+Exec "kubectl -n default logs deploy/loggerhelper-api-deployment --tail=200"
+
+# 6) Accesso locale
+# Exec "kubectl -n $NS port-forward svc/loggerhelper-api 8080:8080"
+
+# 7) Restart rapido
+# Exec "kubectl -n $NS rollout restart deployment/loggerhelper-api"
+
+# 8) Hard reset opzionale
+# Exec "docker system prune -af --volumes"
+# Exec "kubectl delete ns $NS"
+
+# Crea DB (opzionale)
+# Exec 'kubectl run mssql-tools --rm -it --restart=Never --image=mcr.microsoft.com/mssql-tools -- /opt/mssql-tools/bin/sqlcmd -S mssql,1433 -U sa -P "strong!password#123" -Q "CREATE DATABASE [test_db];"'
+
+Write-Host "`nPipeline completata con successo." -ForegroundColor Green
