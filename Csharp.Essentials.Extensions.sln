@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAcce
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{6F9021D9-7675-446C-9AD0-1F6E4E9C7AA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpEssentials.LoggerHelper.Dashboard", "..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper.Dashboard\CSharpEssentials.LoggerHelper.Dashboard.csproj", "{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,18 +55,6 @@ Global
 		{6F9021D9-7675-446C-9AD0-1F6E4E9C7AA3}.Release|x64.Build.0 = Release|Any CPU
 		{6F9021D9-7675-446C-9AD0-1F6E4E9C7AA3}.Release|x86.ActiveCfg = Release|Any CPU
 		{6F9021D9-7675-446C-9AD0-1F6E4E9C7AA3}.Release|x86.Build.0 = Release|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Debug|x64.Build.0 = Debug|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Debug|x86.Build.0 = Debug|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Release|x64.ActiveCfg = Release|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Release|x64.Build.0 = Release|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Release|x86.ActiveCfg = Release|Any CPU
-		{9DBB044D-C820-8A92-C7AD-E0FA2E4152E5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
