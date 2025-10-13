@@ -9,7 +9,7 @@
     <PackageReference Include="CSharpEssentials.HttpHelper" Version="4.0.3" />
     <PackageReference Include="CSharpEssentials.LoggerHelper" Version="4.0.10.1" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.AI" Version="4.0.7" />
-    <PackageReference Include="CSharpEssentials.LoggerHelper.Dashboard" Version="4.0.7.1" />
+    <PackageReference Include="CSharpEssentials.LoggerHelper.Dashboard" Version="4.1.0" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.Console" Version="4.0.10.1" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.Elasticsearch" Version="4.0.2" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.MSSqlServer" Version="4.0.2.2" />

@@ -5,8 +5,8 @@
 ```powershell
 $USER = "alexbypa"                 # nome utente Docker Hub
 $IMAGE = "loggerhelper-api"        # nome dell'immagine
-$TAG   = "1.0.20"                  # tag versione
-$FULL  = "$USER/$IMAGE:$TAG"       # ref completo immagine
+$TAG   = "1.0.21"                  # tag versione
+$FULL  = "${USER}/${IMAGE}:${TAG}"       # ref completo immagine
 $NS    = "webapi"                  # namespace Kubernetes
 ```
 
@@ -41,7 +41,7 @@ kubectl create ns $NS
 docker build --no-cache -t $FULL -f Web.Api.Dockerfile .
 
 # Aggiunge anche il tag :latest alla stessa immagine
-docker tag $FULL "$USER/$IMAGE:latest"
+docker tag $FULL "${USER}/${IMAGE}:${TAG}"
 ```
 
 ## 2) Verifica contenuto immagine
@@ -59,12 +59,11 @@ docker login
 
 # Push del tag versione
 # crea i tag remoti
-docker tag web-api:1.0.20 alexbypa/loggerhelper-api:1.0.20
-docker tag web-api:1.0.20 alexbypa/loggerhelper-api:latest
+docker tag $FULL $FULL
 
 # push
-docker push alexbypa/loggerhelper-api:1.0.20
-docker push alexbypa/loggerhelper-api:latest
+docker push $FULL
+
 ```
 
 ## 4) Deploy su Kubernetes
@@ -73,6 +72,7 @@ docker push alexbypa/loggerhelper-api:latest
 # Applica deployment e service dal repo
 kubectl apply -f loggerhelper-deployment.yaml
 kubectl apply -f loggerhelper-service.yaml
+kubectl apply -f adminer.yaml
 ```
 
 ## 5) Controlli post-deploy

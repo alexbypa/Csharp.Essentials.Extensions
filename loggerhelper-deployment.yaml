@@ -20,7 +20,7 @@ spec:
       - name: loggerhelper-api-container
         # Sostituisci "alexbypa/loggerhelper-api" con il tuo container su Docker Hub
         # oppure usa l'immagine locale se stai testando con Minikube/Docker Desktop
-        image: alexbypa/loggerhelper-api:1.0.20
+        image: alexbypa/loggerhelper-api:1.0.21
         imagePullPolicy: Always
         ports:
         - containerPort: 8080 # La porta interna esposta dal container (come nel Dockerfile)
