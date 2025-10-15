@@ -13,4 +13,4 @@ spec:
   ports:
     - port: 80 # La porta interna del Service (per altri Pod nel cluster)
       targetPort: 8080 # La porta a cui si connetterà all'interno del Pod
-      nodePort: 30000 # La porta esterna (dal tuo PC/server) per accedere all'API
+      nodePort: 30001 # La porta esterna (dal tuo PC/server) per accedere all'API

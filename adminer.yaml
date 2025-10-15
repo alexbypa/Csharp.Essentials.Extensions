@@ -20,7 +20,8 @@ spec:
             - containerPort: 8080
           env:
             - name: ADMINER_DEFAULT_SERVER
-              value: "mssql"   # <--- nome DNS del Service di SQL Server
+              #value: "mssql"   # <--- nome DNS del Service di SQL Server
+              value: "mssql.default.svc.cluster.local"   # <--- nome DNS del Service di SQL Server
           resources:
             requests:
               cpu: "100m"

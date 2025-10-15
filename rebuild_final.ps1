@@ -1,13 +1,19 @@
 # ========================
 # Build & Deploy Pipeline
+#REMEMBER
+
+		#Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+		#change version here and on deployment.yaml!
+
+#REMEMBER
 # ========================
 
 # Variabili
 $USER = "alexbypa"
 $IMAGE = "loggerhelper-api"
-$TAG   = "1.0.21"
+$TAG   = "1.0.22"
 $FULL  = "${USER}/${IMAGE}:${TAG}"
-$NS    = "default"
+$NS    = "webapi"
 $DEPLOY = "loggerhelper-api-deployment"
 
 function Exec($cmd, $desc) {
@@ -59,9 +65,6 @@ Exec "kubectl -n $NS get all" "Visualizzazione delle risorse nel namespace"
 Exec "kubectl -n $NS rollout status deployment/$DEPLOY" "Verifica dello stato di rollout del deployment"
 Exec "kubectl -n $NS logs deploy/$DEPLOY --tail=200" "Visualizzazione delle ultime 200 righe di log del deployment"
 
-# 6) Accesso locale (facoltativo)
-# Exec "kubectl -n $NS port-forward svc/loggerhelper-api 8080:8080" "Apertura porta locale per accesso diretto al servizio"
-
 # 7) Restart rapido (facoltativo)
 # Exec "kubectl -n $NS rollout restart deployment/$DEPLOY" "Riavvio rapido dei pod senza ridistribuzione completa"
 
@@ -71,5 +74,7 @@ Exec "kubectl -n $NS logs deploy/$DEPLOY --tail=200" "Visualizzazione delle ulti
 
 # Creazione DB (opzionale)
 # Exec 'kubectl run mssql-tools --rm -it --restart=Never --image=mcr.microsoft.com/mssql-tools -- /opt/mssql-tools/bin/sqlcmd -S mssql,1433 -U sa -P "strong!password#123" -Q "CREATE DATABASE [test_db];"' "Creazione database SQL Server nel cluster"
+
+Exec "kubectl -n webapi port-forward svc/adminer 8080:8080", "Esgue un port forward 8080:8080 per adminer !"
 
 Write-Host "`nPipeline completata con successo." -ForegroundColor Green
