@@ -1,7 +1,8 @@
 # ========================
 # Build & Deploy Pipeline
 
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+#Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+
 #change version here and on deployment.yaml!
 
 # ========================
