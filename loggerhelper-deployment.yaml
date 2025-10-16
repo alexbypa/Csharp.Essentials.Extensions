@@ -39,16 +39,22 @@ spec:
         # 3. Inietta la stringa di connessione per la chiave "ConnectionStrings:Default"
         #    (usa il Service name K8s di PostgreSQL: logger-db-postgresql)
         - name: ConnectionStrings__Default
-          value: "Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: ConnectionStrings__Default
 
         - name: Serilog__SerilogConfiguration__LoggerTelemetryOptions__IsEnabled
-          value: "false"
+          value: "true"
 
         - name: Serilog__SerilogConfiguration__LoggerTelemetryOptions__Provider
           value: "PostgreSQL"
           
         - name: Serilog__SerilogConfiguration__LoggerTelemetryOptions__ConnectionString
-          value: "Host=postgres-container;Port=5432;Database=test_db;Username=root;Password=root"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: ConnectionStrings__Default
           
         - name: Serilog__SerilogConfiguration__SerilogOption__MSSqlServer__connectionString
           value: "Server=mssql,1433;Database=test_db;User Id=SA;Password=strong!password#123;TrustServerCertificate=True"

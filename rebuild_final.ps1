@@ -1,80 +1,265 @@
 # ========================
 # Build & Deploy Pipeline
-#REMEMBER
 
-		#Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-		#change version here and on deployment.yaml!
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+#change version here and on deployment.yaml!
 
-#REMEMBER
 # ========================
 
-# Variabili
-$USER = "alexbypa"
+# ========================
+# Build & Deploy end-to-end (PowerShell)
+# ========================
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+function Exec([string]$cmd, [string]$msg = "") {
+    if ($msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
+    Write-Host "    $cmd" -ForegroundColor DarkGray
+    try {
+        $out = Invoke-Expression $cmd
+        if ($out) { $out }
+    } catch {
+        Write-Host "ERRORE: $($_.Exception.Message)" -ForegroundColor Red
+        throw
+    }
+}
+
+# ------------------------
+# Parametri
+# ------------------------
+$USER  = "alexbypa"
 $IMAGE = "loggerhelper-api"
 $TAG   = "1.0.22"
-$FULL  = "${USER}/${IMAGE}:${TAG}"
-$NS    = "webapi"
+$FULL  = "$USER/$IMAGE" + ":" + "$TAG"
+$NS          = "webapi"          # namespace unico
+$PG_SECRET   = "postgres-secret"
+$PG_SVC      = "postgres"
+$PG_STS      = "postgres"
+$PG_STORAGE  = "5Gi"
+$PG_USER     = "postgres"
+$PG_DB       = "test_db"
+$PG_PASS     = "strong!password#123"  # cambia se serve
+
+$PGADMIN_DEP = "pgadmin"
+$PGADMIN_SVC = "pgadmin"
+$PGADMIN_MAIL = "admin@local"
+$PGADMIN_PWD  = "adminadmin"          # cambia se serve
+
 $DEPLOY = "loggerhelper-api-deployment"
+$SVC    = "loggerhelper-api"
 
-function Exec($cmd, $desc) {
-    try {
-        if ($desc) { Write-Host "`n>>> $desc" -ForegroundColor Yellow }
-        Write-Host ">>> Eseguo: $cmd" -ForegroundColor Cyan
-        Invoke-Expression $cmd
-        if ($LASTEXITCODE -ne 0) { throw "Errore in comando: $cmd" }
-    }
-    catch {
-        Write-Host "!!! Errore: $_" -ForegroundColor Red
-        exit 1
-    }
+# ------------------------
+# Helper: current namespace
+# ------------------------
+Exec "if (-not (kubectl get ns $NS 2>`$null)) { kubectl create ns $NS }" "Garantisce il namespace '$NS'"
+Exec "kubectl config set-context --current --namespace=$NS" "Imposta il namespace corrente"
+
+# ------------------------
+# Metrics Server (per kubectl top)
+# ------------------------
+Write-Host "`n--- Metrics Server ---" -ForegroundColor Yellow
+try {
+    Exec "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml -n kube-system" "Installa/aggiorna metrics-server"
+    $patch = @'
+[
+  {"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"},
+  {"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname"}
+]
+'@
+    Exec "kubectl -n kube-system patch deploy metrics-server --type=json --patch '$patch'" "Patch args metrics-server (Docker Desktop)"
+    Exec "kubectl -n kube-system rollout status deploy/metrics-server --timeout=90s" "Attende readiness metrics-server"
+} catch {
+    Write-Host "Warning: metrics-server non pronto. Continuerò." -ForegroundColor DarkYellow
 }
 
-# 0) Pulizia locale
-Exec 'docker ps -aq | ForEach-Object { docker rm -f $_ }' "Rimozione di tutti i container Docker attivi o fermi"
-Exec 'docker volume ls -q | ForEach-Object { docker volume rm $_ }' "Rimozione di tutti i volumi Docker"
-Exec 'docker network ls --filter "type=custom" -q | ForEach-Object { docker network rm $_ }' "Rimozione delle reti Docker personalizzate"
-Exec 'docker system prune -af --volumes' "Pulizia cache, immagini e volumi orfani"
-Exec 'if (kubectl get ns $NS 2>$null) { kubectl delete ns $NS }' "Eliminazione del namespace Kubernetes esistente"
-Exec 'kubectl create ns $NS' "Creazione di un nuovo namespace Kubernetes"
+# ------------------------
+# Secret PostgreSQL + pgAdmin
+# ------------------------
+Exec "kubectl -n $NS delete secret $PG_SECRET 2>`$null; kubectl -n $NS create secret generic $PG_SECRET --from-literal=postgres-password='$PG_PASS'" "Secret PostgreSQL (password)"
+Exec "kubectl -n $NS delete secret ${PGADMIN_DEP}-secret 2>`$null; kubectl -n $NS create secret generic ${PGADMIN_DEP}-secret --from-literal=PGADMIN_DEFAULT_EMAIL='$PGADMIN_MAIL' --from-literal=PGADMIN_DEFAULT_PASSWORD='$PGADMIN_PWD'" "Secret pgAdmin"
 
-# 1) Build immagine
-Exec "docker build --no-cache -t $FULL -f Web.Api.Dockerfile ." "Build dell'immagine Docker del progetto senza cache"
-Exec "docker tag $FULL ${USER}/${IMAGE}:latest" "Aggiunta del tag 'latest' all'immagine Docker"
+# ------------------------
+# PostgreSQL: Headless SVC + StatefulSet con PVC per pod
+# ------------------------
+@"
+apiVersion: v1
+kind: Service
+metadata:
+  name: $PG_SVC
+  namespace: $NS
+  labels: { app: $PG_SVC }
+spec:
+  clusterIP: None
+  selector: { app: $PG_SVC }
+  ports:
+  - name: postgres
+    port: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: $PG_STS
+  namespace: $NS
+spec:
+  serviceName: $PG_SVC
+  replicas: 1
+  selector:
+    matchLabels: { app: $PG_SVC }
+  template:
+    metadata:
+      labels: { app: $PG_SVC }
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+          name: postgres
+        env:
+        - name: POSTGRES_USER
+          value: "$PG_USER"
+        - name: POSTGRES_DB
+          value: "$PG_DB"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: $PG_SECRET
+              key: postgres-password
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: $PG_STORAGE
+"@ | kubectl apply -f - | Out-Null
+Write-Host "PostgreSQL applicato." -ForegroundColor Green
+Exec "kubectl -n $NS rollout status sts/$PG_STS --timeout=180s" "Attende readiness PostgreSQL"
 
-# 2) Verifica contenuto immagine
-Exec "docker run --rm --entrypoint /bin/sh $FULL -lc 'ls -lh /app; echo ---; cat /cse-assemblies.log'" "Verifica del contenuto dell'immagine e visualizzazione log di build"
+# ------------------------
+# pgAdmin: SVC + Deployment
+# ------------------------
+@"
+apiVersion: v1
+kind: Service
+metadata:
+  name: $PGADMIN_SVC
+  namespace: $NS
+  labels: { app: $PGADMIN_DEP }
+spec:
+  type: ClusterIP
+  selector: { app: $PGADMIN_DEP }
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $PGADMIN_DEP
+  namespace: $NS
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: $PGADMIN_DEP }
+  template:
+    metadata:
+      labels: { app: $PGADMIN_DEP }
+    spec:
+      containers:
+      - name: pgadmin
+        image: dpage/pgadmin4:8
+        ports:
+        - containerPort: 80
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: ${PGADMIN_DEP}-secret
+              key: PGADMIN_DEFAULT_EMAIL
+        - name: PGADMIN_DEFAULT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ${PGADMIN_DEP}-secret
+              key: PGADMIN_DEFAULT_PASSWORD
+"@ | kubectl apply -f - | Out-Null
+Write-Host "pgAdmin applicato." -ForegroundColor Green
+Exec "kubectl -n $NS rollout status deploy/$PGADMIN_DEP --timeout=120s" "Attende readiness pgAdmin"
 
-# Conferma aggiornamento pacchetti
-$risp = Read-Host "I Packages sono aggiornati? (S/N)"
-if ($risp -notin @('S', 's')) {
-    Write-Host "Aggiorna i pacchetti prima di continuare." -ForegroundColor Yellow
-    exit 0
-}
+# ------------------------
+# Build + Push immagine LoggerHelper API
+# ------------------------
+Exec "docker build --pull --no-cache -t $FULL -f Web.Api.Dockerfile ." "Build immagine $FULL"
+Exec "docker tag $FULL $USER/$IMAGE:latest" "Tag latest"
+Exec "docker push $FULL" "Push immagine versionata"
+Exec "docker push $USER/$IMAGE:latest" "Push latest"
 
-# 3) Login e push
-Exec 'docker login' "Autenticazione su Docker Hub"
-Exec "docker push $FULL" "Esecuzione del push dell'immagine su Docker Hub"
+# ------------------------
+# Deploy LoggerHelper API (Deployment + Service)
+# - Nota: aggiorna ENV secondo le tue chiavi
+# ------------------------
+@"
+apiVersion: v1
+kind: Service
+metadata:
+  name: $SVC
+  namespace: $NS
+spec:
+  selector: { app: $DEPLOY }
+  ports:
+  - port: 8081
+    targetPort: 8081
+    name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $DEPLOY
+  namespace: $NS
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: $DEPLOY }
+  template:
+    metadata:
+      labels: { app: $DEPLOY }
+    spec:
+      containers:
+      - name: api
+        image: $FULL
+        ports:
+        - containerPort: 8081
+        env:
+        - name: Serilog__SerilogConfiguration__SerilogOption__PostgreSql__connectionString
+          value: "Host=$PG_SVC.$NS.svc.cluster.local;Port=5432;Database=$PG_DB;Username=$PG_USER;Password=$PG_PASS"
+        - name: ASPNETCORE_URLS
+          value: "http://0.0.0.0:8081"
+"@ | kubectl apply -f - | Out-Null
+Exec "kubectl -n $NS rollout status deploy/$DEPLOY --timeout=180s" "Attende readiness LoggerHelper API"
 
-# 4) Deploy Kubernetes
-Exec "kubectl -n $NS apply -f loggerhelper-deployment.yaml" "Applicazione del file di deployment su Kubernetes"
-Exec "kubectl -n $NS apply -f loggerhelper-service.yaml" "Applicazione del file di servizio su Kubernetes"
-Exec "kubectl -n $NS apply -f adminer.yaml" "Applicazione del deployment di Adminer su Kubernetes"
+# ------------------------
+# Verifiche rapide
+# ------------------------
+Write-Host "`n--- Verifiche ---" -ForegroundColor Yellow
+try { Exec "kubectl top nodes" "Uso risorse nodi" } catch { Write-Host "Metrics non disponibili." -ForegroundColor DarkYellow }
+try { Exec "kubectl top pods -n $NS" "Uso risorse pod in $NS" } catch { }
 
-# 5) Post-deploy check
-Exec "kubectl -n $NS get all" "Visualizzazione delle risorse nel namespace"
-Exec "kubectl -n $NS rollout status deployment/$DEPLOY" "Verifica dello stato di rollout del deployment"
-Exec "kubectl -n $NS logs deploy/$DEPLOY --tail=200" "Visualizzazione delle ultime 200 righe di log del deployment"
+Exec "kubectl -n $NS get pods -o wide" "Pods"
+Exec "kubectl -n $NS get svc" "Services"
+Exec "kubectl -n $NS get endpoints $PG_SVC" "Endpoint PostgreSQL"
+Exec "kubectl -n $NS get endpoints $PGADMIN_SVC" "Endpoint pgAdmin"
 
-# 7) Restart rapido (facoltativo)
-# Exec "kubectl -n $NS rollout restart deployment/$DEPLOY" "Riavvio rapido dei pod senza ridistribuzione completa"
+# ------------------------
+# Port-forward utili (facoltativi)
+# ------------------------
+Write-Host "`nPuoi aprire terminali separati per i port-forward:" -ForegroundColor DarkGray
+Write-Host "  kubectl -n $NS port-forward svc/$PGADMIN_SVC 8080:8080   # pgAdmin" -ForegroundColor DarkGray
+Write-Host "  kubectl -n $NS port-forward svc/$SVC       8081:8081   # LoggerHelper API" -ForegroundColor DarkGray
 
-# 8) Hard reset opzionale
-# Exec "docker system prune -af --volumes" "Pulizia completa del sistema Docker"
-# Exec "kubectl delete ns $NS" "Eliminazione completa del namespace Kubernetes"
-
-# Creazione DB (opzionale)
-# Exec 'kubectl run mssql-tools --rm -it --restart=Never --image=mcr.microsoft.com/mssql-tools -- /opt/mssql-tools/bin/sqlcmd -S mssql,1433 -U sa -P "strong!password#123" -Q "CREATE DATABASE [test_db];"' "Creazione database SQL Server nel cluster"
-
-Exec "kubectl -n webapi port-forward svc/adminer 8080:8080", "Esgue un port forward 8080:8080 per adminer !"
-
-Write-Host "`nPipeline completata con successo." -ForegroundColor Green
+Write-Host "`nCompletato." -ForegroundColor Green
