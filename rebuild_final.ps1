@@ -1,266 +1,271 @@
-# ========================
-# Build & Deploy Pipeline
+param(
+    [ValidateSet('install','verify')] [string]$Mode = 'install',
+    [string]$Ns = 'webapi',
+    [int]$TimeoutSec = 180,
+    [string]$ServicesDir = 'k8s_services'
+)
 
-#Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+# --- guards ---
+$ErrorActionPreference = 'Stop'
+$ConfirmPreference = 'None'
+$ProgressPreference = 'SilentlyContinue'
+function Warn($m){ Write-Host $m -ForegroundColor Yellow }
+function Info($m){ Write-Host $m -ForegroundColor Cyan }
+function Debug($m){ Write-Host $m -ForegroundColor Gray }
 
-#change version here and on deployment.yaml!
+# base paths
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+Set-Location $ScriptDir
+$SvcBase = Join-Path $ScriptDir $ServicesDir
 
-# ========================
-
-# ========================
-# Build & Deploy end-to-end (PowerShell)
-# ========================
-
-Set-StrictMode -Version Latest
-$ErrorActionPreference = "Stop"
-
-function Exec([string]$cmd, [string]$msg = "") {
-    if ($msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
-    Write-Host "    $cmd" -ForegroundColor DarkGray
-    try {
-        $out = Invoke-Expression $cmd
-        if ($out) { $out }
-    } catch {
-        Write-Host "ERRORE: $($_.Exception.Message)" -ForegroundColor Red
-        throw
+function Wait-K8sApi([int]$T = 120){
+    $sw=[Diagnostics.Stopwatch]::StartNew()
+    while($sw.Elapsed.TotalSeconds -lt $T){
+        try{
+            kubectl cluster-info 1>$null 2>$null
+            kubectl get ns default --request-timeout=5s 1>$null 2>$null
+            return
+        } catch { Start-Sleep 3 }
     }
+    throw "API Kubernetes non raggiungibile dopo $T s."
 }
 
-# ------------------------
-# Parametri
-# ------------------------
-$USER  = "alexbypa"
-$IMAGE = "loggerhelper-api"
-$TAG   = "1.0.22"
-$FULL  = "$USER/$IMAGE" + ":" + "$TAG"
-$NS          = "webapi"          # namespace unico
-$PG_SECRET   = "postgres-secret"
-$PG_SVC      = "postgres"
-$PG_STS      = "postgres"
-$PG_STORAGE  = "5Gi"
-$PG_USER     = "postgres"
-$PG_DB       = "test_db"
-$PG_PASS     = "strong!password#123"  # cambia se serve
-
-$PGADMIN_DEP = "pgadmin"
-$PGADMIN_SVC = "pgadmin"
-$PGADMIN_MAIL = "admin@local"
-$PGADMIN_PWD  = "adminadmin"          # cambia se serve
-
-$DEPLOY = "loggerhelper-api-deployment"
-$SVC    = "loggerhelper-api"
-
-# ------------------------
-# Helper: current namespace
-# ------------------------
-Exec "if (-not (kubectl get ns $NS 2>`$null)) { kubectl create ns $NS }" "Garantisce il namespace '$NS'"
-Exec "kubectl config set-context --current --namespace=$NS" "Imposta il namespace corrente"
-
-# ------------------------
-# Metrics Server (per kubectl top)
-# ------------------------
-Write-Host "`n--- Metrics Server ---" -ForegroundColor Yellow
-try {
-    Exec "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml -n kube-system" "Installa/aggiorna metrics-server"
-    $patch = @'
-[
-  {"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"},
-  {"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname"}
-]
-'@
-    Exec "kubectl -n kube-system patch deploy metrics-server --type=json --patch '$patch'" "Patch args metrics-server (Docker Desktop)"
-    Exec "kubectl -n kube-system rollout status deploy/metrics-server --timeout=90s" "Attende readiness metrics-server"
-} catch {
-    Write-Host "Warning: metrics-server non pronto. Continuerò." -ForegroundColor DarkYellow
+function Ensure-Namespace([string]$ns){
+		Debug('Ensure-Namespace: ' + $ns)
+    if(-not (kubectl get ns $ns --ignore-not-found -o name)){ kubectl create ns $ns | Out-Null }
 }
 
-# ------------------------
-# Secret PostgreSQL + pgAdmin
-# ------------------------
-Exec "kubectl -n $NS delete secret $PG_SECRET 2>`$null; kubectl -n $NS create secret generic $PG_SECRET --from-literal=postgres-password='$PG_PASS'" "Secret PostgreSQL (password)"
-Exec "kubectl -n $NS delete secret ${PGADMIN_DEP}-secret 2>`$null; kubectl -n $NS create secret generic ${PGADMIN_DEP}-secret --from-literal=PGADMIN_DEFAULT_EMAIL='$PGADMIN_MAIL' --from-literal=PGADMIN_DEFAULT_PASSWORD='$PGADMIN_PWD'" "Secret pgAdmin"
+function Get-Workload([string]$name,[string]$ns,[string]$label=$null){
+    Debug('Get-Workload: ' + $name)
+    
+    # Funzione Helper per ottenere l'oggetto JSON pulito.
+    # Usiamo 'ignore-not-found' e reindirizziamo tutti i messaggi di errore (2)
+    function Invoke-KubectlJson($resource, $query) {
+			Debug("Eseguo Invoke-KubectlJson (" + $resource + "," + $query + ")")
+			
+			# FIX: Usa la stringa completa per garantire la corretta citazione degli argomenti
+			$commandLine = "kubectl -n $ns get $resource $query --ignore-not-found -o json"
+			
+			# DEBUG: La tua stampa del comando completo
+			Debug("Comando completo: " + $commandLine)
 
-# ------------------------
-# PostgreSQL: Headless SVC + StatefulSet con PVC per pod
-# ------------------------
-@"
-apiVersion: v1
-kind: Service
-metadata:
-  name: $PG_SVC
-  namespace: $NS
-  labels: { app: $PG_SVC }
-spec:
-  clusterIP: None
-  selector: { app: $PG_SVC }
-  ports:
-  - name: postgres
-    port: 5432
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: $PG_STS
-  namespace: $NS
-spec:
-  serviceName: $PG_SVC
-  replicas: 1
-  selector:
-    matchLabels: { app: $PG_SVC }
-  template:
-    metadata:
-      labels: { app: $PG_SVC }
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:16
-        ports:
-        - containerPort: 5432
-          name: postgres
-        env:
-        - name: POSTGRES_USER
-          value: "$PG_USER"
-        - name: POSTGRES_DB
-          value: "$PG_DB"
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: $PG_SECRET
-              key: postgres-password
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: $PG_STORAGE
-"@ | kubectl apply -f - | Out-Null
-Write-Host "PostgreSQL applicato." -ForegroundColor Green
-Exec "kubectl -n $NS rollout status sts/$PG_STS --timeout=180s" "Attende readiness PostgreSQL"
+			# Esecuzione robusta con IEX (Invoke-Expression) per catturare l'output come singola stringa
+			# Questo è il metodo più aggressivo per catturare l'output di un eseguibile
+			$json = Invoke-Expression -Command "$commandLine 2>$null" | Out-String
+			
+			Debug("json (parziale): " + ($json.Substring(0, [Math]::Min(100, $json.Length))))
+			Debug("----------------")
+		
+			if ([string]::IsNullOrWhiteSpace($json)) { return $null }
+			try {
+					return $json | ConvertFrom-Json
+			} catch {
+					Debug("WARNING: Parsing JSON fallito per $resource/$query. Output corrotto. Ritorno null.")
+					return $null
+			}
+    }
 
-# ------------------------
-# pgAdmin: SVC + Deployment
-# ------------------------
-@"
-apiVersion: v1
-kind: Service
-metadata:
-  name: $PGADMIN_SVC
-  namespace: $NS
-  labels: { app: $PGADMIN_DEP }
-spec:
-  type: ClusterIP
-  selector: { app: $PGADMIN_DEP }
-  ports:
-  - name: http
-    port: 8080
-    targetPort: 80
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: $PGADMIN_DEP
-  namespace: $NS
-spec:
-  replicas: 1
-  selector:
-    matchLabels: { app: $PGADMIN_DEP }
-  template:
-    metadata:
-      labels: { app: $PGADMIN_DEP }
-    spec:
-      containers:
-      - name: pgadmin
-        image: dpage/pgadmin4:8
-        ports:
-        - containerPort: 80
-        env:
-        - name: PGADMIN_DEFAULT_EMAIL
-          valueFrom:
-            secretKeyRef:
-              name: ${PGADMIN_DEP}-secret
-              key: PGADMIN_DEFAULT_EMAIL
-        - name: PGADMIN_DEFAULT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: ${PGADMIN_DEP}-secret
-              key: PGADMIN_DEFAULT_PASSWORD
-"@ | kubectl apply -f - | Out-Null
-Write-Host "pgAdmin applicato." -ForegroundColor Green
-Exec "kubectl -n $NS rollout status deploy/$PGADMIN_DEP --timeout=120s" "Attende readiness pgAdmin"
+    # 1. Ricerca per Nome (se $name è valorizzato)
+    if ($name) {
+        $dObj = Invoke-KubectlJson 'deploy' $name
+        if($dObj){ return @{kind='Deployment';obj=$dObj} }
+        
+        $sObj = Invoke-KubectlJson 'statefulset' $name
+        if($sObj){ return @{kind='StatefulSet';obj=$sObj} }
+    }
+    
+    # 2. Ricerca per Label (se $label è valorizzato)
+    if ($label) {
+        $dlist = Invoke-KubectlJson 'deploy' "-l $label"
+        if ($dlist -and $dlist.items -and $dlist.items.Count -gt 0){
+            return @{kind='Deployment';obj=$dlist.items[0]}
+        }
+        
+        $slist = Invoke-KubectlJson 'statefulset' "-l $label"
+        if ($slist -and $slist.items -and $slist.items.Count -gt 0){
+            return @{kind='StatefulSet';obj=$slist.items[0]}
+        }
+    }
 
-# ------------------------
-# Build + Push immagine LoggerHelper API
-# ------------------------
-Exec "docker build --pull --no-cache -t $FULL -f Web.Api.Dockerfile ." "Build immagine $FULL"
-Exec "docker tag $FULL $USER/$IMAGE:latest" "Tag latest"
-Exec "docker push $FULL" "Push immagine versionata"
-Exec "docker push $USER/$IMAGE:latest" "Push latest"
+    return $null
+}
 
-# ------------------------
-# Deploy LoggerHelper API (Deployment + Service)
-# - Nota: aggiorna ENV secondo le tue chiavi
-# ------------------------
-@"
-apiVersion: v1
-kind: Service
-metadata:
-  name: $SVC
-  namespace: $NS
-spec:
-  selector: { app: $DEPLOY }
-  ports:
-  - port: 8081
-    targetPort: 8081
-    name: http
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: $DEPLOY
-  namespace: $NS
-spec:
-  replicas: 1
-  selector:
-    matchLabels: { app: $DEPLOY }
-  template:
-    metadata:
-      labels: { app: $DEPLOY }
-    spec:
-      containers:
-      - name: api
-        image: $FULL
-        ports:
-        - containerPort: 8081
-        env:
-        - name: Serilog__SerilogConfiguration__SerilogOption__PostgreSql__connectionString
-          value: "Host=$PG_SVC.$NS.svc.cluster.local;Port=5432;Database=$PG_DB;Username=$PG_USER;Password=$PG_PASS"
-        - name: ASPNETCORE_URLS
-          value: "http://0.0.0.0:8081"
-"@ | kubectl apply -f - | Out-Null
-Exec "kubectl -n $NS rollout status deploy/$DEPLOY --timeout=180s" "Attende readiness LoggerHelper API"
 
-# ------------------------
-# Verifiche rapide
-# ------------------------
-Write-Host "`n--- Verifiche ---" -ForegroundColor Yellow
-try { Exec "kubectl top nodes" "Uso risorse nodi" } catch { Write-Host "Metrics non disponibili." -ForegroundColor DarkYellow }
-try { Exec "kubectl top pods -n $NS" "Uso risorse pod in $NS" } catch { }
+function Test-WorkloadReady([string]$name,[string]$ns,[string]$label=$null){
+		Debug('Test-WorkloadReady: ' + $name)
+    $w=Get-Workload $name $ns $label
+    if(-not $w){ return $false }
+    $obj=$w.obj
+    $ready=($obj.status.readyReplicas|%{$_}); if(-not $ready){$ready=0}
+    $desired=($obj.spec.replicas|%{$_});     if(-not $desired){$desired=0}
+    return (($ready -ge 1) -and ($ready -eq $desired))
+}
 
-Exec "kubectl -n $NS get pods -o wide" "Pods"
-Exec "kubectl -n $NS get svc" "Services"
-Exec "kubectl -n $NS get endpoints $PG_SVC" "Endpoint PostgreSQL"
-Exec "kubectl -n $NS get endpoints $PGADMIN_SVC" "Endpoint pgAdmin"
+function Test-SvcHasEndpoints([string]$svc,[string]$ns){
+	  Debug('Test-SvcHasEndpoints: ' + $svc)
+    $e=kubectl -n $ns get endpoints $svc --ignore-not-found -o json 2>$null|ConvertFrom-Json
+    if(-not $e){ return $false }
+    $subs=@(); if($e -and $e.subsets){ $subs=$e.subsets }
+    foreach($s in $subs){ if($s.addresses -and $s.ports){ return $true } }
+    return $false
+}
 
-# ------------------------
-# Port-forward utili (facoltativi)
-# ------------------------
-Write-Host "`nPuoi aprire terminali separati per i port-forward:" -ForegroundColor DarkGray
-Write-Host "  kubectl -n $NS port-forward svc/$PGADMIN_SVC 8080:8080   # pgAdmin" -ForegroundColor DarkGray
-Write-Host "  kubectl -n $NS port-forward svc/$SVC       8081:8081   # LoggerHelper API" -ForegroundColor DarkGray
+function Wait-WorkloadRollout([string]$label,[string]$ns,[int]$t){
+    # Timeout di esistenza: usa $t (180s) con un minimo di 60s
+    $timeoutExist = [Math]::Max($t, 60)
+    $workloadName = $null
+    $workloadKind = $null
+    $sw = [Diagnostics.Stopwatch]::StartNew()
 
-Write-Host "`nCompletato." -ForegroundColor Green
+    Write-Host "Rollout: Attendo Workload con label '$label' nel ns '$ns'. Timeout max di esistenza: $($timeoutExist)s..." -ForegroundColor DarkGray
+    
+    # Ciclo di attesa per la CREAZIONE del Workload
+    while ($sw.Elapsed.TotalSeconds -lt $timeoutExist) {
+        # Riutilizza la funzione Get-Workload (che ora è più robusta)
+        $w = Get-Workload $null $ns $label
+
+        if ($w) {
+            $workloadName = $w.obj.metadata.name
+            $workloadKind = $w.kind
+            break
+        }
+        
+        Start-Sleep -Seconds 3 # Pausa di 3 secondi
+    }
+
+    # Verifica se il Workload è stato trovato
+    if (-not $workloadName) {
+        throw "Nessun workload con label '$label' nel ns '$ns' è apparso dopo $($timeoutExist)s. Controlla i logs: kubectl logs -n $ns -l $label"
+    }
+
+    # Attesa per il ROLLOUT (usando il nome trovato)
+    Write-Host "Rollout: Trovato $($workloadKind)/$workloadName. Attesa completamento ($($t)s max)..." -ForegroundColor DarkGray
+    
+    # Adatta il tipo di risorsa per il comando rollout status
+    $resourceType = if ($workloadKind -eq 'Deployment') { 'deploy' } else { 'statefulset' }
+    
+    kubectl -n $ns rollout status "$($resourceType)/$workloadName" --timeout=${t}s
+    return
+}
+
+function Wait-ServiceEndpoints([string[]]$svcCandidates,[string]$ns,[int]$t=120){
+		Debug('Wait-ServiceEndpoints: ' + $svcCandidates -join ", ")
+    $sw=[Diagnostics.Stopwatch]::StartNew()
+    while($sw.Elapsed.TotalSeconds -lt $t){
+        foreach($svc in $svcCandidates){
+            if(kubectl -n $ns get svc $svc --ignore-not-found -o name 2>$null){
+                if(Test-SvcHasEndpoints $svc $ns){ return }
+            }
+        }
+        Start-Sleep 2
+    }
+    throw ("Service senza endpoints dopo {0}s. Provati: {1}" -f $t, ($svcCandidates -join ', '))
+}
+
+function First-ExistingService([string[]]$candidates,[string]$ns){
+		Debug('First-ExistingService: ' + $candidates -join ", ")
+    foreach($c in $candidates){ if(kubectl -n $ns get svc $c --ignore-not-found -o name 2>$null){ return $c } }
+    return $null
+}
+
+function Verify-Stack([string]$ns){
+		Debug('Verify-Stack: ' + $ns)
+    $checks=@(
+        @{name='mssql';      svc=@('mssql');                        workload=''; label='app=mssql'},
+        @{name='postgresql'; svc=@('postgres','postgres-container');workload=''; label='app=postgres'},
+        @{name='pgadmin';    svc=@('pgadmin');                      workload=''; label='app=pgadmin'},
+        @{name='adminer';    svc=@('adminer');                      workload=''; label='app=adminer'}
+    )
+    $missing=@(); $notReady=@(); $noEndpoints=@()
+    foreach($c in $checks){
+        $w=Get-Workload $c.workload $ns $c.label
+        $svcName=First-ExistingService $c.svc $ns
+        $workOK=Test-WorkloadReady $c.workload $ns $c.label
+        $svcOK=$false; if($svcName){ $svcOK=Test-SvcHasEndpoints $svcName $ns }
+
+        $statusWork = if($workOK){'OK'} else { if($w){'NOT-READY'} else {'MISSING'} }
+        $statusSvc  = if($svcName){$svcName}else{'N/D'}
+        $statusEndp = if($svcOK){'OK'} else { if($svcName){'NO-ENDPOINTS'} else {'N/A'} }
+
+        "{0,-12} ns={1} workload={2} svc={3} endpoints={4}" -f $c.name,$ns,$statusWork,$statusSvc,$statusEndp
+
+        if(-not $w){ $missing += $c.name } elseif(-not $workOK){ $notReady += $c.name }
+        if($svcName -and -not $svcOK){ $noEndpoints += $c.name }
+    }
+    if($missing.Count -gt 0){ Warn ("Servizi non installati: " + ($missing -join ', ')) }
+    if($notReady.Count -gt 0){ Warn ("Workload non Ready: " + ($notReady -join ', ')) }
+    if($noEndpoints.Count -gt 0){ Warn ("Service senza endpoints: " + ($noEndpoints -join ', ')) }
+
+    if($missing.Count -eq 0 -and $notReady.Count -eq 0 -and $noEndpoints.Count -eq 0){ "Stack OK nel namespace '$ns'."; exit 0 } else { exit 1 }
+}
+
+# Applica solo i file esistenti. Ritorna quanti sono stati applicati.
+function Apply-Files([string[]]$files,[string]$ns){
+		Debug('Apply-Files: ' + $files -join ", ")
+    $applied=0
+    foreach($f in $files){
+        $full=Join-Path $SvcBase $f
+        if(Test-Path $full){
+            kubectl -n $ns apply -f $full | Out-Null
+            $applied++
+        } else {
+            Info ("SKIP file mancante: {0}" -f $full)
+        }
+    }
+    return $applied
+}
+
+function Ensure-Component([string]$name,[string[]]$files,[string]$workload,[string]$label,[string[]]$svcCandidates,[string]$ns){
+		Debug('Ensure-Component: ' + $files -join ", ")
+
+		$existsWork = [bool](Get-Workload $workload $ns $label)
+    $existsSvc  = [bool](First-ExistingService $svcCandidates $ns)
+
+		Debug('$existsWork: ' + $existsWork)
+		Debug('$existsSvc: ' + $existsSvc)
+
+    if($existsWork -and $existsSvc){
+        Info ("SKIP install {0} (già presente in ns={1})" -f $name,$ns)
+        return
+    }
+
+    $applied = Apply-Files -files $files -ns $ns
+    if($applied -eq 0){
+        Info ("SKIP install {0} (nessun manifest trovato in {1})" -f $name,$SvcBase)
+        return
+    }
+
+    if($workload -or $label){ Wait-WorkloadRollout $label $ns $TimeoutSec }
+    if($svcCandidates -and $svcCandidates.Count -gt 0){ Wait-ServiceEndpoints $svcCandidates $ns -t ([Math]::Min($TimeoutSec,120)) }
+}
+
+# --- start ---
+if(-not (kubectl config current-context 2>$null)){ Write-Error "kubectl non configurato. Esegui: kubectl config use-context docker-desktop"; exit 1 }
+Wait-K8sApi -T $TimeoutSec
+Ensure-Namespace $Ns
+
+if($Mode -eq 'verify'){
+    Verify-Stack $Ns
+    exit 0
+}
+
+# --- INSTALL ---  (file sotto .\k8s_services\)
+
+Ensure-Component -name 'mssql'      -files @('mssql-deployment.yaml','mssql-service.yaml') `
+                 -workload '' -label 'app=mssql'      -svcCandidates @('mssql')                     -ns $Ns
+
+Ensure-Component -name 'postgresql' -files @('postgres-pvc.yaml','postgres.yaml','postgres-service.yaml') `
+                 -workload '' -label 'app=postgres'   -svcCandidates @('postgres','postgres-container') -ns $Ns
+
+Ensure-Component -name 'pgadmin'    -files @('pgadmin-pvc.yaml','pgadmin.yaml') `
+                 -workload '' -label 'app=pgadmin'    -svcCandidates @('pgadmin')                  -ns $Ns
+
+Ensure-Component -name 'adminer'    -files @('adminer.yaml') `
+                 -workload '' -label 'app=adminer'    -svcCandidates @('adminer')                  -ns $Ns
+
+# Web.API (opzionale)
+# Ensure-Component -name 'webapi' -files @('webapi.yaml') `
+#                  -workload '' -label 'app=loggerhelper-api' -svcCandidates @('loggerhelper-api') -ns $Ns
+
+# --- VERIFICA FINALE ---
+Verify-Stack $Ns
