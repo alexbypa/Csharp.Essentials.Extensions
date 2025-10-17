@@ -9,23 +9,36 @@ param(
 $ErrorActionPreference = 'Stop'
 $ConfirmPreference = 'None'
 $ProgressPreference = 'SilentlyContinue'
+function Error($m){ Write-Host $m -ForegroundColor Red }
 function Warn($m){ Write-Host $m -ForegroundColor Yellow }
 function Info($m){ Write-Host $m -ForegroundColor Cyan }
 function Debug($m){ Write-Host $m -ForegroundColor Gray }
 
+Debug('Script in esecuzione ...')
 # base paths
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 Set-Location $ScriptDir
 $SvcBase = Join-Path $ScriptDir $ServicesDir
 
+Debug('$SvcBase: ' + $SvcBase)
+
 function Wait-K8sApi([int]$T = 120){
+		Debug("Wait-K8sApi in progress")
     $sw=[Diagnostics.Stopwatch]::StartNew()
     while($sw.Elapsed.TotalSeconds -lt $T){
         try{
-            kubectl cluster-info 1>$null 2>$null
-            kubectl get ns default --request-timeout=5s 1>$null 2>$null
+						Debug("kubectl cluster-info 1>$null 2>$null in progress")
+            kubectl cluster-info 1>$null -- 2>$null
+						Debug("kubectl cluster-info 1>$null 2>$null executed")
+            #kubectl get ns default --request-timeout=5s 1>$null 2>$null
+						$nsInfo = kubectl get ns default --request-timeout=5s 
+						Debug("NameSpace info : " + $nsInfo)
             return
-        } catch { Start-Sleep 3 }
+        } catch { 
+					Error("Cannot connect to Kubernetes ...")
+					Start-Sleep 3 
+					exit 1
+				}
     }
     throw "API Kubernetes non raggiungibile dopo $T s."
 }
@@ -36,24 +49,21 @@ function Ensure-Namespace([string]$ns){
 }
 
 function Get-Workload([string]$name,[string]$ns,[string]$label=$null){
-    Debug('Get-Workload: ' + $name)
+    Debug('Get-Workload $name: ' + $name + ' $ns: ' + $ns + '$label: ' + $label)
     
-    # Funzione Helper per ottenere l'oggetto JSON pulito.
-    # Usiamo 'ignore-not-found' e reindirizziamo tutti i messaggi di errore (2)
     function Invoke-KubectlJson($resource, $query) {
 			Debug("Eseguo Invoke-KubectlJson (" + $resource + "," + $query + ")")
 			
-			# FIX: Usa la stringa completa per garantire la corretta citazione degli argomenti
-			$commandLine = "kubectl -n $ns get $resource $query --ignore-not-found -o json"
+			$arguments = @('-n', $ns, 'get', $resource, $query, '--ignore-not-found', '-o', 'json') | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 			
-			# DEBUG: La tua stampa del comando completo
-			Debug("Comando completo: " + $commandLine)
-
-			# Esecuzione robusta con IEX (Invoke-Expression) per catturare l'output come singola stringa
-			# Questo è il metodo più aggressivo per catturare l'output di un eseguibile
-			$json = Invoke-Expression -Command "$commandLine 2>$null" | Out-String
+			Debug("Comando previsto: kubectl " + ($arguments -join ' '))
 			
-			Debug("json (parziale): " + ($json.Substring(0, [Math]::Min(100, $json.Length))))
+			$scriptBlock = {
+				& kubectl $arguments 2>$null | Out-String
+      }
+			
+			$outputGrezzo = Invoke-Command -ScriptBlock $scriptBlock
+			$json = $outputGrezzo.Trim()
 			Debug("----------------")
 		
 			if ([string]::IsNullOrWhiteSpace($json)) { return $null }
@@ -67,6 +77,7 @@ function Get-Workload([string]$name,[string]$ns,[string]$label=$null){
 
     # 1. Ricerca per Nome (se $name è valorizzato)
     if ($name) {
+				Debug('RICERCO PER NOME')
         $dObj = Invoke-KubectlJson 'deploy' $name
         if($dObj){ return @{kind='Deployment';obj=$dObj} }
         
@@ -76,6 +87,7 @@ function Get-Workload([string]$name,[string]$ns,[string]$label=$null){
     
     # 2. Ricerca per Label (se $label è valorizzato)
     if ($label) {
+				Debug('RICERCO PER LABEL')
         $dlist = Invoke-KubectlJson 'deploy' "-l $label"
         if ($dlist -and $dlist.items -and $dlist.items.Count -gt 0){
             return @{kind='Deployment';obj=$dlist.items[0]}
@@ -225,7 +237,7 @@ function Ensure-Component([string]$name,[string[]]$files,[string]$workload,[stri
 		Debug('$existsSvc: ' + $existsSvc)
 
     if($existsWork -and $existsSvc){
-        Info ("SKIP install {0} (già presente in ns={1})" -f $name,$ns)
+        Info ("SKIP install {0} (just installed in ns={1})" -f $name,$ns)
         return
     }
 
@@ -240,7 +252,11 @@ function Ensure-Component([string]$name,[string[]]$files,[string]$workload,[stri
 }
 
 # --- start ---
-if(-not (kubectl config current-context 2>$null)){ Write-Error "kubectl non configurato. Esegui: kubectl config use-context docker-desktop"; exit 1 }
+if(-not (kubectl config current-context 2>$null)){ 
+	Error("kubectl non configurato. Esegui: kubectl config use-context docker-desktop")
+	exit 1 
+}
+
 Wait-K8sApi -T $TimeoutSec
 Ensure-Namespace $Ns
 
@@ -250,18 +266,18 @@ if($Mode -eq 'verify'){
 }
 
 # --- INSTALL ---  (file sotto .\k8s_services\)
-
+Debug("Ensure-Component mssql !")
 Ensure-Component -name 'mssql'      -files @('mssql-deployment.yaml','mssql-service.yaml') `
-                 -workload '' -label 'app=mssql'      -svcCandidates @('mssql')                     -ns $Ns
+                 -workload 'mssql' -label 'app=mssql'      -svcCandidates @('mssql')                     -ns $Ns
 
-Ensure-Component -name 'postgresql' -files @('postgres-pvc.yaml','postgres.yaml','postgres-service.yaml') `
-                 -workload '' -label 'app=postgres'   -svcCandidates @('postgres','postgres-container') -ns $Ns
+Ensure-Component -name 'postgres' -files @('postgres-pvc.yaml','postgres.yaml','postgres-service.yaml') `
+                 -workload 'postgres' -label 'app=postgres'   -svcCandidates @('postgres','postgres-container') -ns $Ns
 
 Ensure-Component -name 'pgadmin'    -files @('pgadmin-pvc.yaml','pgadmin.yaml') `
-                 -workload '' -label 'app=pgadmin'    -svcCandidates @('pgadmin')                  -ns $Ns
+                 -workload 'pgadmin' -label 'app=pgadmin'    -svcCandidates @('pgadmin')                  -ns $Ns
 
 Ensure-Component -name 'adminer'    -files @('adminer.yaml') `
-                 -workload '' -label 'app=adminer'    -svcCandidates @('adminer')                  -ns $Ns
+                 -workload 'adminer' -label 'app=adminer'    -svcCandidates @('adminer')                  -ns $Ns
 
 # Web.API (opzionale)
 # Ensure-Component -name 'webapi' -files @('webapi.yaml') `
