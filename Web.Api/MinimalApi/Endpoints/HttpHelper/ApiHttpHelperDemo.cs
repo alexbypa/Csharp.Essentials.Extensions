@@ -6,11 +6,60 @@ using CSharpEssentials.HttpHelper;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 using System.Net;
+using System.Net.Http;
 
 namespace Web.Api.MinimalApi.Endpoints.HttpHelper;
 public class ApiHttpHelperDemo : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
+
+        app.MapGet("Test/Howcall", (IhttpsClientHelperFactory httpFactory, string httpOptionName, bool useRetry = false) => {
+            string url = "http://www.yoursite.com/echo";
+            var client = httpFactory.CreateOrGet(httpOptionName);
+            client.ClearRequestActions();
+            client.AddRequestAction((req, res, retry, elapsed) => {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"[GLOBAL ACTION] Nr Retry: {retry} - {req.Method} {req.RequestUri} -> {res.StatusCode} in {elapsed.TotalMilliseconds} ms");
+                Console.ResetColor();
+                return Task.CompletedTask;
+            });
+            client.addTimeout(TimeSpan.FromSeconds(10));
+
+            if (useRetry) {
+                url = "http://www.yoursite.com/retry";
+                client.addRetryCondition((res) => res.StatusCode == HttpStatusCode.InternalServerError, 3, 2);
+            }
+
+            IContentBuilder nobody = new NoBodyContentBuilder();
+            var response = client.SendAsync(url, HttpMethod.Get, null,  nobody);
+            return Results.Ok("See console output for how to call HttpHelper with actions.");
+        })
+        .WithTags("HttpHelper")
+        .WithSummary("Base Request")
+        .Produces<string>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status502BadGateway)
+        .ProducesProblem(StatusCodes.Status504GatewayTimeout)
+        .WithOpenApi(op => {
+            // Query parameter
+            op.Parameters.Add(new Microsoft.OpenApi.Models.OpenApiParameter {
+                Name = "httpOptionName",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Query,
+                Required = true,
+                Description = "Named HTTP profile (as configured in appsettings.json). Example: `default`.",
+                Schema = new Microsoft.OpenApi.Models.OpenApiSchema { Type = "string" },
+                Example = new Microsoft.OpenApi.Any.OpenApiString("default")
+            });
+
+            // Response descriptions
+            op.Responses["200"].Description = "OK – upstream response payload";
+            op.Responses.TryAdd("400", new Microsoft.OpenApi.Models.OpenApiResponse { Description = "Bad Request – missing/invalid parameters" });
+            op.Responses.TryAdd("502", new Microsoft.OpenApi.Models.OpenApiResponse { Description = "Bad Gateway – upstream error" });
+            op.Responses.TryAdd("504", new Microsoft.OpenApi.Models.OpenApiResponse { Description = "Gateway Timeout – upstream timeout" });
+
+            return op;
+        });
+        ;
 
         //Minimal simple example of HttpHelper usage
         app.MapGet("Test/echo", async (string httpOptionName, IhttpsClientHelperFactory httpFactory) => {

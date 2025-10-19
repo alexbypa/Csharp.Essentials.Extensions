@@ -71,7 +71,7 @@ public class HttpMocks {
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
                 ItExpr.Is<HttpRequestMessage>(r =>
-                    r.Method == HttpMethod.Post &&
+                    //r.Method == HttpMethod.Post &&
                     r.RequestUri != null &&
                     r.RequestUri.AbsolutePath.Contains("/echo")),
                 ItExpr.IsAny<CancellationToken>())
