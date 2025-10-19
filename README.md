@@ -207,7 +207,7 @@ A list of **preconfigured HTTP clients**. Each object represents one named clien
   * `IsEnabled`: Enables (`true`) or disables (`false`) rate limiting.
 
 * **`UseMock`**
-  If `true`, the client uses an internal mock/handler instead of making real HTTP calls (useful for testing).
+  If `has stringa value`, the client uses an internal mock/handler instead of making real HTTP calls (useful for testing).
 
 ---
 
@@ -231,6 +231,21 @@ A list of **preconfigured HTTP clients**. Each object represents one named clien
 
 ---
 
+#### **Understanding the Usage and Demos**
+
+The Web API demo project showcases two distinct approaches to using this package:
+
+1.  **SOLID-Compliant Usage (Business Logic):**
+    The main demonstration endpoints (e.g., `Test/RateLimit`) perform HTTP calls using a dedicated **Business Layer** (e.g., `FetchAndLogUseCase`). This is the **recommended approach** for production code as it adheres strictly to **SOLID principles** by isolating the HTTP communication logic (`INetworkClient`) from the business use cases.
+
+2.  **Raw Method Demonstration (`Test/Howcall`):**
+    To provide developers with a clear, straightforward understanding of the package's core features, the Minimal API endpoint at **`ApiHttpHelperDemo`** (specifically the action **`Test/Howcall`**) shows the **raw methods** of the `IHttpClientHelper` interface. This demo bypasses the Business Logic layer to illustrate the direct configuration of:
+    * **Global Request Actions** (e.g., custom logging).
+    * **Retry Conditions** (e.g., using `client.addRetryCondition`).
+    * **Timeouts**.
+    * **etc etc... **.
+
+--- 
 **Related types (quick pointers):**
 
 * **`IHttpClientStep`** (contract used by `TimeoutStep`, `RetryConditionStep`, `HeadersAndBearerStep`) → `BusinessLayer/Contracts/IHttpClientStep.cs`
