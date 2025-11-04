@@ -7,6 +7,7 @@ using CSharpEssentials.LoggerHelper.Configuration;
 using CSharpEssentials.LoggerHelper.Dashboard.Extensions;
 using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Scalar.AspNetCore;
+using System.Net;
 using Web.Api.MinimalApi;
 using Web.Api.MinimalApi.Endpoints.Telemetries;
 
@@ -31,6 +32,7 @@ builder.Services.AddSingleton<IContextLogEnricher, MetricsEnricher>();
 builder.Services.AddloggerConfiguration(builder);
 builder.Services.AddSingleton(new MyCustomMetrics(500));
 #endregion
+
 
 
 #region CSharpEssentials.HttpHelper Package

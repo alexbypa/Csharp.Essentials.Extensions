@@ -12,6 +12,39 @@ namespace Web.Api.MinimalApi.Endpoints.HttpHelper;
 public class ApiHttpHelperDemo : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
+        app.MapGet("Test/proxyweb", (IhttpsClientHelperFactory httpFactory, string httpOptionName, bool useRetry = false) => {
+
+            string url = "https://www.google.com";
+            var client = httpFactory.CreateOrGet(httpOptionName);
+            client.ClearRequestActions();
+            client.AddRequestAction((req, res, retry, elapsed) => {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"[GLOBAL ACTION] Nr Retry: {retry} - {req.Method} {req.RequestUri} -> {res.StatusCode} in {elapsed.TotalMilliseconds} ms");
+                Console.ResetColor();
+                return Task.CompletedTask;
+            });
+            client.addTimeout(TimeSpan.FromSeconds(10));
+
+            if (useRetry) {
+                url = "http://www.google.com";
+                client.addRetryCondition((res) => res.StatusCode == HttpStatusCode.InternalServerError, 3, 2);
+            }
+
+            IContentBuilder nobody = new NoBodyContentBuilder();
+            var response = client.SendAsync(url, HttpMethod.Get, null, nobody).GetAwaiter().GetResult();
+            try {
+                response.EnsureSuccessStatusCode();
+            } catch (HttpRequestException ex) {
+                // Cattura l'errore di connessione (es. se Proxifier è offline o il protocollo è sbagliato)
+                return Results.Problem($"[FAIL] Errore di connessione al Proxy/Target: {ex.Message}. Verifica che Proxifier sia attivo e sia in modalità HTTPS.");
+            } catch (UriFormatException ex) {
+                return Results.Problem($"[FAIL] Errore di formato URI nella configurazione: {ex.Message}. Assicurati di usare 'https://IP:PORTA' in appsettings.");
+            }
+            return Results.Ok("See console output for how to call HttpHelper with actions.");
+        })
+        .WithTags("proxyweb")
+        .WithSummary("proxyweb");
+
 
         app.MapGet("Test/Howcall", (IhttpsClientHelperFactory httpFactory, string httpOptionName, bool useRetry = false) => {
             string url = "http://www.yoursite.com/echo";
@@ -59,7 +92,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
 
             return op;
         });
-        ;
+        
 
         //Minimal simple example of HttpHelper usage
         app.MapGet("Test/echo", async (string httpOptionName, IhttpsClientHelperFactory httpFactory) => {

@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpEssentials.HttpHelper" Version="4.0.3" />
     <PackageReference Include="CSharpEssentials.LoggerHelper" Version="4.0.10.1" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.AI" Version="4.0.7" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Dashboard" Version="4.1.1" />

@@ -16,6 +16,7 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj" />
     <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
   </ItemGroup>
 </Project>
