@@ -28,7 +28,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
 
 
         app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
-            //Qui dobbiamo simulare il retry con Polly nel caso in cui la richiesta http richiede molto tmepo coni Mocks !!!
+            //Qui dobbiamo simulare il retry con Polly nel caso in cui la richiesta http richiede molto tmepo con i Mocks ! ! !
             await Task.Delay(10);
             return Results.Ok("TO DO !!!");
         })
