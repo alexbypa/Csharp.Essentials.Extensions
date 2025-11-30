@@ -1,19 +1,33 @@
 ﻿using CSharpEssentials.HttpHelper;
-using Microsoft.AspNetCore.Http.HttpResults;
+using CSharpEssentials.HttpHelper.HttpMocks;
+using System.Net;
 
 namespace Web.Api.MinimalApi.Endpoints.HttpHelper;
 public class ApiHttpHelperDemo : IEndpointDefinition {
+    IhttpsClientHelper client;
+    string url;
+    IContentBuilder contentBuilder;
+    CancellationTokenSource cts;
+    public IhttpsClientHelper buildHttpClient(IhttpsClientHelperFactory httpFactory, string Url, IContentBuilder contentBuilder) {
+        CancellationTokenSource cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromSeconds(30));
+
+        client = httpFactory.CreateOrGet("testAI");//////////////////////////
+        
+        this.url = Url;
+        this.contentBuilder = contentBuilder;
+        this.cts = cts;
+
+        return client;
+    }
+    public async Task<HttpResponseMessage> sendAsync() => await client.SendAsync(url, HttpMethod.Get, null, new NoBodyContentBuilder(), null, this.cts.Token);
+    
+
     public async Task DefineEndpointsAsync(WebApplication app) {
-        IContentBuilder contentBuilder = new NoBodyContentBuilder();
-        app.MapGet("Test/proxyweb", async (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
-            string url = "https://example.com/";
-            var client = httpFactory.CreateOrGet(httpOptionName);
-
-            IContentBuilder nobody = new NoBodyContentBuilder();
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(30));
-
-            var response = await client.SendAsync(url, HttpMethod.Get, null, nobody, null, cts.Token);
+        app.MapGet("Test/proxyweb", async (IhttpsClientHelperFactory httpFactory) => {
+            client = buildHttpClient(httpFactory, "https://example.com/", contentBuilder);
+            
+            var response = await sendAsync();
             try {
                 response.EnsureSuccessStatusCode();
             } catch (HttpRequestException ex) {
@@ -27,17 +41,14 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         .WithSummary("proxyweb");
 
 
-        app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
-            //Qui dobbiamo simulare il retry con Polly nel caso in cui la richiesta http richiede molto tmepo con i Mocks ! ! !
-            await Task.Delay(10);
-            return Results.Ok("TO DO !!!");
+
+        app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory httpFactory) => {
+            client = buildHttpClient(httpFactory, "https://myfakesite.com/", contentBuilder);
+            var response = await sendAsync();
+            return Results.Ok(await response.Content.ReadAsStringAsync());
         })
         .WithTags("HTTP HELPER")
         .WithSummary("Timeout");
-
-
-
-
 
         /*
         app.MapGet("Test/Howcall", (IhttpsClientHelperFactory httpFactory, string httpOptionName, bool useRetry = false) => {
@@ -330,4 +341,22 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
             """);
         */
     }
+}
+
+public class HttpMockLibraryTimeoutThenOk : IHttpMockScenario {
+    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesiteOnError") ;
+    public IReadOnlyList<Func<Task<HttpResponseMessage>>> ResponseFactory => new List<Func<Task<HttpResponseMessage>>> {
+        () => Task.FromResult(new HttpResponseMessage(HttpStatusCode.RequestTimeout)),
+        () => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new StringContent("Success after timeout")
+        })
+    };
+}
+public class HttpMockLibraryAlwaysOk : IHttpMockScenario {
+    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesite");
+    public IReadOnlyList<Func<Task<HttpResponseMessage>>> ResponseFactory => new List<Func<Task<HttpResponseMessage>>> {
+        () => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new StringContent("Always success from Moq")
+        })
+    };
 }

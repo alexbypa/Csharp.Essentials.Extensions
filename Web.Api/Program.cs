@@ -1,6 +1,7 @@
 using BusinessLayer.Application;
 using BusinessLayer.Contracts.Context;
 using CSharpEssentials.HttpHelper;
+using CSharpEssentials.HttpHelper.HttpMocks;
 using CSharpEssentials.LoggerHelper;
 using CSharpEssentials.LoggerHelper.AI.Infrastructure;
 using CSharpEssentials.LoggerHelper.Configuration;
@@ -9,6 +10,7 @@ using CSharpEssentials.LoggerHelper.Telemetry.Configuration;
 using Scalar.AspNetCore;
 using System.Net;
 using Web.Api.MinimalApi;
+using Web.Api.MinimalApi.Endpoints.HttpHelper;
 using Web.Api.MinimalApi.Endpoints.Telemetries;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,8 +38,10 @@ builder.Services.AddSingleton(new MyCustomMetrics(500));
 
 
 #region CSharpEssentials.HttpHelper Package
-builder.Services.AddHttpClients(builder.Configuration); //if you dont use Moq
-//builder.Services.AddHttpClients(builder.Configuration, HttpMocks.CreateHandler());
+builder.Services.AddScoped<IHttpMockScenario, HttpMockLibraryTimeoutThenOk>(); 
+builder.Services.AddScoped<IHttpMockScenario, HttpMockLibraryAlwaysOk>(); 
+builder.Services.AddScoped<IHttpMockEngine, HttpMockEngine>();
+builder.Services.AddHttpClients(builder.Configuration); 
 #endregion
 
 
