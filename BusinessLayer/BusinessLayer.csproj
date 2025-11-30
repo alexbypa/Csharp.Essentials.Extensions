@@ -6,9 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CSharpEssentials.LoggerHelper" Version="4.0.10.1" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.AI" Version="4.0.7" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Dashboard" Version="4.1.1" />
+    <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.Console" Version="4.0.12" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.Elasticsearch" Version="4.0.2" />
+    <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.File" Version="4.0.0" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.MSSqlServer" Version="4.0.2.2" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Sink.Postgresql" Version="4.0.2" />
     <PackageReference Include="CSharpEssentials.LoggerHelper.Telemetry" Version="4.0.11" />
@@ -16,9 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper.Sink.Console\CSharpEssentials.LoggerHelper.Sink.Console.csproj" />
-    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper.Sink.File\CSharpEssentials.LoggerHelper.Sink.File.csproj" />
-    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.LoggerHelper\CSharpEssentials.LoggerHelper.csproj" />
+    <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj" />
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
   </ItemGroup>
 </Project>

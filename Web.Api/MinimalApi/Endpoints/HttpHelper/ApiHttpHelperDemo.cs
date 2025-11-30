@@ -1,34 +1,13 @@
-﻿using BusinessLayer.Application;
-using BusinessLayer.Contracts;
-using BusinessLayer.Domain;
-using BusinessLayer.Infrastructure;
-using CSharpEssentials.HttpHelper;
-using Microsoft.AspNetCore.Mvc;
-using Scalar.AspNetCore;
-using System.Net;
-using System.Net.Http;
+﻿using CSharpEssentials.HttpHelper;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Web.Api.MinimalApi.Endpoints.HttpHelper;
 public class ApiHttpHelperDemo : IEndpointDefinition {
     public void DefineEndpoints(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
-        app.MapGet("Test/proxyweb", (IhttpsClientHelperFactory httpFactory, string httpOptionName, bool useRetry = false) => {
-
-            string url = "https://www.google.com";
+        app.MapGet("Test/proxyweb", (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
+            string url = "https://httpbin.org/get";
             var client = httpFactory.CreateOrGet(httpOptionName);
-            client.ClearRequestActions();
-            client.AddRequestAction((req, res, retry, elapsed) => {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"[GLOBAL ACTION] Nr Retry: {retry} - {req.Method} {req.RequestUri} -> {res.StatusCode} in {elapsed.TotalMilliseconds} ms");
-                Console.ResetColor();
-                return Task.CompletedTask;
-            });
-            client.addTimeout(TimeSpan.FromSeconds(10));
-
-            if (useRetry) {
-                url = "http://www.google.com";
-                client.addRetryCondition((res) => res.StatusCode == HttpStatusCode.InternalServerError, 3, 2);
-            }
 
             IContentBuilder nobody = new NoBodyContentBuilder();
             var response = client.SendAsync(url, HttpMethod.Get, null, nobody).GetAwaiter().GetResult();
@@ -36,16 +15,28 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
                 response.EnsureSuccessStatusCode();
             } catch (HttpRequestException ex) {
                 // Cattura l'errore di connessione (es. se Proxifier è offline o il protocollo è sbagliato)
-                return Results.Problem($"[FAIL] Errore di connessione al Proxy/Target: {ex.Message}. Verifica che Proxifier sia attivo e sia in modalità HTTPS.");
+                return Results.Problem($"[FAIL HTTP] connection Error on Proxy/Target: {ex.Message}.");
             } catch (UriFormatException ex) {
-                return Results.Problem($"[FAIL] Errore di formato URI nella configurazione: {ex.Message}. Assicurati di usare 'https://IP:PORTA' in appsettings.");
+                return Results.Problem($"[FAIL HTTP] URI fomat error on configuration: {ex.Message}.");
             }
             return Results.Ok("See console output for how to call HttpHelper with actions.");
         })
-        .WithTags("proxyweb")
+        .WithTags("HTTP HELPER")
         .WithSummary("proxyweb");
 
 
+        app.MapGet("Test/TimeOut", (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
+            //Qui dobbiamo simulare il retry con Polly nel caso in cui la richiesta http richiede molto tmepo coni Mocks !!!
+            return Results.Ok("TO DO !!!");
+        })
+        .WithTags("HTTP HELPER")
+        .WithSummary("Timeout");
+
+
+
+
+
+        /*
         app.MapGet("Test/Howcall", (IhttpsClientHelperFactory httpFactory, string httpOptionName, bool useRetry = false) => {
             string url = "http://www.yoursite.com/echo";
             var client = httpFactory.CreateOrGet(httpOptionName);
@@ -334,5 +325,6 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
 
             Each iteration result is collected into a dictionary with keys `Step 1..Step 10`.
             """);
+        */
     }
 }
