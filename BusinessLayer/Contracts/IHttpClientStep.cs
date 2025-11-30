@@ -22,7 +22,7 @@ public sealed class HeadersAndBearerStep : IHttpClientStep {
             : null;
 
         
-        return client.setHeadersAndBearerAuthentication(spec.Headers, bearer);
+        return client.setHeadersAndBearerAuthenticationSync(spec.Headers, bearer);
     }
 }
 public sealed class BasicAuthStep : IHttpClientStep {
@@ -36,7 +36,7 @@ public sealed class BasicAuthStep : IHttpClientStep {
             return client;
         var basic = new httpsClientHelper.httpClientAuthenticationBasic(a!.BasicUsername!, a.BasicPassword!);
 
-        return client.setHeadersAndBasicAuthentication(spec.Headers, basic);
+        return client.setHeadersAndBasicAuthenticationSync(spec.Headers, basic);
     }
 }
 

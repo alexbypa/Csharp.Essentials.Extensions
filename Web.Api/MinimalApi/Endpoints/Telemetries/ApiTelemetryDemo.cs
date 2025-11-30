@@ -15,7 +15,7 @@ using System.Text.Json;
 namespace Web.Api.MinimalApi.Endpoints.Telemetries;
 
 public class ApiTelemetryDemo : IEndpointDefinition {
-    public void DefineEndpoints(WebApplication app) {
+    public async Task DefineEndpointsAsync(WebApplication app) {
         app.MapGet("Telemetry/Simple", getUserInfo)
            .WithSummary("Test Timeout")
            .WithBadge("beta", BadgePosition.Before, "yellow")

@@ -38,7 +38,9 @@ public sealed class HttpHelperNetworkClient : INetworkClient {
                     _ => HttpMethod.Get
                 },
                 request.Body,
-                contentBuilder);
+                contentBuilder, 
+                null, 
+                ct );
 
             return OpResult<HttpResponseSpec>.Ok(new HttpResponseSpec {
                 StatusCode = (int)response.StatusCode,

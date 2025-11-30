@@ -3,18 +3,20 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Web.Api.MinimalApi.Endpoints.HttpHelper;
 public class ApiHttpHelperDemo : IEndpointDefinition {
-    public void DefineEndpoints(WebApplication app) {
+    public async Task DefineEndpointsAsync(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
-        app.MapGet("Test/proxyweb", (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
+        app.MapGet("Test/proxyweb", async (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
             string url = "https://httpbin.org/get";
             var client = httpFactory.CreateOrGet(httpOptionName);
 
             IContentBuilder nobody = new NoBodyContentBuilder();
-            var response = client.SendAsync(url, HttpMethod.Get, null, nobody).GetAwaiter().GetResult();
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(30));
+
+            var response = await client.SendAsync(url, HttpMethod.Get, null, nobody, null, cts.Token);
             try {
                 response.EnsureSuccessStatusCode();
             } catch (HttpRequestException ex) {
-                // Cattura l'errore di connessione (es. se Proxifier è offline o il protocollo è sbagliato)
                 return Results.Problem($"[FAIL HTTP] connection Error on Proxy/Target: {ex.Message}.");
             } catch (UriFormatException ex) {
                 return Results.Problem($"[FAIL HTTP] URI fomat error on configuration: {ex.Message}.");
@@ -25,8 +27,9 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         .WithSummary("proxyweb");
 
 
-        app.MapGet("Test/TimeOut", (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
+        app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
             //Qui dobbiamo simulare il retry con Polly nel caso in cui la richiesta http richiede molto tmepo coni Mocks !!!
+            await Task.Delay(10);
             return Results.Ok("TO DO !!!");
         })
         .WithTags("HTTP HELPER")

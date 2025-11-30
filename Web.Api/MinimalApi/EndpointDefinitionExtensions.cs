@@ -20,7 +20,7 @@ public static class EndpointDefinitionExtensions {
         using var scope = app.Services.CreateScope(); // <-- crea scope
         var defs = scope.ServiceProvider.GetServices<IEndpointDefinition>();
         foreach (var def in defs)
-            def.DefineEndpoints(app);
+            def.DefineEndpointsAsync(app);
         return app;        
         //var defs = app.Services.GetServices<IEndpointDefinition>();
         //foreach (var def in defs)

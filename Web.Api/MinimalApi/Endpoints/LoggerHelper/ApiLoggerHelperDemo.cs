@@ -4,8 +4,9 @@ using CSharpEssentials.LoggerHelper.InMemorySink;
 using Serilog.Events;
 namespace Web.Api.MinimalApi.Endpoints.LoggerHelper;
 public class ApiLoggerHelperDemo : IEndpointDefinition {
-    public void DefineEndpoints(WebApplication app) {
-        app.MapGet("Logger/Sample", (string Action, string message, LogEventLevel logEventLevel) => {
+    public async Task DefineEndpointsAsync(WebApplication app) {
+        app.MapGet("Logger/Sample", async (string Action, string message, LogEventLevel logEventLevel) => {
+            await Task.Delay(10);
             loggerExtension<RequestSample>
             .TraceSync(
                 new RequestSample() { 
@@ -35,5 +36,6 @@ public class ApiLoggerHelperDemo : IEndpointDefinition {
         })
         .WithSummary("Add Log on Dashboard")
         .WithTags("LoggerHelper");
+
     }
 }
