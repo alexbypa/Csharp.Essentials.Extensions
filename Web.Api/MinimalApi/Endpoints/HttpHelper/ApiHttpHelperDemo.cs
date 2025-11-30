@@ -6,7 +6,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
     public async Task DefineEndpointsAsync(WebApplication app) {
         IContentBuilder contentBuilder = new NoBodyContentBuilder();
         app.MapGet("Test/proxyweb", async (IhttpsClientHelperFactory httpFactory, string httpOptionName = "testAI") => {
-            string url = "https://httpbin.org/get";
+            string url = "https://example.com/";
             var client = httpFactory.CreateOrGet(httpOptionName);
 
             IContentBuilder nobody = new NoBodyContentBuilder();
@@ -21,7 +21,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
             } catch (UriFormatException ex) {
                 return Results.Problem($"[FAIL HTTP] URI fomat error on configuration: {ex.Message}.");
             }
-            return Results.Ok("See console output for how to call HttpHelper with actions.");
+            return Results.Ok(await response.Content.ReadAsStringAsync());
         })
         .WithTags("HTTP HELPER")
         .WithSummary("proxyweb");
