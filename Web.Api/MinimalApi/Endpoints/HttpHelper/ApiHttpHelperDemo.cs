@@ -1,4 +1,5 @@
-﻿using CSharpEssentials.HttpHelper;
+﻿using Castle.Components.DictionaryAdapter.Xml;
+using CSharpEssentials.HttpHelper;
 using CSharpEssentials.HttpHelper.HttpMocks;
 using System.Net;
 
@@ -24,7 +25,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
 
     public async Task DefineEndpointsAsync(WebApplication app) {
         //Testing addRquestOnAction !
-        app.MapGet("Test/addRquestOnAction", async(IhttpsClientHelperFactory httpFactory) => {
+        app.MapGet("Test/addRquestOnAction", async (IhttpsClientHelperFactory httpFactory) => {
             client = buildHttpClient(httpFactory, "https://httpbin.org/get", new NoBodyContentBuilder());
 
             client.AddRequestAction(async (req, res, retry, elapsed) => {
@@ -45,7 +46,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
             }
         })
         .WithTags("HTTP HELPER")
-        .WithSummary("Log Request");            
+        .WithSummary("Log Request");
 
 
         //Testing WebProxy
@@ -68,7 +69,19 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
 
         //Testing Timeout - MOQ -> first request timeout, second ok (see HttpMockLibraryTimeoutThenOk)
         app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory httpFactory) => {
-            client = buildHttpClient(httpFactory, "https://myfakesite.com/", contentBuilder);
+            client = buildHttpClient(httpFactory, "https://myfakesiteOnError.com/", contentBuilder);
+
+            client.addTimeout(TimeSpan.FromSeconds(15));
+
+            client.AddRequestAction(async (req, res, retry, elapsedMs) => {
+                Console.ForegroundColor = ConsoleColor.Magenta; 
+                Console.WriteLine($"[RETRY LOG] Attempt {retry}: {req.RequestUri} → {res.StatusCode}");
+                Console.ResetColor();
+                await Task.CompletedTask;
+            });
+
+            client.addRetryCondition((res) => res.StatusCode != HttpStatusCode.OK, 2, 2);
+
             var response = await sendAsync();
             return Results.Ok(await response.Content.ReadAsStringAsync());
         })
@@ -369,33 +382,30 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
 }
 
 public class HttpMockLibraryTimeoutThenOk : IHttpMockScenario {
-    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesiteOnError");
+    int countRequest = 0;
+    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesiteOnError", StringComparison.InvariantCultureIgnoreCase);
     public IReadOnlyList<Func<Task<HttpResponseMessage>>> ResponseFactory => new List<Func<Task<HttpResponseMessage>>>
-        {
-            async () =>
-            {
+        {async () => {
+            if (countRequest == 0){
+                countRequest++;
                 // Simulate timeout of 50 seconds
-                await Task.Delay(TimeSpan.FromSeconds(50));
+                await Task.Delay(TimeSpan.FromSeconds(10));
 
                 // after delay return timeout 
                 return new HttpResponseMessage(HttpStatusCode.RequestTimeout)
                 {
                     Content = new StringContent("Simulated timeout")
                 };
-            },
-            async () =>
-            {
-                // 200 OK
-                await Task.Delay(100); // small delay to simulate processing   
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
+            } else
+                return new HttpResponseMessage(HttpStatusCode.OK) {
                     Content = new StringContent("Success after timeout")
                 };
+
             }
         };
 }
 public class HttpMockLibraryAlwaysOk : IHttpMockScenario {
-    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesite");
+    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesiteAlwaysOk");
     public IReadOnlyList<Func<Task<HttpResponseMessage>>> ResponseFactory => new List<Func<Task<HttpResponseMessage>>> {
         () => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = new StringContent("Always success from Moq")

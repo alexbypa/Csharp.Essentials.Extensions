@@ -8,6 +8,9 @@
     <UserSecretsId>d4067cdb-df61-4739-a439-14cab893341e</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="docs\HTTPMockAndRetryActions.md" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
       <PrivateAssets>all</PrivateAssets>
