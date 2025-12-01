@@ -22,17 +22,30 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
     }
     public async Task<HttpResponseMessage> sendAsync() => await client.SendAsync(url, HttpMethod.Get, null, new NoBodyContentBuilder(), null, this.cts.Token);
 
-
     public async Task DefineEndpointsAsync(WebApplication app) {
-
         //Testing addRquestOnAction !
         app.MapGet("Test/addRquestOnAction", async(IhttpsClientHelperFactory httpFactory) => {
-            client = buildHttpClient(httpFactory, "https://httpbin.org/get", new JsonContentBuilder());
+            client = buildHttpClient(httpFactory, "https://httpbin.org/get", new NoBodyContentBuilder());
+
+            client.AddRequestAction(async (req, res, retry, elapsed) => {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"[CUSTOM ACTION] - {req.Method} {req.RequestUri} -> {res.StatusCode}");
+                Console.ResetColor();
+                await Task.CompletedTask;
+            });
 
             var response = await sendAsync();
+            try {
+                response.EnsureSuccessStatusCode();
+                return Results.Ok(await response.Content.ReadAsStringAsync());
+            } catch (HttpRequestException ex) {
+                return Results.Problem($"[FAIL HTTP] connection Error on Proxy/Target: {ex.Message}.");
+            } catch (UriFormatException ex) {
+                return Results.Problem($"[FAIL HTTP] URI fomat error on configuration: {ex.Message}.");
+            }
         })
         .WithTags("HTTP HELPER")
-        .WithSummary("proxyweb");            
+        .WithSummary("Log Request");            
 
 
         //Testing WebProxy
