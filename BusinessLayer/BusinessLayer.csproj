@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Project_Pixelo\CSharp.Essentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj" />
+    <ProjectReference Include="..\..\CSharp.Essentials\CSharpEssentials.HttpHelper\CSharpEssentials.HttpHelper.csproj" />
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
   </ItemGroup>
 </Project>

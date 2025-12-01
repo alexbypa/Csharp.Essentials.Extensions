@@ -13,7 +13,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         cts.CancelAfter(TimeSpan.FromSeconds(30));
 
         client = httpFactory.CreateOrGet("testAI");//////////////////////////
-        
+
         this.url = Url;
         this.contentBuilder = contentBuilder;
         this.cts = cts;
@@ -21,12 +21,24 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         return client;
     }
     public async Task<HttpResponseMessage> sendAsync() => await client.SendAsync(url, HttpMethod.Get, null, new NoBodyContentBuilder(), null, this.cts.Token);
-    
+
 
     public async Task DefineEndpointsAsync(WebApplication app) {
+
+        //Testing addRquestOnAction !
+        app.MapGet("Test/addRquestOnAction", async(IhttpsClientHelperFactory httpFactory) => {
+            client = buildHttpClient(httpFactory, "https://httpbin.org/get", new JsonContentBuilder());
+
+            var response = await sendAsync();
+        })
+        .WithTags("HTTP HELPER")
+        .WithSummary("proxyweb");            
+
+
+        //Testing WebProxy
         app.MapGet("Test/proxyweb", async (IhttpsClientHelperFactory httpFactory) => {
             client = buildHttpClient(httpFactory, "https://example.com/", contentBuilder);
-            
+
             var response = await sendAsync();
             try {
                 response.EnsureSuccessStatusCode();
@@ -41,7 +53,7 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
         .WithSummary("proxyweb");
 
 
-
+        //Testing Timeout - MOQ -> first request timeout, second ok (see HttpMockLibraryTimeoutThenOk)
         app.MapGet("Test/TimeOut", async (IhttpsClientHelperFactory httpFactory) => {
             client = buildHttpClient(httpFactory, "https://myfakesite.com/", contentBuilder);
             var response = await sendAsync();
@@ -344,13 +356,30 @@ public class ApiHttpHelperDemo : IEndpointDefinition {
 }
 
 public class HttpMockLibraryTimeoutThenOk : IHttpMockScenario {
-    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesiteOnError") ;
-    public IReadOnlyList<Func<Task<HttpResponseMessage>>> ResponseFactory => new List<Func<Task<HttpResponseMessage>>> {
-        () => Task.FromResult(new HttpResponseMessage(HttpStatusCode.RequestTimeout)),
-        () => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = new StringContent("Success after timeout")
-        })
-    };
+    public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesiteOnError");
+    public IReadOnlyList<Func<Task<HttpResponseMessage>>> ResponseFactory => new List<Func<Task<HttpResponseMessage>>>
+        {
+            async () =>
+            {
+                // Simulate timeout of 50 seconds
+                await Task.Delay(TimeSpan.FromSeconds(50));
+
+                // after delay return timeout 
+                return new HttpResponseMessage(HttpStatusCode.RequestTimeout)
+                {
+                    Content = new StringContent("Simulated timeout")
+                };
+            },
+            async () =>
+            {
+                // 200 OK
+                await Task.Delay(100); // small delay to simulate processing   
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("Success after timeout")
+                };
+            }
+        };
 }
 public class HttpMockLibraryAlwaysOk : IHttpMockScenario {
     public Func<HttpRequestMessage, bool> Match => (req) => req.RequestUri.AbsoluteUri.Contains("myfakesite");
